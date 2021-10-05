@@ -1,119 +1,65 @@
-import { BigInt } from "@graphprotocol/graph-ts"
+import { BigInt, ipfs, json } from "@graphprotocol/graph-ts";
 import {
-  NFT,
-  Approval,
-  ApprovalForAll,
-  BaseURIUpdated,
-  Minted,
-  NFTCreatorMigrated,
-  NFTMarketUpdated,
-  NFTMetadataUpdated,
-  NFTOwnerMigrated,
-  PaymentAddressMigrated,
-  TokenCreatorPaymentAddressSet,
-  TokenCreatorUpdated,
-  TokenIPFSPathUpdated,
-  Transfer,
-  Updated
-} from "../generated/NFT/NFT"
-import { ExampleEntity } from "../generated/schema"
+  NFT as NFTContract,
+  Minted as MintedEvent,
+} from "../generated/NFT/NFT";
 
-export function handleApproval(event: Approval): void {
-  // Entities can be loaded from the store using a string ID; this ID
-  // needs to be unique across all entities of the same type
-  let entity = ExampleEntity.load(event.transaction.from.toHex())
+import {
+  Market as MarketContract,
+  ReserveAuctionCreated as AuctionEvent,
+  ReserveAuctionBidPlaced as BidsEvent,
+} from "../generated/Market/Market";
+import { Minted, Auction, Bid } from "../generated/schema";
 
-  // Entities only exist after they have been saved to the store;
-  // `null` checks allow to create entities on demand
-  if (entity == null) {
-    entity = new ExampleEntity(event.transaction.from.toHex())
-
-    // Entity fields can be set using simple assignments
-    entity.count = BigInt.fromI32(0)
+export function handleMinted(event: MintedEvent): void {
+  let token = Minted.load(event.params.tokenId.toString());
+  if (!token) {
+    token = new Minted(event.params.tokenId.toString());
+    token.creator = event.params.creator;
+    token.tokenID = event.params.tokenId;
+    //token.IPFSPath = event.params.tokenIPFSPath.toString();
+    let tokenContract = NFTContract.bind(event.address);
+    token.IPFSPath = tokenContract
+      .getTokenIPFSPath(event.params.tokenId)
+      .toString();
+    token.tokenURI = tokenContract
+      .tokenURI(event.params.tokenId)
+      .toString();
+    token.owner = tokenContract.ownerOf(event.params.tokenId);
+    let temp = ipfs.cat(token.IPFSPath);
+    // let data = json.fromBytes(temp);
+    token.NFTInfo = temp.toString();
+    //token.metadataURI = tokenContract.tokenMetadataURI(event.params.tokenId);
   }
-
-  // BigInt and BigDecimal math are supported
-  entity.count = entity.count + BigInt.fromI32(1)
-
-  // Entity fields can be set based on event parameters
-  entity.owner = event.params.owner
-  entity.approved = event.params.approved
-
-  // Entities can be written to the store with `.save()`
-  entity.save()
-
-  // Note: If a handler doesn't require existing field values, it is faster
-  // _not_ to load the entity from the store. Instead, create it fresh with
-  // `new Entity(...)`, set the fields that should be updated and save the
-  // entity back to the store. Fields that were not set or unset remain
-  // unchanged, allowing for partial updates to be applied.
-
-  // It is also possible to access smart contracts from mappings. For
-  // example, the contract that has emitted the event can be connected to
-  // with:
-  //
-  // let contract = Contract.bind(event.address)
-  //
-  // The following functions can then be called on this contract to access
-  // state variables and other data:
-  //
-  // - contract.balanceOf(...)
-  // - contract.baseURI(...)
-  // - contract.getApproved(...)
-  // - contract.getFeeBps(...)
-  // - contract.getFeeRecipients(...)
-  // - contract.getFees(...)
-  // - contract.getFoundationTreasury(...)
-  // - contract.getHasCreatorMintedIPFSHash(...)
-  // - contract.getNFTMarket(...)
-  // - contract.getNextTokenId(...)
-  // - contract.getTokenCreatorPaymentAddress(...)
-  // - contract.getTokenIPFSPath(...)
-  // - contract.isApprovedForAll(...)
-  // - contract.mint(...)
-  // - contract.mintAndApproveMarket(...)
-  // - contract.mintWithCreatorPaymentAddress(...)
-  // - contract.mintWithCreatorPaymentAddressAndApproveMarket(...)
-  // - contract.mintWithCreatorPaymentFactory(...)
-  // - contract.mintWithCreatorPaymentFactoryAndApproveMarket(...)
-  // - contract.name(...)
-  // - contract.ownerOf(...)
-  // - contract.supportsInterface(...)
-  // - contract.symbol(...)
-  // - contract.tokenByIndex(...)
-  // - contract.tokenCreator(...)
-  // - contract.tokenOfOwnerByIndex(...)
-  // - contract.tokenURI(...)
-  // - contract.totalSupply(...)
-  // - contract.whitelisted(...)
+  //token.owner = event.params.to.toHexString();
+  token.save();
 }
 
-export function handleApprovalForAll(event: ApprovalForAll): void {}
+export function handleReserveAuctionCreated(event: AuctionEvent): void {
+  let auction = Auction.load(event.params.tokenId.toString());
+  if (!auction) {
+    auction = new Auction(event.params.tokenId.toString());
+    auction.seller = event.params.seller.toHexString();
+    auction.tokenId = event.params.tokenId;
+    auction.nftContract = event.params.nftContract.toHexString();
+    auction.auctionId = event.params.auctionId;
+    auction.reservePrice = event.params.reservePrice;
+    // // let tokenContract = MarketContract.bind(event.address);
+    // let token = Minted.load(event.params.tokenId.toString());
+    // token.AuctionID = event.params.auctionId;
+  }
+  auction.save();
+}
 
-export function handleBaseURIUpdated(event: BaseURIUpdated): void {}
-
-export function handleMinted(event: Minted): void {}
-
-export function handleNFTCreatorMigrated(event: NFTCreatorMigrated): void {}
-
-export function handleNFTMarketUpdated(event: NFTMarketUpdated): void {}
-
-export function handleNFTMetadataUpdated(event: NFTMetadataUpdated): void {}
-
-export function handleNFTOwnerMigrated(event: NFTOwnerMigrated): void {}
-
-export function handlePaymentAddressMigrated(
-  event: PaymentAddressMigrated
-): void {}
-
-export function handleTokenCreatorPaymentAddressSet(
-  event: TokenCreatorPaymentAddressSet
-): void {}
-
-export function handleTokenCreatorUpdated(event: TokenCreatorUpdated): void {}
-
-export function handleTokenIPFSPathUpdated(event: TokenIPFSPathUpdated): void {}
-
-export function handleTransfer(event: Transfer): void {}
-
-export function handleUpdated(event: Updated): void {}
+export function handleReserveAuctionBidPlaced(event: BidsEvent): void {
+  let bids = Bid.load(event.params.auctionId.toString());
+  if (!bids) {
+    bids = new Bid(event.params.auctionId.toString());
+    bids.auctionId = event.params.auctionId;
+    bids.bidder = event.params.bidder.toHexString();
+    bids.amount = event.params.amount;
+    bids.endTime = event.params.endTime;
+    // let marketContract = MarketContract.bind(event.address);
+  }
+  bids.save();
+}

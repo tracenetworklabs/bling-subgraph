@@ -1,6 +1,6 @@
 specVersion: 0.0.2
 schema:
-  file: ./schema.graphql
+  file: schema.graphql
 dataSources:
   - kind: ethereum/contract
     name: NFT
@@ -17,11 +17,11 @@ dataSources:
         - Minted
       abis:
         - name: NFT
-          file: ./abis/NFT.json
+          file: NFT\abis\NFT.json
       eventHandlers:
         - event: Minted(indexed address,indexed uint256,indexed string,string)
           handler: handleMinted
-      file: ./src/mapping.ts
+      file: NFT\NFT.wasm
   - kind: ethereum/contract
     name: Market
     network: mumbai
@@ -38,10 +38,11 @@ dataSources:
         - Bid
       abis:
         - name: Market
-          file: ./abis/Market.json
+          file: Market\abis\Market.json
       eventHandlers:
-        - event: ReserveAuctionCreated(indexed address,indexed address,indexed uint256,uint256,uint256)
+        - event: ReserveAuctionCreated(indexed address,indexed address,indexed
+            uint256,uint256,uint256)
           handler: handleReserveAuctionCreated
         - event: ReserveAuctionBidPlaced(indexed uint256,indexed address,uint256,uint256)
-          handler: handleReserveAuctionBidPlaced 
-      file: ./src/mapping.ts
+          handler: handleReserveAuctionBidPlaced
+      file: NFT\NFT.wasm
