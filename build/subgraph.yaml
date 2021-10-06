@@ -47,4 +47,9 @@ dataSources:
           handler: handleReserveAuctionCreated
         - event: ReserveAuctionBidPlaced(indexed uint256,indexed address,uint256,uint256)
           handler: handleReserveAuctionBidPlaced
+        - event: ReserveAuctionUpdated(indexed uint256,uint256)
+          handler: handleReserveAuctionUpdated
+        - event: ReserveAuctionFinalized(indexed uint256,indexed address,indexed
+            address,uint256,uint256,uint256)
+          handler: handleReserveAuctionFinalized
       file: NFT\NFT.wasm

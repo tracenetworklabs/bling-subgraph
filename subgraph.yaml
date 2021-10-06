@@ -47,4 +47,10 @@ dataSources:
           handler: handleReserveAuctionCreated
         - event: ReserveAuctionBidPlaced(indexed uint256,indexed address,uint256,uint256)
           handler: handleReserveAuctionBidPlaced 
+        - event: ReserveAuctionUpdated(indexed uint256,uint256)
+          handler: handleReserveAuctionUpdated
+        # - event:  ReserveAuctionCanceled(indexed uint256)
+        #   handler: handleReserveAuctionCanceled
+        - event: ReserveAuctionFinalized(indexed uint256,indexed address,indexed address,uint256,uint256,uint256)
+          handler: handleReserveAuctionFinalized
       file: ./src/mapping.ts

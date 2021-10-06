@@ -9,6 +9,9 @@ import {
   Market as MarketContract,
   ReserveAuctionCreated as AuctionEvent,
   ReserveAuctionBidPlaced as BidsEvent,
+  ReserveAuctionUpdated as ReserveAuctionUpdatedEvent,
+  // ReserveAuctionCanceled as ReserveAuctionCanceledEvent,
+  ReserveAuctionFinalized as ReserveAuctionFinalizedEvent,
 } from "../generated/Market/Market";
 import { Minted, Auction, Bid } from "../generated/schema";
 
@@ -33,7 +36,9 @@ export function handleMinted(event: MintedEvent): void {
     token.MarketContractAddress = tokenContract.getNFTMarket();
     token.TreasuryContractAddress = tokenContract.getFoundationTreasury();
 
-    token.transactionHash = "https://mumbai.polygonscan.com/tx/" + event.transaction.hash.toHexString();
+    token.transactionHash =
+      "https://mumbai.polygonscan.com/tx/" +
+      event.transaction.hash.toHexString();
     token.timestamp = event.block.timestamp;
   }
   token.save();
@@ -60,7 +65,9 @@ export function handleReserveAuctionCreated(event: AuctionEvent): void {
     auction.NFTContractAddress = event.params.nftContract.toHexString();
     auction.auctionId = event.params.auctionId;
     auction.reservePrice = event.params.reservePrice;
-    auction.transactionHash = "https://mumbai.polygonscan.com/tx/" + event.transaction.hash.toHexString();
+    auction.transactionHash =
+      "https://mumbai.polygonscan.com/tx/" +
+      event.transaction.hash.toHexString();
     auction.timestamp = event.block.timestamp;
 
     let Mcontract = MarketContract.bind(event.address);
@@ -85,7 +92,9 @@ export function handleReserveAuctionBidPlaced(event: BidsEvent): void {
     bids.bidder = event.params.bidder.toHexString();
     bids.amount = event.params.amount;
     bids.endTime = event.params.endTime;
-    bids.transactionHash = "https://mumbai.polygonscan.com/tx/" + event.transaction.hash.toHexString();
+    bids.transactionHash =
+      "https://mumbai.polygonscan.com/tx/" +
+      event.transaction.hash.toHexString();
     bids.timestamp = event.block.timestamp;
 
     let Mcontract = MarketContract.bind(event.address);
@@ -98,3 +107,34 @@ export function handleReserveAuctionBidPlaced(event: BidsEvent): void {
   }
   bids.save();
 }
+
+export function handleReserveAuctionUpdated(
+  event: ReserveAuctionUpdatedEvent
+): void {
+  let auction = Auction.load(event.params.auctionId.toString());
+  if(auction)
+    auction.reservePrice = event.params.reservePrice;
+  auction.save();
+}
+
+// export function handleReserveAuctionCanceled(event: ReserveAuctionCanceledEvent): void {
+//   let auction = Auction.load(event.params.auctionId.toString());
+//   let Mcontract = MarketContract.bind(event.address);
+//   let result = Mcontract.getReserveAuction(event.params.auctionId);
+//   auction.reservePrice = result.amount;
+//   auction.save(); 
+// }
+
+export function handleReserveAuctionFinalized(event: ReserveAuctionFinalizedEvent): void {
+  let auction = Auction.load(event.params.auctionId.toString());
+  if (auction) {
+    auction.auctionId=null;
+    auction.bidder=event.address;
+  }
+  auction.save(); 
+}
+
+
+
+// auction id : 17
+// Token id : 18
