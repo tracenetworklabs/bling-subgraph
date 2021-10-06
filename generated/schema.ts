@@ -172,13 +172,13 @@ export class Auction extends Entity {
     this.set("tokenId", Value.fromBigInt(value));
   }
 
-  get nftContract(): string {
-    let value = this.get("nftContract");
+  get NFTContractAddress(): string {
+    let value = this.get("NFTContractAddress");
     return value.toString();
   }
 
-  set nftContract(value: string) {
-    this.set("nftContract", Value.fromString(value));
+  set NFTContractAddress(value: string) {
+    this.set("NFTContractAddress", Value.fromString(value));
   }
 
   get seller(): string {
@@ -206,6 +206,33 @@ export class Auction extends Entity {
 
   set reservePrice(value: BigInt) {
     this.set("reservePrice", Value.fromBigInt(value));
+  }
+
+  get startTime(): BigInt {
+    let value = this.get("startTime");
+    return value.toBigInt();
+  }
+
+  set startTime(value: BigInt) {
+    this.set("startTime", Value.fromBigInt(value));
+  }
+
+  get endTime(): BigInt {
+    let value = this.get("endTime");
+    return value.toBigInt();
+  }
+
+  set endTime(value: BigInt) {
+    this.set("endTime", Value.fromBigInt(value));
+  }
+
+  get bidder(): Bytes {
+    let value = this.get("bidder");
+    return value.toBytes();
+  }
+
+  set bidder(value: Bytes) {
+    this.set("bidder", Value.fromBytes(value));
   }
 }
 

@@ -54,10 +54,16 @@ export function handleReserveAuctionCreated(event: AuctionEvent): void {
     auction = new Auction(event.params.tokenId.toString());
     auction.seller = event.params.seller.toHexString();
     auction.tokenId = event.params.tokenId;
-    auction.nftContract = event.params.nftContract.toHexString();
+    auction.NFTContractAddress = event.params.nftContract.toHexString();
     auction.auctionId = event.params.auctionId;
     auction.reservePrice = event.params.reservePrice;
-    // // let tokenContract = MarketContract.bind(event.address);
+
+    let Mcontract = MarketContract.bind(event.address);
+    let result = Mcontract.getReserveAuction(auction.auctionId);
+    auction.startTime = result.startTime;
+    auction.endTime = result.endTime;
+    auction.bidder = result.bidder;
+
     let token = Minted.load(event.params.tokenId.toString());
     token.auctionId = event.params.auctionId;
     token.owner = event.address;
@@ -74,7 +80,14 @@ export function handleReserveAuctionBidPlaced(event: BidsEvent): void {
     bids.bidder = event.params.bidder.toHexString();
     bids.amount = event.params.amount;
     bids.endTime = event.params.endTime;
-    // let marketContract = MarketContract.bind(event.address);
+    
+    let Mcontract = MarketContract.bind(event.address);
+    let result = Mcontract.getReserveAuction(event.params.auctionId);
+
+    let auction = Auction.load(result.tokenId.toString());
+    auction.bidder = event.params.bidder;
+    auction.reservePrice = event.params.amount;
+    auction.save()
   }
   bids.save();
 }
