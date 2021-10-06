@@ -60,6 +60,8 @@ export function handleReserveAuctionCreated(event: AuctionEvent): void {
     auction.NFTContractAddress = event.params.nftContract.toHexString();
     auction.auctionId = event.params.auctionId;
     auction.reservePrice = event.params.reservePrice;
+    auction.transactionHash = "https://mumbai.polygonscan.com/tx/" + event.transaction.hash.toHexString();
+    auction.timestamp = event.block.timestamp;
 
     let Mcontract = MarketContract.bind(event.address);
     let result = Mcontract.getReserveAuction(auction.auctionId);
@@ -83,6 +85,8 @@ export function handleReserveAuctionBidPlaced(event: BidsEvent): void {
     bids.bidder = event.params.bidder.toHexString();
     bids.amount = event.params.amount;
     bids.endTime = event.params.endTime;
+    bids.transactionHash = "https://mumbai.polygonscan.com/tx/" + event.transaction.hash.toHexString();
+    bids.timestamp = event.block.timestamp;
 
     let Mcontract = MarketContract.bind(event.address);
     let result = Mcontract.getReserveAuction(event.params.auctionId);
