@@ -78,6 +78,15 @@ export class Minted extends Entity {
     this.set("owner", Value.fromBytes(value));
   }
 
+  get auctionId(): BigInt {
+    let value = this.get("auctionId");
+    return value.toBigInt();
+  }
+
+  set auctionId(value: BigInt) {
+    this.set("auctionId", Value.fromBigInt(value));
+  }
+
   get tokenURI(): string {
     let value = this.get("tokenURI");
     return value.toString();
@@ -94,6 +103,33 @@ export class Minted extends Entity {
 
   set NFTInfo(value: string) {
     this.set("NFTInfo", Value.fromString(value));
+  }
+
+  get NFTContractAddress(): Bytes {
+    let value = this.get("NFTContractAddress");
+    return value.toBytes();
+  }
+
+  set NFTContractAddress(value: Bytes) {
+    this.set("NFTContractAddress", Value.fromBytes(value));
+  }
+
+  get MarketContractAddress(): Bytes {
+    let value = this.get("MarketContractAddress");
+    return value.toBytes();
+  }
+
+  set MarketContractAddress(value: Bytes) {
+    this.set("MarketContractAddress", Value.fromBytes(value));
+  }
+
+  get TreasuryContractAddress(): Bytes {
+    let value = this.get("TreasuryContractAddress");
+    return value.toBytes();
+  }
+
+  set TreasuryContractAddress(value: Bytes) {
+    this.set("TreasuryContractAddress", Value.fromBytes(value));
   }
 }
 
