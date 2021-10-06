@@ -32,6 +32,9 @@ export function handleMinted(event: MintedEvent): void {
     token.NFTContractAddress = event.address;
     token.MarketContractAddress = tokenContract.getNFTMarket();
     token.TreasuryContractAddress = tokenContract.getFoundationTreasury();
+
+    token.transactionHash = "https://mumbai.polygonscan.com/tx/" + event.transaction.hash.toHexString();
+    token.timestamp = event.block.timestamp;
   }
   token.save();
 }
@@ -80,14 +83,14 @@ export function handleReserveAuctionBidPlaced(event: BidsEvent): void {
     bids.bidder = event.params.bidder.toHexString();
     bids.amount = event.params.amount;
     bids.endTime = event.params.endTime;
-    
+
     let Mcontract = MarketContract.bind(event.address);
     let result = Mcontract.getReserveAuction(event.params.auctionId);
 
     let auction = Auction.load(result.tokenId.toString());
     auction.bidder = event.params.bidder;
     auction.reservePrice = event.params.amount;
-    auction.save()
+    auction.save();
   }
   bids.save();
 }

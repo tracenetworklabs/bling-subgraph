@@ -131,6 +131,24 @@ export class Minted extends Entity {
   set TreasuryContractAddress(value: Bytes) {
     this.set("TreasuryContractAddress", Value.fromBytes(value));
   }
+
+  get transactionHash(): string {
+    let value = this.get("transactionHash");
+    return value.toString();
+  }
+
+  set transactionHash(value: string) {
+    this.set("transactionHash", Value.fromString(value));
+  }
+
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    return value.toBigInt();
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
+  }
 }
 
 export class Auction extends Entity {
