@@ -21,6 +21,9 @@ dataSources:
       eventHandlers:
         - event: Minted(indexed address,indexed uint256,indexed string,string)
           handler: handleMinted
+        - event: Updated(indexed address,indexed uint256,indexed string,string)
+          handler: handleUpdated 
+
       file: ./src/mapping.ts
   - kind: ethereum/contract
     name: Market

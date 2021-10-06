@@ -21,6 +21,8 @@ dataSources:
       eventHandlers:
         - event: Minted(indexed address,indexed uint256,indexed string,string)
           handler: handleMinted
+        - event: Updated(indexed address,indexed uint256,indexed string,string)
+          handler: handleUpdated
       file: NFT\NFT.wasm
   - kind: ethereum/contract
     name: Market

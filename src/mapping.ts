@@ -2,6 +2,7 @@ import { BigInt, ipfs, json } from "@graphprotocol/graph-ts";
 import {
   NFT as NFTContract,
   Minted as MintedEvent,
+  Updated as UpdatedEvent,
 } from "../generated/NFT/NFT";
 
 import {
@@ -22,9 +23,7 @@ export function handleMinted(event: MintedEvent): void {
     token.IPFSPath = tokenContract
       .getTokenIPFSPath(event.params.tokenId)
       .toString();
-    token.tokenURI = tokenContract
-      .tokenURI(event.params.tokenId)
-      .toString();
+    token.tokenURI = tokenContract.tokenURI(event.params.tokenId).toString();
     token.owner = tokenContract.ownerOf(event.params.tokenId);
     let temp = ipfs.cat(token.IPFSPath);
     token.NFTInfo = temp.toString();
@@ -34,6 +33,18 @@ export function handleMinted(event: MintedEvent): void {
     token.MarketContractAddress = tokenContract.getNFTMarket();
     token.TreasuryContractAddress = tokenContract.getFoundationTreasury();
   }
+  token.save();
+}
+
+export function handleUpdated(event: UpdatedEvent): void {
+  let token = Minted.load(event.params.tokenId.toString());
+  let tokenContract = NFTContract.bind(event.address);
+  token.IPFSPath = tokenContract
+    .getTokenIPFSPath(event.params.tokenId)
+    .toString();
+  token.tokenURI = tokenContract.tokenURI(event.params.tokenId).toString();
+  let temp = ipfs.cat(token.IPFSPath);
+  token.NFTInfo = temp.toString();
   token.save();
 }
 
