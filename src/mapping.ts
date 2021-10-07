@@ -69,6 +69,7 @@ export function handleReserveAuctionCreated(event: AuctionEvent): void {
       "https://mumbai.polygonscan.com/tx/" +
       event.transaction.hash.toHexString();
     auction.timestamp = event.block.timestamp;
+    auction.bidList = [];
 
     let Mcontract = MarketContract.bind(event.address);
     let result = Mcontract.getReserveAuction(auction.auctionId);
@@ -86,9 +87,15 @@ export function handleReserveAuctionCreated(event: AuctionEvent): void {
 
 export function handleReserveAuctionBidPlaced(event: BidsEvent): void {
   let bids = Bid.load(event.params.auctionId.toString());
-  if (!bids) {
-    bids = new Bid(event.params.auctionId.toString());
-    bids.auctionId = event.params.auctionId;
+
+  let Mcontract = MarketContract.bind(event.address);
+  let result = Mcontract.getReserveAuction(event.params.auctionId);
+
+  let auction = Auction.load(result.tokenId.toString());
+
+  if (auction.bidList.length == 0) {
+    bids = new Bid(event.transaction.hash.toString());
+    bids.auctionId = event.params.auctionId.toString();
     bids.bidder = event.params.bidder.toHexString();
     bids.amount = event.params.amount;
     bids.endTime = event.params.endTime;
@@ -97,12 +104,29 @@ export function handleReserveAuctionBidPlaced(event: BidsEvent): void {
       event.transaction.hash.toHexString();
     bids.timestamp = event.block.timestamp;
 
-    let Mcontract = MarketContract.bind(event.address);
-    let result = Mcontract.getReserveAuction(event.params.auctionId);
-
-    let auction = Auction.load(result.tokenId.toString());
     auction.bidder = event.params.bidder;
     auction.reservePrice = event.params.amount;
+    bids.number = BigInt.fromI32(auction.bidList.length);
+
+    let temp = auction.bidList;
+    auction.bidList = temp.concat([bids.id]);
+    auction.save();
+  } else {
+    bids = new Bid(event.transaction.hash.toString());
+    bids.auctionId = event.params.auctionId.toString();
+    bids.bidder = event.params.bidder.toHexString();
+    bids.amount = event.params.amount;
+    bids.endTime = event.params.endTime;
+    bids.transactionHash =
+      "https://mumbai.polygonscan.com/tx/" +
+      event.transaction.hash.toHexString();
+    bids.timestamp = event.block.timestamp;
+
+    auction.bidder = event.params.bidder;
+    auction.reservePrice = event.params.amount;
+    bids.number = BigInt.fromI32(auction.bidList.length);
+    let temp = auction.bidList;
+    auction.bidList = temp.concat([bids.id]);
     auction.save();
   }
   bids.save();
@@ -112,8 +136,7 @@ export function handleReserveAuctionUpdated(
   event: ReserveAuctionUpdatedEvent
 ): void {
   let auction = Auction.load(event.params.auctionId.toString());
-  if(auction)
-    auction.reservePrice = event.params.reservePrice;
+  if (auction) auction.reservePrice = event.params.reservePrice;
   auction.save();
 }
 
@@ -122,19 +145,19 @@ export function handleReserveAuctionUpdated(
 //   let Mcontract = MarketContract.bind(event.address);
 //   let result = Mcontract.getReserveAuction(event.params.auctionId);
 //   auction.reservePrice = result.amount;
-//   auction.save(); 
+//   auction.save();
 // }
 
-export function handleReserveAuctionFinalized(event: ReserveAuctionFinalizedEvent): void {
+export function handleReserveAuctionFinalized(
+  event: ReserveAuctionFinalizedEvent
+): void {
   let auction = Auction.load(event.params.auctionId.toString());
   if (auction) {
-    auction.auctionId=null;
-    auction.bidder=event.address;
+    auction.auctionId = null;
+    auction.bidder = event.address;
   }
-  auction.save(); 
+  auction.save();
 }
-
-
 
 // auction id : 17
 // Token id : 18

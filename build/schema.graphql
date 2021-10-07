@@ -25,10 +25,12 @@ type Auction @entity {
   bidder: Bytes!
   transactionHash: String!
   timestamp: BigInt!
+  bidList: [Bid]!
 }
 type Bid @entity {
   id: ID!
-  auctionId: BigInt!
+  auctionId: Auction!
+  number: BigInt!
   bidder: String! # uint256
   amount: BigInt! # uint256
   endTime: BigInt! #uint256

@@ -270,6 +270,15 @@ export class Auction extends Entity {
   set timestamp(value: BigInt) {
     this.set("timestamp", Value.fromBigInt(value));
   }
+
+  get bidList(): Array<string | null> {
+    let value = this.get("bidList");
+    return value.toStringArray();
+  }
+
+  set bidList(value: Array<string | null>) {
+    this.set("bidList", Value.fromStringArray(value));
+  }
 }
 
 export class Bid extends Entity {
@@ -302,13 +311,22 @@ export class Bid extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get auctionId(): BigInt {
+  get auctionId(): string {
     let value = this.get("auctionId");
+    return value.toString();
+  }
+
+  set auctionId(value: string) {
+    this.set("auctionId", Value.fromString(value));
+  }
+
+  get number(): BigInt {
+    let value = this.get("number");
     return value.toBigInt();
   }
 
-  set auctionId(value: BigInt) {
-    this.set("auctionId", Value.fromBigInt(value));
+  set number(value: BigInt) {
+    this.set("number", Value.fromBigInt(value));
   }
 
   get bidder(): string {
