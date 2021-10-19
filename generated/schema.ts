@@ -51,13 +51,13 @@ export class Minted extends Entity {
     this.set("tokenID", Value.fromBigInt(value));
   }
 
-  get IPFSPath(): string {
-    let value = this.get("IPFSPath");
+  get ipfsHash(): string {
+    let value = this.get("ipfsHash");
     return value.toString();
   }
 
-  set IPFSPath(value: string) {
-    this.set("IPFSPath", Value.fromString(value));
+  set ipfsHash(value: string) {
+    this.set("ipfsHash", Value.fromString(value));
   }
 
   get creator(): Bytes {
@@ -78,13 +78,21 @@ export class Minted extends Entity {
     this.set("owner", Value.fromBytes(value));
   }
 
-  get auctionId(): BigInt {
-    let value = this.get("auctionId");
-    return value.toBigInt();
+  get auctionID(): string | null {
+    let value = this.get("auctionID");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
   }
 
-  set auctionId(value: BigInt) {
-    this.set("auctionId", Value.fromBigInt(value));
+  set auctionID(value: string | null) {
+    if (value === null) {
+      this.unset("auctionID");
+    } else {
+      this.set("auctionID", Value.fromString(value as string));
+    }
   }
 
   get tokenURI(): string {
@@ -96,13 +104,13 @@ export class Minted extends Entity {
     this.set("tokenURI", Value.fromString(value));
   }
 
-  get NFTInfo(): string {
-    let value = this.get("NFTInfo");
+  get nftInfo(): string {
+    let value = this.get("nftInfo");
     return value.toString();
   }
 
-  set NFTInfo(value: string) {
-    this.set("NFTInfo", Value.fromString(value));
+  set nftInfo(value: string) {
+    this.set("nftInfo", Value.fromString(value));
   }
 
   get NFTContractAddress(): Bytes {
@@ -149,6 +157,15 @@ export class Minted extends Entity {
   set timestamp(value: BigInt) {
     this.set("timestamp", Value.fromBigInt(value));
   }
+
+  get action(): string {
+    let value = this.get("action");
+    return value.toString();
+  }
+
+  set action(value: string) {
+    this.set("action", Value.fromString(value));
+  }
 }
 
 export class Auction extends Entity {
@@ -181,13 +198,13 @@ export class Auction extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get tokenId(): BigInt {
+  get tokenId(): string {
     let value = this.get("tokenId");
-    return value.toBigInt();
+    return value.toString();
   }
 
-  set tokenId(value: BigInt) {
-    this.set("tokenId", Value.fromBigInt(value));
+  set tokenId(value: string) {
+    this.set("tokenId", Value.fromString(value));
   }
 
   get NFTContractAddress(): string {
@@ -208,13 +225,13 @@ export class Auction extends Entity {
     this.set("seller", Value.fromString(value));
   }
 
-  get auctionId(): BigInt {
-    let value = this.get("auctionId");
+  get auctionID(): BigInt {
+    let value = this.get("auctionID");
     return value.toBigInt();
   }
 
-  set auctionId(value: BigInt) {
-    this.set("auctionId", Value.fromBigInt(value));
+  set auctionID(value: BigInt) {
+    this.set("auctionID", Value.fromBigInt(value));
   }
 
   get reservePrice(): BigInt {
@@ -279,6 +296,15 @@ export class Auction extends Entity {
   set bidList(value: Array<string | null>) {
     this.set("bidList", Value.fromStringArray(value));
   }
+
+  get action(): string {
+    let value = this.get("action");
+    return value.toString();
+  }
+
+  set action(value: string) {
+    this.set("action", Value.fromString(value));
+  }
 }
 
 export class Bid extends Entity {
@@ -311,13 +337,13 @@ export class Bid extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get auctionId(): string {
-    let value = this.get("auctionId");
+  get auctionID(): string {
+    let value = this.get("auctionID");
     return value.toString();
   }
 
-  set auctionId(value: string) {
-    this.set("auctionId", Value.fromString(value));
+  set auctionID(value: string) {
+    this.set("auctionID", Value.fromString(value));
   }
 
   get number(): BigInt {
@@ -372,5 +398,14 @@ export class Bid extends Entity {
 
   set timestamp(value: BigInt) {
     this.set("timestamp", Value.fromBigInt(value));
+  }
+
+  get action(): string {
+    let value = this.get("action");
+    return value.toString();
+  }
+
+  set action(value: string) {
+    this.set("action", Value.fromString(value));
   }
 }

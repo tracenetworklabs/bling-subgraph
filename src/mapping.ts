@@ -21,17 +21,16 @@ export function handleMinted(event: MintedEvent): void {
     token = new Minted(event.params.tokenId.toString());
     token.creator = event.params.creator;
     token.tokenID = event.params.tokenId;
-    //token.IPFSPath = event.params.tokenIPFSPath.toString();
+    //token.ipfsHash = event.params.tokenIPFSPath.toString();
     let tokenContract = NFTContract.bind(event.address);
-    token.IPFSPath = tokenContract
+    token.ipfsHash = tokenContract
       .getTokenIPFSPath(event.params.tokenId)
       .toString();
     token.tokenURI = tokenContract.tokenURI(event.params.tokenId).toString();
     token.owner = tokenContract.ownerOf(event.params.tokenId);
-    let temp = ipfs.cat(token.IPFSPath);
-    token.NFTInfo = temp.toString();
+    let temp = ipfs.cat(token.ipfsHash);
+    token.nftInfo = temp.toString();
 
-    token.auctionId = null;
     token.NFTContractAddress = event.address;
     token.MarketContractAddress = tokenContract.getNFTMarket();
     token.TreasuryContractAddress = tokenContract.getFoundationTreasury();
@@ -40,6 +39,8 @@ export function handleMinted(event: MintedEvent): void {
       "https://mumbai.polygonscan.com/tx/" +
       event.transaction.hash.toHexString();
     token.timestamp = event.block.timestamp;
+
+    token.action = "Token Minted"
   }
   token.save();
 }
@@ -47,38 +48,39 @@ export function handleMinted(event: MintedEvent): void {
 export function handleUpdated(event: UpdatedEvent): void {
   let token = Minted.load(event.params.tokenId.toString());
   let tokenContract = NFTContract.bind(event.address);
-  token.IPFSPath = tokenContract
+  token.ipfsHash = tokenContract
     .getTokenIPFSPath(event.params.tokenId)
     .toString();
   token.tokenURI = tokenContract.tokenURI(event.params.tokenId).toString();
-  let temp = ipfs.cat(token.IPFSPath);
-  token.NFTInfo = temp.toString();
+  let temp = ipfs.cat(token.ipfsHash);
+  token.nftInfo = temp.toString();
   token.save();
 }
 
 export function handleReserveAuctionCreated(event: AuctionEvent): void {
-  let auction = Auction.load(event.params.tokenId.toString());
+  let auction = Auction.load(event.params.auctionId.toString());
   if (!auction) {
-    auction = new Auction(event.params.tokenId.toString());
+    auction = new Auction(event.params.auctionId.toString());
     auction.seller = event.params.seller.toHexString();
-    auction.tokenId = event.params.tokenId;
+    auction.tokenId = event.params.tokenId.toString();
     auction.NFTContractAddress = event.params.nftContract.toHexString();
-    auction.auctionId = event.params.auctionId;
+    auction.auctionID = event.params.auctionId;
     auction.reservePrice = event.params.reservePrice;
     auction.transactionHash =
       "https://mumbai.polygonscan.com/tx/" +
       event.transaction.hash.toHexString();
     auction.timestamp = event.block.timestamp;
     auction.bidList = [];
+    auction.action = "Auction Started";
 
     let Mcontract = MarketContract.bind(event.address);
-    let result = Mcontract.getReserveAuction(auction.auctionId);
+    let result = Mcontract.getReserveAuction(auction.auctionID);
     auction.startTime = result.startTime;
     auction.endTime = result.endTime;
     auction.bidder = result.bidder;
 
     let token = Minted.load(event.params.tokenId.toString());
-    token.auctionId = event.params.auctionId;
+    token.auctionID = event.params.auctionId.toString();
     token.owner = event.address;
     token.save();
   }
@@ -88,14 +90,11 @@ export function handleReserveAuctionCreated(event: AuctionEvent): void {
 export function handleReserveAuctionBidPlaced(event: BidsEvent): void {
   let bids = Bid.load(event.params.auctionId.toString());
 
-  let Mcontract = MarketContract.bind(event.address);
-  let result = Mcontract.getReserveAuction(event.params.auctionId);
-
-  let auction = Auction.load(result.tokenId.toString());
+  let auction = Auction.load(event.params.auctionId.toString());
 
   if (auction.bidList.length == 0) {
     bids = new Bid(event.transaction.hash.toString());
-    bids.auctionId = event.params.auctionId.toString();
+    bids.auctionID = event.params.auctionId.toString();
     bids.bidder = event.params.bidder.toHexString();
     bids.amount = event.params.amount;
     bids.endTime = event.params.endTime;
@@ -103,6 +102,7 @@ export function handleReserveAuctionBidPlaced(event: BidsEvent): void {
       "https://mumbai.polygonscan.com/tx/" +
       event.transaction.hash.toHexString();
     bids.timestamp = event.block.timestamp;
+    bids.action = "Place a bid";
 
     auction.bidder = event.params.bidder;
     auction.reservePrice = event.params.amount;
@@ -113,7 +113,7 @@ export function handleReserveAuctionBidPlaced(event: BidsEvent): void {
     auction.save();
   } else {
     bids = new Bid(event.transaction.hash.toString());
-    bids.auctionId = event.params.auctionId.toString();
+    bids.auctionID = event.params.auctionId.toString();
     bids.bidder = event.params.bidder.toHexString();
     bids.amount = event.params.amount;
     bids.endTime = event.params.endTime;
@@ -121,6 +121,7 @@ export function handleReserveAuctionBidPlaced(event: BidsEvent): void {
       "https://mumbai.polygonscan.com/tx/" +
       event.transaction.hash.toHexString();
     bids.timestamp = event.block.timestamp;
+    bids.action = "Place a bid";
 
     auction.bidder = event.params.bidder;
     auction.reservePrice = event.params.amount;
@@ -141,9 +142,9 @@ export function handleReserveAuctionUpdated(
 }
 
 // export function handleReserveAuctionCanceled(event: ReserveAuctionCanceledEvent): void {
-//   let auction = Auction.load(event.params.auctionId.toString());
+//   let auction = Auction.load(event.params.auctionID.toString());
 //   let Mcontract = MarketContract.bind(event.address);
-//   let result = Mcontract.getReserveAuction(event.params.auctionId);
+//   let result = Mcontract.getReserveAuction(event.params.auctionID);
 //   auction.reservePrice = result.amount;
 //   auction.save();
 // }
@@ -153,10 +154,14 @@ export function handleReserveAuctionFinalized(
 ): void {
   let auction = Auction.load(event.params.auctionId.toString());
   if (auction) {
-    auction.auctionId = null;
-    auction.bidder = event.address;
+    auction.action = "Auction ended";
+    auction.bidder = event.params.bidder;
+
+    let token = Minted.load(auction.tokenId.toString());
+    token.owner = event.params.bidder;
+    token.save();
+    auction.save();
   }
-  auction.save();
 }
 
 // auction id : 17

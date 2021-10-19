@@ -1,24 +1,25 @@
 type Minted @entity {
   id: ID!
   tokenID: BigInt!
-  IPFSPath: String!
+  ipfsHash: String!
   creator: Bytes!
   owner: Bytes!
-  auctionId: BigInt!
+  auctionID: Auction
   tokenURI: String!
-  NFTInfo: String!
+  nftInfo: String!
   NFTContractAddress: Bytes!
   MarketContractAddress: Bytes!
   TreasuryContractAddress: Bytes!
   transactionHash: String!
   timestamp: BigInt!
+  action: String!
 }
 type Auction @entity {
   id: ID!
-  tokenId: BigInt!
+  tokenId: Minted!
   NFTContractAddress: String!
   seller: String!
-  auctionId: BigInt!
+  auctionID: BigInt!
   reservePrice: BigInt!
   startTime: BigInt!
   endTime: BigInt!
@@ -26,14 +27,16 @@ type Auction @entity {
   transactionHash: String!
   timestamp: BigInt!
   bidList: [Bid]!
+  action: String!
 }
 type Bid @entity {
   id: ID!
-  auctionId: Auction!
+  auctionID: Auction!
   number: BigInt!
   bidder: String! # uint256
   amount: BigInt! # uint256
   endTime: BigInt! #uint256
   transactionHash: String!
   timestamp: BigInt!
+  action: String!
 }
