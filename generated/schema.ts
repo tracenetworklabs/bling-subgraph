@@ -78,8 +78,25 @@ export class Minted extends Entity {
     this.set("owner", Value.fromBytes(value));
   }
 
-  get auctionID(): string | null {
+  get auctionID(): BigInt | null {
     let value = this.get("auctionID");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set auctionID(value: BigInt | null) {
+    if (value === null) {
+      this.unset("auctionID");
+    } else {
+      this.set("auctionID", Value.fromBigInt(value as BigInt));
+    }
+  }
+
+  get auctionDetails(): string | null {
+    let value = this.get("auctionDetails");
     if (value === null || value.kind == ValueKind.NULL) {
       return null;
     } else {
@@ -87,11 +104,11 @@ export class Minted extends Entity {
     }
   }
 
-  set auctionID(value: string | null) {
+  set auctionDetails(value: string | null) {
     if (value === null) {
-      this.unset("auctionID");
+      this.unset("auctionDetails");
     } else {
-      this.set("auctionID", Value.fromString(value as string));
+      this.set("auctionDetails", Value.fromString(value as string));
     }
   }
 

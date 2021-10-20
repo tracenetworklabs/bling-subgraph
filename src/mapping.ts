@@ -1,4 +1,13 @@
-import { BigInt, ipfs, json } from "@graphprotocol/graph-ts";
+import {
+  BigInt,
+  ByteArray,
+  Bytes,
+  ipfs,
+  json,
+  JSONValue,
+  JSONValueKind,
+  Value,
+} from "@graphprotocol/graph-ts";
 import {
   NFT as NFTContract,
   Minted as MintedEvent,
@@ -40,7 +49,7 @@ export function handleMinted(event: MintedEvent): void {
       event.transaction.hash.toHexString();
     token.timestamp = event.block.timestamp;
 
-    token.action = "Token Minted"
+    token.action = "Token Minted";
   }
   token.save();
 }
@@ -80,7 +89,8 @@ export function handleReserveAuctionCreated(event: AuctionEvent): void {
     auction.bidder = result.bidder;
 
     let token = Minted.load(event.params.tokenId.toString());
-    token.auctionID = event.params.auctionId.toString();
+    token.auctionID = event.params.auctionId;
+    token.auctionDetails = event.params.auctionId.toString();
     token.owner = event.address;
     token.save();
   }
