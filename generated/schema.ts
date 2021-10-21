@@ -78,21 +78,13 @@ export class Minted extends Entity {
     this.set("owner", Value.fromBytes(value));
   }
 
-  get auctionID(): BigInt | null {
+  get auctionID(): string {
     let value = this.get("auctionID");
-    if (value === null || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBigInt();
-    }
+    return value.toString();
   }
 
-  set auctionID(value: BigInt | null) {
-    if (value === null) {
-      this.unset("auctionID");
-    } else {
-      this.set("auctionID", Value.fromBigInt(value as BigInt));
-    }
+  set auctionID(value: string) {
+    this.set("auctionID", Value.fromString(value));
   }
 
   get auctionDetails(): string | null {

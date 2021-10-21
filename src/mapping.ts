@@ -38,7 +38,11 @@ export function handleMinted(event: MintedEvent): void {
     token.tokenURI = tokenContract.tokenURI(event.params.tokenId).toString();
     token.owner = tokenContract.ownerOf(event.params.tokenId);
     let temp = ipfs.cat(token.ipfsHash);
+    if(temp == null)
+      temp = ipfs.cat(token.ipfsHash);
+      
     token.nftInfo = temp.toString();
+    token.auctionID = "0";
 
     token.NFTContractAddress = event.address;
     token.MarketContractAddress = tokenContract.getNFTMarket();
@@ -89,7 +93,7 @@ export function handleReserveAuctionCreated(event: AuctionEvent): void {
     auction.bidder = result.bidder;
 
     let token = Minted.load(event.params.tokenId.toString());
-    token.auctionID = event.params.auctionId;
+    token.auctionID = event.params.auctionId.toString();
     token.auctionDetails = event.params.auctionId.toString();
     token.owner = event.address;
     token.save();

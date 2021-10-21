@@ -4,7 +4,7 @@ type Minted @entity {
   ipfsHash: String!
   creator: Bytes!
   owner: Bytes!
-  auctionID: BigInt
+  auctionID: String!
   auctionDetails: Auction
   tokenURI: String!
   nftInfo: String!
