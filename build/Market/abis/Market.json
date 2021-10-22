@@ -397,7 +397,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "stateDate",
+        "name": "startDate",
         "type": "uint256"
       },
       {

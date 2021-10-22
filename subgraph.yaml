@@ -29,7 +29,7 @@ dataSources:
     name: Market
     network: mumbai
     source:
-      address: "0x484fbb138D8E44558c11371E3Cf075Aa9AFFC365"
+      address: "0x9eF46B8aeBC7160A413050B5DACfeeF8367c6233"
       abi: Market
       startBlock: 19494963
     mapping:
