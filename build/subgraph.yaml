@@ -30,7 +30,7 @@ dataSources:
     source:
       address: "0x9eF46B8aeBC7160A413050B5DACfeeF8367c6233"
       abi: Market
-      startBlock: 19494963
+      startBlock: 20484898
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
