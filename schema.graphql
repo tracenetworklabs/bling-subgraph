@@ -11,9 +11,9 @@ type Minted @entity {
   NFTContractAddress: Bytes!
   MarketContractAddress: Bytes!
   TreasuryContractAddress: Bytes!
-  transactionHash: String!
-  timestamp: BigInt!
-  action: String!
+  NFTtransactionHash: String!
+  NFTtimestamp: BigInt!
+  NFTaction: String!
 }
 type Auction @entity {
   id: ID!
@@ -25,10 +25,10 @@ type Auction @entity {
   startTime: BigInt!
   endTime: BigInt!
   bidder: Bytes!
-  transactionHash: String!
-  timestamp: BigInt!
+  auctionTransactionHash: String!
+  auctionTimestamp: BigInt!
   bidList: [Bid]!
-  action: String!
+  auctionAction: String!
 }
 type Bid @entity {
   id: ID!
