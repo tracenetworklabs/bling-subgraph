@@ -207,13 +207,13 @@ export class Auction extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get tokenId(): string {
-    let value = this.get("tokenId");
+  get tokenDetails(): string {
+    let value = this.get("tokenDetails");
     return value.toString();
   }
 
-  set tokenId(value: string) {
-    this.set("tokenId", Value.fromString(value));
+  set tokenDetails(value: string) {
+    this.set("tokenDetails", Value.fromString(value));
   }
 
   get NFTContractAddress(): string {

@@ -855,7 +855,7 @@ export class CreateReserveAuctionCall__Inputs {
     return this._call.inputValues[2].value.toBigInt();
   }
 
-  get stateDate(): BigInt {
+  get startDate(): BigInt {
     return this._call.inputValues[3].value.toBigInt();
   }
 
