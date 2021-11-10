@@ -20,7 +20,7 @@ type Auction @entity {
   tokenId: Minted!
   NFTContractAddress: String!
   seller: String!
-  auctionID: BigInt!
+  auctionID: String!
   reservePrice: BigInt!
   startTime: BigInt!
   endTime: BigInt!

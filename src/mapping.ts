@@ -19,7 +19,7 @@ import {
   ReserveAuctionCreated as AuctionEvent,
   ReserveAuctionBidPlaced as BidsEvent,
   ReserveAuctionUpdated as ReserveAuctionUpdatedEvent,
-  // ReserveAuctionCanceled as ReserveAuctionCanceledEvent,
+  ReserveAuctionCanceled as ReserveAuctionCanceledEvent,
   ReserveAuctionFinalized as ReserveAuctionFinalizedEvent,
 } from "../generated/Market/Market";
 import { Minted, Auction, Bid } from "../generated/schema";
@@ -39,12 +39,10 @@ export function handleMinted(event: MintedEvent): void {
     token.owner = tokenContract.ownerOf(event.params.tokenId);
     let temp = ipfs.cat(token.ipfsHash);
 
-    if(temp == null)
-      temp = ipfs.cat(token.ipfsHash);
+    if (temp == null) temp = ipfs.cat(token.ipfsHash);
 
-    if(temp == null && token.ipfsHash != null)
-      temp = ipfs.cat(token.ipfsHash);
-    
+    if (temp == null && token.ipfsHash != null) temp = ipfs.cat(token.ipfsHash);
+
     token.auctionID = "0";
 
     token.NFTContractAddress = event.address;
@@ -58,10 +56,11 @@ export function handleMinted(event: MintedEvent): void {
 
     token.action = "Token Minted";
 
-    if(temp == null)
-      temp = ipfs.cat(token.ipfsHash);
+    if (temp == null) temp = ipfs.cat(token.ipfsHash);
 
-    token.nftInfo = temp.toString();  
+    if (temp == null) temp = ipfs.cat(token.ipfsHash);
+
+    token.nftInfo = temp.toString();
   }
   token.save();
 }
@@ -85,7 +84,7 @@ export function handleReserveAuctionCreated(event: AuctionEvent): void {
     auction.seller = event.params.seller.toHexString();
     auction.tokenId = event.params.tokenId.toString();
     auction.NFTContractAddress = event.params.nftContract.toHexString();
-    auction.auctionID = event.params.auctionId;
+    auction.auctionID = event.params.auctionId.toString();
     auction.reservePrice = event.params.reservePrice;
     auction.transactionHash =
       "https://mumbai.polygonscan.com/tx/" +
@@ -95,7 +94,7 @@ export function handleReserveAuctionCreated(event: AuctionEvent): void {
     auction.action = "Auction Started";
 
     let Mcontract = MarketContract.bind(event.address);
-    let result = Mcontract.getReserveAuction(auction.auctionID);
+    let result = Mcontract.getReserveAuction(event.params.auctionId);
     auction.startTime = result.startTime;
     auction.endTime = result.endTime;
     auction.bidder = result.bidder;
@@ -163,13 +162,16 @@ export function handleReserveAuctionUpdated(
   auction.save();
 }
 
-// export function handleReserveAuctionCanceled(event: ReserveAuctionCanceledEvent): void {
-//   let auction = Auction.load(event.params.auctionID.toString());
-//   let Mcontract = MarketContract.bind(event.address);
-//   let result = Mcontract.getReserveAuction(event.params.auctionID);
-//   auction.reservePrice = result.amount;
-//   auction.save();
-// }
+export function handleReserveAuctionCanceled(event: ReserveAuctionCanceledEvent): void {
+  let auction = Auction.load(event.params.auctionId.toString());
+  let Mcontract = MarketContract.bind(event.address);
+  let result = Mcontract.getReserveAuction(event.params.auctionId);
+  let token = Minted.load(result.tokenId.toString());
+  token.auctionID = "0";
+  auction.action = "Auction Cancelled";
+  auction.auctionID = "0";
+  auction.save();
+}
 
 export function handleReserveAuctionFinalized(
   event: ReserveAuctionFinalizedEvent

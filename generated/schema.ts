@@ -207,13 +207,13 @@ export class Auction extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get tokenDetails(): string {
-    let value = this.get("tokenDetails");
+  get tokenId(): string {
+    let value = this.get("tokenId");
     return value.toString();
   }
 
-  set tokenDetails(value: string) {
-    this.set("tokenDetails", Value.fromString(value));
+  set tokenId(value: string) {
+    this.set("tokenId", Value.fromString(value));
   }
 
   get NFTContractAddress(): string {
@@ -234,13 +234,13 @@ export class Auction extends Entity {
     this.set("seller", Value.fromString(value));
   }
 
-  get auctionID(): BigInt {
+  get auctionID(): string {
     let value = this.get("auctionID");
-    return value.toBigInt();
+    return value.toString();
   }
 
-  set auctionID(value: BigInt) {
-    this.set("auctionID", Value.fromBigInt(value));
+  set auctionID(value: string) {
+    this.set("auctionID", Value.fromString(value));
   }
 
   get reservePrice(): BigInt {
