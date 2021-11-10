@@ -63,3 +63,10 @@ export function handleReserveAuctionBidPlaced(event: BidsEvent): void {
   }
   bids.save();
 }
+
+
+Treasury : 0x7D17a8FD2248fb2C0d3EA44227AD37856588F270
+
+Master : 0x4dF8F60e0639304D7A3340d662Dfe9771e3A97Cd
+
+Collection : 0xf2e91114f7a56986CBf76ce4Cfc0a195CC8Fcb4D

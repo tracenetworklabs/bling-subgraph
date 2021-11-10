@@ -374,7 +374,7 @@ export class Updated__Params {
   }
 }
 
-export class NFT__getFeesResult {
+export class Collection__getFeesResult {
   value0: Array<Address>;
   value1: Array<BigInt>;
 
@@ -391,303 +391,9 @@ export class NFT__getFeesResult {
   }
 }
 
-export class NFT extends ethereum.SmartContract {
-  static bind(address: Address): NFT {
-    return new NFT("NFT", address);
-  }
-
-  balanceOf(owner: Address): BigInt {
-    let result = super.call("balanceOf", "balanceOf(address):(uint256)", [
-      ethereum.Value.fromAddress(owner)
-    ]);
-
-    return result[0].toBigInt();
-  }
-
-  try_balanceOf(owner: Address): ethereum.CallResult<BigInt> {
-    let result = super.tryCall("balanceOf", "balanceOf(address):(uint256)", [
-      ethereum.Value.fromAddress(owner)
-    ]);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  baseURI(): string {
-    let result = super.call("baseURI", "baseURI():(string)", []);
-
-    return result[0].toString();
-  }
-
-  try_baseURI(): ethereum.CallResult<string> {
-    let result = super.tryCall("baseURI", "baseURI():(string)", []);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toString());
-  }
-
-  getApproved(tokenId: BigInt): Address {
-    let result = super.call("getApproved", "getApproved(uint256):(address)", [
-      ethereum.Value.fromUnsignedBigInt(tokenId)
-    ]);
-
-    return result[0].toAddress();
-  }
-
-  try_getApproved(tokenId: BigInt): ethereum.CallResult<Address> {
-    let result = super.tryCall(
-      "getApproved",
-      "getApproved(uint256):(address)",
-      [ethereum.Value.fromUnsignedBigInt(tokenId)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddress());
-  }
-
-  getFeeBps(param0: BigInt): Array<BigInt> {
-    let result = super.call("getFeeBps", "getFeeBps(uint256):(uint256[])", [
-      ethereum.Value.fromUnsignedBigInt(param0)
-    ]);
-
-    return result[0].toBigIntArray();
-  }
-
-  try_getFeeBps(param0: BigInt): ethereum.CallResult<Array<BigInt>> {
-    let result = super.tryCall("getFeeBps", "getFeeBps(uint256):(uint256[])", [
-      ethereum.Value.fromUnsignedBigInt(param0)
-    ]);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigIntArray());
-  }
-
-  getFeeRecipients(id: BigInt): Array<Address> {
-    let result = super.call(
-      "getFeeRecipients",
-      "getFeeRecipients(uint256):(address[])",
-      [ethereum.Value.fromUnsignedBigInt(id)]
-    );
-
-    return result[0].toAddressArray();
-  }
-
-  try_getFeeRecipients(id: BigInt): ethereum.CallResult<Array<Address>> {
-    let result = super.tryCall(
-      "getFeeRecipients",
-      "getFeeRecipients(uint256):(address[])",
-      [ethereum.Value.fromUnsignedBigInt(id)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddressArray());
-  }
-
-  getFees(tokenId: BigInt): NFT__getFeesResult {
-    let result = super.call(
-      "getFees",
-      "getFees(uint256):(address[2],uint256[2])",
-      [ethereum.Value.fromUnsignedBigInt(tokenId)]
-    );
-
-    return new NFT__getFeesResult(
-      result[0].toAddressArray(),
-      result[1].toBigIntArray()
-    );
-  }
-
-  try_getFees(tokenId: BigInt): ethereum.CallResult<NFT__getFeesResult> {
-    let result = super.tryCall(
-      "getFees",
-      "getFees(uint256):(address[2],uint256[2])",
-      [ethereum.Value.fromUnsignedBigInt(tokenId)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(
-      new NFT__getFeesResult(
-        value[0].toAddressArray(),
-        value[1].toBigIntArray()
-      )
-    );
-  }
-
-  getFoundationTreasury(): Address {
-    let result = super.call(
-      "getFoundationTreasury",
-      "getFoundationTreasury():(address)",
-      []
-    );
-
-    return result[0].toAddress();
-  }
-
-  try_getFoundationTreasury(): ethereum.CallResult<Address> {
-    let result = super.tryCall(
-      "getFoundationTreasury",
-      "getFoundationTreasury():(address)",
-      []
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddress());
-  }
-
-  getHasCreatorMintedIPFSHash(
-    creator: Address,
-    tokenIPFSPath: string
-  ): boolean {
-    let result = super.call(
-      "getHasCreatorMintedIPFSHash",
-      "getHasCreatorMintedIPFSHash(address,string):(bool)",
-      [
-        ethereum.Value.fromAddress(creator),
-        ethereum.Value.fromString(tokenIPFSPath)
-      ]
-    );
-
-    return result[0].toBoolean();
-  }
-
-  try_getHasCreatorMintedIPFSHash(
-    creator: Address,
-    tokenIPFSPath: string
-  ): ethereum.CallResult<boolean> {
-    let result = super.tryCall(
-      "getHasCreatorMintedIPFSHash",
-      "getHasCreatorMintedIPFSHash(address,string):(bool)",
-      [
-        ethereum.Value.fromAddress(creator),
-        ethereum.Value.fromString(tokenIPFSPath)
-      ]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBoolean());
-  }
-
-  getNFTMarket(): Address {
-    let result = super.call("getNFTMarket", "getNFTMarket():(address)", []);
-
-    return result[0].toAddress();
-  }
-
-  try_getNFTMarket(): ethereum.CallResult<Address> {
-    let result = super.tryCall("getNFTMarket", "getNFTMarket():(address)", []);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddress());
-  }
-
-  getNextTokenId(): BigInt {
-    let result = super.call("getNextTokenId", "getNextTokenId():(uint256)", []);
-
-    return result[0].toBigInt();
-  }
-
-  try_getNextTokenId(): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getNextTokenId",
-      "getNextTokenId():(uint256)",
-      []
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getTokenCreatorPaymentAddress(tokenId: BigInt): Address {
-    let result = super.call(
-      "getTokenCreatorPaymentAddress",
-      "getTokenCreatorPaymentAddress(uint256):(address)",
-      [ethereum.Value.fromUnsignedBigInt(tokenId)]
-    );
-
-    return result[0].toAddress();
-  }
-
-  try_getTokenCreatorPaymentAddress(
-    tokenId: BigInt
-  ): ethereum.CallResult<Address> {
-    let result = super.tryCall(
-      "getTokenCreatorPaymentAddress",
-      "getTokenCreatorPaymentAddress(uint256):(address)",
-      [ethereum.Value.fromUnsignedBigInt(tokenId)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddress());
-  }
-
-  getTokenIPFSPath(tokenId: BigInt): string {
-    let result = super.call(
-      "getTokenIPFSPath",
-      "getTokenIPFSPath(uint256):(string)",
-      [ethereum.Value.fromUnsignedBigInt(tokenId)]
-    );
-
-    return result[0].toString();
-  }
-
-  try_getTokenIPFSPath(tokenId: BigInt): ethereum.CallResult<string> {
-    let result = super.tryCall(
-      "getTokenIPFSPath",
-      "getTokenIPFSPath(uint256):(string)",
-      [ethereum.Value.fromUnsignedBigInt(tokenId)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toString());
-  }
-
-  isApprovedForAll(owner: Address, operator: Address): boolean {
-    let result = super.call(
-      "isApprovedForAll",
-      "isApprovedForAll(address,address):(bool)",
-      [ethereum.Value.fromAddress(owner), ethereum.Value.fromAddress(operator)]
-    );
-
-    return result[0].toBoolean();
-  }
-
-  try_isApprovedForAll(
-    owner: Address,
-    operator: Address
-  ): ethereum.CallResult<boolean> {
-    let result = super.tryCall(
-      "isApprovedForAll",
-      "isApprovedForAll(address,address):(bool)",
-      [ethereum.Value.fromAddress(owner), ethereum.Value.fromAddress(operator)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBoolean());
+export class Collection extends ethereum.SmartContract {
+  static bind(address: Address): Collection {
+    return new Collection("Collection", address);
   }
 
   mint(tokenIPFSPath: string): BigInt {
@@ -767,33 +473,218 @@ export class NFT extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  mintWithCreatorPaymentAddressAndApproveMarket(
-    tokenIPFSPath: string,
-    tokenCreatorPaymentAddress: Address
-  ): BigInt {
-    let result = super.call(
-      "mintWithCreatorPaymentAddressAndApproveMarket",
-      "mintWithCreatorPaymentAddressAndApproveMarket(string,address):(uint256)",
-      [
-        ethereum.Value.fromString(tokenIPFSPath),
-        ethereum.Value.fromAddress(tokenCreatorPaymentAddress)
-      ]
-    );
+  balanceOf(owner: Address): BigInt {
+    let result = super.call("balanceOf", "balanceOf(address):(uint256)", [
+      ethereum.Value.fromAddress(owner)
+    ]);
 
     return result[0].toBigInt();
   }
 
-  try_mintWithCreatorPaymentAddressAndApproveMarket(
-    tokenIPFSPath: string,
-    tokenCreatorPaymentAddress: Address
-  ): ethereum.CallResult<BigInt> {
+  try_balanceOf(owner: Address): ethereum.CallResult<BigInt> {
+    let result = super.tryCall("balanceOf", "balanceOf(address):(uint256)", [
+      ethereum.Value.fromAddress(owner)
+    ]);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  baseURI(): string {
+    let result = super.call("baseURI", "baseURI():(string)", []);
+
+    return result[0].toString();
+  }
+
+  try_baseURI(): ethereum.CallResult<string> {
+    let result = super.tryCall("baseURI", "baseURI():(string)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toString());
+  }
+
+  bling_master(): Address {
+    let result = super.call("bling_master", "bling_master():(address)", []);
+
+    return result[0].toAddress();
+  }
+
+  try_bling_master(): ethereum.CallResult<Address> {
+    let result = super.tryCall("bling_master", "bling_master():(address)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  getApproved(tokenId: BigInt): Address {
+    let result = super.call("getApproved", "getApproved(uint256):(address)", [
+      ethereum.Value.fromUnsignedBigInt(tokenId)
+    ]);
+
+    return result[0].toAddress();
+  }
+
+  try_getApproved(tokenId: BigInt): ethereum.CallResult<Address> {
     let result = super.tryCall(
-      "mintWithCreatorPaymentAddressAndApproveMarket",
-      "mintWithCreatorPaymentAddressAndApproveMarket(string,address):(uint256)",
+      "getApproved",
+      "getApproved(uint256):(address)",
+      [ethereum.Value.fromUnsignedBigInt(tokenId)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  getFeeBps(param0: BigInt): Array<BigInt> {
+    let result = super.call("getFeeBps", "getFeeBps(uint256):(uint256[])", [
+      ethereum.Value.fromUnsignedBigInt(param0)
+    ]);
+
+    return result[0].toBigIntArray();
+  }
+
+  try_getFeeBps(param0: BigInt): ethereum.CallResult<Array<BigInt>> {
+    let result = super.tryCall("getFeeBps", "getFeeBps(uint256):(uint256[])", [
+      ethereum.Value.fromUnsignedBigInt(param0)
+    ]);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigIntArray());
+  }
+
+  getFeeRecipients(id: BigInt): Array<Address> {
+    let result = super.call(
+      "getFeeRecipients",
+      "getFeeRecipients(uint256):(address[])",
+      [ethereum.Value.fromUnsignedBigInt(id)]
+    );
+
+    return result[0].toAddressArray();
+  }
+
+  try_getFeeRecipients(id: BigInt): ethereum.CallResult<Array<Address>> {
+    let result = super.tryCall(
+      "getFeeRecipients",
+      "getFeeRecipients(uint256):(address[])",
+      [ethereum.Value.fromUnsignedBigInt(id)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddressArray());
+  }
+
+  getFees(tokenId: BigInt): Collection__getFeesResult {
+    let result = super.call(
+      "getFees",
+      "getFees(uint256):(address[2],uint256[2])",
+      [ethereum.Value.fromUnsignedBigInt(tokenId)]
+    );
+
+    return new Collection__getFeesResult(
+      result[0].toAddressArray(),
+      result[1].toBigIntArray()
+    );
+  }
+
+  try_getFees(tokenId: BigInt): ethereum.CallResult<Collection__getFeesResult> {
+    let result = super.tryCall(
+      "getFees",
+      "getFees(uint256):(address[2],uint256[2])",
+      [ethereum.Value.fromUnsignedBigInt(tokenId)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      new Collection__getFeesResult(
+        value[0].toAddressArray(),
+        value[1].toBigIntArray()
+      )
+    );
+  }
+
+  getFoundationTreasury(): Address {
+    let result = super.call(
+      "getFoundationTreasury",
+      "getFoundationTreasury():(address)",
+      []
+    );
+
+    return result[0].toAddress();
+  }
+
+  try_getFoundationTreasury(): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "getFoundationTreasury",
+      "getFoundationTreasury():(address)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  getHasCreatorMintedIPFSHash(
+    creator: Address,
+    tokenIPFSPath: string
+  ): boolean {
+    let result = super.call(
+      "getHasCreatorMintedIPFSHash",
+      "getHasCreatorMintedIPFSHash(address,string):(bool)",
       [
-        ethereum.Value.fromString(tokenIPFSPath),
-        ethereum.Value.fromAddress(tokenCreatorPaymentAddress)
+        ethereum.Value.fromAddress(creator),
+        ethereum.Value.fromString(tokenIPFSPath)
       ]
+    );
+
+    return result[0].toBoolean();
+  }
+
+  try_getHasCreatorMintedIPFSHash(
+    creator: Address,
+    tokenIPFSPath: string
+  ): ethereum.CallResult<boolean> {
+    let result = super.tryCall(
+      "getHasCreatorMintedIPFSHash",
+      "getHasCreatorMintedIPFSHash(address,string):(bool)",
+      [
+        ethereum.Value.fromAddress(creator),
+        ethereum.Value.fromString(tokenIPFSPath)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
+  }
+
+  getNextTokenId(): BigInt {
+    let result = super.call("getNextTokenId", "getNextTokenId():(uint256)", []);
+
+    return result[0].toBigInt();
+  }
+
+  try_getNextTokenId(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getNextTokenId",
+      "getNextTokenId():(uint256)",
+      []
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -802,82 +693,93 @@ export class NFT extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  mintWithCreatorPaymentFactory(
-    tokenIPFSPath: string,
-    paymentAddressFactory: Address,
-    paymentAddressCallData: Bytes
-  ): BigInt {
-    let result = super.call(
-      "mintWithCreatorPaymentFactory",
-      "mintWithCreatorPaymentFactory(string,address,bytes):(uint256)",
-      [
-        ethereum.Value.fromString(tokenIPFSPath),
-        ethereum.Value.fromAddress(paymentAddressFactory),
-        ethereum.Value.fromBytes(paymentAddressCallData)
-      ]
-    );
+  getNFTMarket(): Address {
+    let result = super.call("getNFTMarket", "getNFTMarket():(address)", []);
 
-    return result[0].toBigInt();
+    return result[0].toAddress();
   }
 
-  try_mintWithCreatorPaymentFactory(
-    tokenIPFSPath: string,
-    paymentAddressFactory: Address,
-    paymentAddressCallData: Bytes
-  ): ethereum.CallResult<BigInt> {
+  try_getNFTMarket(): ethereum.CallResult<Address> {
+    let result = super.tryCall("getNFTMarket", "getNFTMarket():(address)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  getTokenCreatorPaymentAddress(tokenId: BigInt): Address {
+    let result = super.call(
+      "getTokenCreatorPaymentAddress",
+      "getTokenCreatorPaymentAddress(uint256):(address)",
+      [ethereum.Value.fromUnsignedBigInt(tokenId)]
+    );
+
+    return result[0].toAddress();
+  }
+
+  try_getTokenCreatorPaymentAddress(
+    tokenId: BigInt
+  ): ethereum.CallResult<Address> {
     let result = super.tryCall(
-      "mintWithCreatorPaymentFactory",
-      "mintWithCreatorPaymentFactory(string,address,bytes):(uint256)",
-      [
-        ethereum.Value.fromString(tokenIPFSPath),
-        ethereum.Value.fromAddress(paymentAddressFactory),
-        ethereum.Value.fromBytes(paymentAddressCallData)
-      ]
+      "getTokenCreatorPaymentAddress",
+      "getTokenCreatorPaymentAddress(uint256):(address)",
+      [ethereum.Value.fromUnsignedBigInt(tokenId)]
     );
     if (result.reverted) {
       return new ethereum.CallResult();
     }
     let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
+    return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
-  mintWithCreatorPaymentFactoryAndApproveMarket(
-    tokenIPFSPath: string,
-    paymentAddressFactory: Address,
-    paymentAddressCallData: Bytes
-  ): BigInt {
+  getTokenIPFSPath(tokenId: BigInt): string {
     let result = super.call(
-      "mintWithCreatorPaymentFactoryAndApproveMarket",
-      "mintWithCreatorPaymentFactoryAndApproveMarket(string,address,bytes):(uint256)",
-      [
-        ethereum.Value.fromString(tokenIPFSPath),
-        ethereum.Value.fromAddress(paymentAddressFactory),
-        ethereum.Value.fromBytes(paymentAddressCallData)
-      ]
+      "getTokenIPFSPath",
+      "getTokenIPFSPath(uint256):(string)",
+      [ethereum.Value.fromUnsignedBigInt(tokenId)]
     );
 
-    return result[0].toBigInt();
+    return result[0].toString();
   }
 
-  try_mintWithCreatorPaymentFactoryAndApproveMarket(
-    tokenIPFSPath: string,
-    paymentAddressFactory: Address,
-    paymentAddressCallData: Bytes
-  ): ethereum.CallResult<BigInt> {
+  try_getTokenIPFSPath(tokenId: BigInt): ethereum.CallResult<string> {
     let result = super.tryCall(
-      "mintWithCreatorPaymentFactoryAndApproveMarket",
-      "mintWithCreatorPaymentFactoryAndApproveMarket(string,address,bytes):(uint256)",
-      [
-        ethereum.Value.fromString(tokenIPFSPath),
-        ethereum.Value.fromAddress(paymentAddressFactory),
-        ethereum.Value.fromBytes(paymentAddressCallData)
-      ]
+      "getTokenIPFSPath",
+      "getTokenIPFSPath(uint256):(string)",
+      [ethereum.Value.fromUnsignedBigInt(tokenId)]
     );
     if (result.reverted) {
       return new ethereum.CallResult();
     }
     let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
+    return ethereum.CallResult.fromValue(value[0].toString());
+  }
+
+  isApprovedForAll(owner: Address, operator: Address): boolean {
+    let result = super.call(
+      "isApprovedForAll",
+      "isApprovedForAll(address,address):(bool)",
+      [ethereum.Value.fromAddress(owner), ethereum.Value.fromAddress(operator)]
+    );
+
+    return result[0].toBoolean();
+  }
+
+  try_isApprovedForAll(
+    owner: Address,
+    operator: Address
+  ): ethereum.CallResult<boolean> {
+    let result = super.tryCall(
+      "isApprovedForAll",
+      "isApprovedForAll(address,address):(bool)",
+      [ethereum.Value.fromAddress(owner), ethereum.Value.fromAddress(operator)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
   name(): string {
@@ -1156,60 +1058,6 @@ export class AdminAccountMigrationCall__Outputs {
   }
 }
 
-export class AdminAccountMigrationForPaymentAddressesCall extends ethereum.Call {
-  get inputs(): AdminAccountMigrationForPaymentAddressesCall__Inputs {
-    return new AdminAccountMigrationForPaymentAddressesCall__Inputs(this);
-  }
-
-  get outputs(): AdminAccountMigrationForPaymentAddressesCall__Outputs {
-    return new AdminAccountMigrationForPaymentAddressesCall__Outputs(this);
-  }
-}
-
-export class AdminAccountMigrationForPaymentAddressesCall__Inputs {
-  _call: AdminAccountMigrationForPaymentAddressesCall;
-
-  constructor(call: AdminAccountMigrationForPaymentAddressesCall) {
-    this._call = call;
-  }
-
-  get paymentAddressTokenIds(): Array<BigInt> {
-    return this._call.inputValues[0].value.toBigIntArray();
-  }
-
-  get paymentAddressFactory(): Address {
-    return this._call.inputValues[1].value.toAddress();
-  }
-
-  get paymentAddressCallData(): Bytes {
-    return this._call.inputValues[2].value.toBytes();
-  }
-
-  get addressLocationInCallData(): BigInt {
-    return this._call.inputValues[3].value.toBigInt();
-  }
-
-  get originalAddress(): Address {
-    return this._call.inputValues[4].value.toAddress();
-  }
-
-  get newAddress(): Address {
-    return this._call.inputValues[5].value.toAddress();
-  }
-
-  get signature(): Bytes {
-    return this._call.inputValues[6].value.toBytes();
-  }
-}
-
-export class AdminAccountMigrationForPaymentAddressesCall__Outputs {
-  _call: AdminAccountMigrationForPaymentAddressesCall;
-
-  constructor(call: AdminAccountMigrationForPaymentAddressesCall) {
-    this._call = call;
-  }
-}
-
 export class AdminUpdateConfigCall extends ethereum.Call {
   get inputs(): AdminUpdateConfigCall__Inputs {
     return new AdminUpdateConfigCall__Inputs(this);
@@ -1336,6 +1184,10 @@ export class InitializeCall__Inputs {
   get symbol(): string {
     return this._call.inputValues[2].value.toString();
   }
+
+  get supply(): BigInt {
+    return this._call.inputValues[3].value.toBigInt();
+  }
 }
 
 export class InitializeCall__Outputs {
@@ -1444,128 +1296,6 @@ export class MintWithCreatorPaymentAddressCall__Outputs {
   _call: MintWithCreatorPaymentAddressCall;
 
   constructor(call: MintWithCreatorPaymentAddressCall) {
-    this._call = call;
-  }
-
-  get tokenId(): BigInt {
-    return this._call.outputValues[0].value.toBigInt();
-  }
-}
-
-export class MintWithCreatorPaymentAddressAndApproveMarketCall extends ethereum.Call {
-  get inputs(): MintWithCreatorPaymentAddressAndApproveMarketCall__Inputs {
-    return new MintWithCreatorPaymentAddressAndApproveMarketCall__Inputs(this);
-  }
-
-  get outputs(): MintWithCreatorPaymentAddressAndApproveMarketCall__Outputs {
-    return new MintWithCreatorPaymentAddressAndApproveMarketCall__Outputs(this);
-  }
-}
-
-export class MintWithCreatorPaymentAddressAndApproveMarketCall__Inputs {
-  _call: MintWithCreatorPaymentAddressAndApproveMarketCall;
-
-  constructor(call: MintWithCreatorPaymentAddressAndApproveMarketCall) {
-    this._call = call;
-  }
-
-  get tokenIPFSPath(): string {
-    return this._call.inputValues[0].value.toString();
-  }
-
-  get tokenCreatorPaymentAddress(): Address {
-    return this._call.inputValues[1].value.toAddress();
-  }
-}
-
-export class MintWithCreatorPaymentAddressAndApproveMarketCall__Outputs {
-  _call: MintWithCreatorPaymentAddressAndApproveMarketCall;
-
-  constructor(call: MintWithCreatorPaymentAddressAndApproveMarketCall) {
-    this._call = call;
-  }
-
-  get tokenId(): BigInt {
-    return this._call.outputValues[0].value.toBigInt();
-  }
-}
-
-export class MintWithCreatorPaymentFactoryCall extends ethereum.Call {
-  get inputs(): MintWithCreatorPaymentFactoryCall__Inputs {
-    return new MintWithCreatorPaymentFactoryCall__Inputs(this);
-  }
-
-  get outputs(): MintWithCreatorPaymentFactoryCall__Outputs {
-    return new MintWithCreatorPaymentFactoryCall__Outputs(this);
-  }
-}
-
-export class MintWithCreatorPaymentFactoryCall__Inputs {
-  _call: MintWithCreatorPaymentFactoryCall;
-
-  constructor(call: MintWithCreatorPaymentFactoryCall) {
-    this._call = call;
-  }
-
-  get tokenIPFSPath(): string {
-    return this._call.inputValues[0].value.toString();
-  }
-
-  get paymentAddressFactory(): Address {
-    return this._call.inputValues[1].value.toAddress();
-  }
-
-  get paymentAddressCallData(): Bytes {
-    return this._call.inputValues[2].value.toBytes();
-  }
-}
-
-export class MintWithCreatorPaymentFactoryCall__Outputs {
-  _call: MintWithCreatorPaymentFactoryCall;
-
-  constructor(call: MintWithCreatorPaymentFactoryCall) {
-    this._call = call;
-  }
-
-  get tokenId(): BigInt {
-    return this._call.outputValues[0].value.toBigInt();
-  }
-}
-
-export class MintWithCreatorPaymentFactoryAndApproveMarketCall extends ethereum.Call {
-  get inputs(): MintWithCreatorPaymentFactoryAndApproveMarketCall__Inputs {
-    return new MintWithCreatorPaymentFactoryAndApproveMarketCall__Inputs(this);
-  }
-
-  get outputs(): MintWithCreatorPaymentFactoryAndApproveMarketCall__Outputs {
-    return new MintWithCreatorPaymentFactoryAndApproveMarketCall__Outputs(this);
-  }
-}
-
-export class MintWithCreatorPaymentFactoryAndApproveMarketCall__Inputs {
-  _call: MintWithCreatorPaymentFactoryAndApproveMarketCall;
-
-  constructor(call: MintWithCreatorPaymentFactoryAndApproveMarketCall) {
-    this._call = call;
-  }
-
-  get tokenIPFSPath(): string {
-    return this._call.inputValues[0].value.toString();
-  }
-
-  get paymentAddressFactory(): Address {
-    return this._call.inputValues[1].value.toAddress();
-  }
-
-  get paymentAddressCallData(): Bytes {
-    return this._call.inputValues[2].value.toBytes();
-  }
-}
-
-export class MintWithCreatorPaymentFactoryAndApproveMarketCall__Outputs {
-  _call: MintWithCreatorPaymentFactoryAndApproveMarketCall;
-
-  constructor(call: MintWithCreatorPaymentFactoryAndApproveMarketCall) {
     this._call = call;
   }
 
@@ -1812,6 +1542,32 @@ export class UpdateTokenURICall__Outputs {
   _call: UpdateTokenURICall;
 
   constructor(call: UpdateTokenURICall) {
+    this._call = call;
+  }
+}
+
+export class ConstructorCall extends ethereum.Call {
+  get inputs(): ConstructorCall__Inputs {
+    return new ConstructorCall__Inputs(this);
+  }
+
+  get outputs(): ConstructorCall__Outputs {
+    return new ConstructorCall__Outputs(this);
+  }
+}
+
+export class ConstructorCall__Inputs {
+  _call: ConstructorCall;
+
+  constructor(call: ConstructorCall) {
+    this._call = call;
+  }
+}
+
+export class ConstructorCall__Outputs {
+  _call: ConstructorCall;
+
+  constructor(call: ConstructorCall) {
     this._call = call;
   }
 }
