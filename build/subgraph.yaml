@@ -46,5 +46,21 @@ templates:
         - name: BlingMaster
           file: Collection\abis\BlingMaster.json
       eventHandlers:
+<<<<<<< HEAD
         - event: Minted(indexed address,indexed uint256,indexed string,string)
           handler: handleMinted
+=======
+        - event: ReserveAuctionCreated(indexed address,indexed address,indexed
+            uint256,uint256,uint256)
+          handler: handleReserveAuctionCreated
+        - event: ReserveAuctionBidPlaced(indexed uint256,indexed address,uint256,uint256)
+          handler: handleReserveAuctionBidPlaced
+        - event: ReserveAuctionUpdated(indexed uint256,uint256)
+          handler: handleReserveAuctionUpdated
+        - event: ReserveAuctionCanceled(indexed uint256)
+          handler: handleReserveAuctionCanceled
+        - event: ReserveAuctionFinalized(indexed uint256,indexed address,indexed
+            address,uint256,uint256,uint256)
+          handler: handleReserveAuctionFinalized
+      file: NFT\NFT.wasm
+>>>>>>> 24efe02af8ac40ae70aa04bf733d35e6567ee47e

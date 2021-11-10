@@ -25,7 +25,39 @@ type Collection @entity {
   NFTContractAddress: Bytes!
   MarketContractAddress: Bytes!
   TreasuryContractAddress: Bytes!
+<<<<<<< HEAD
   NFTtransactionHash: String!
   NFTtimestamp: BigInt!
   NFTaction: String!
+=======
+  transactionHash: String!
+  timestamp: BigInt!
+  action: String!
+}
+type Auction @entity {
+  id: ID!
+  tokenId: Minted!
+  NFTContractAddress: String!
+  seller: String!
+  auctionID: String!
+  reservePrice: BigInt!
+  startTime: BigInt!
+  endTime: BigInt!
+  bidder: Bytes!
+  transactionHash: String!
+  timestamp: BigInt!
+  bidList: [Bid]!
+  action: String!
+}
+type Bid @entity {
+  id: ID!
+  auctionID: Auction!
+  number: BigInt!
+  bidder: String! # uint256
+  amount: BigInt! # uint256
+  endTime: BigInt! #uint256
+  transactionHash: String!
+  timestamp: BigInt!
+  action: String!
+>>>>>>> 24efe02af8ac40ae70aa04bf733d35e6567ee47e
 }

@@ -196,8 +196,67 @@ export class Collection extends Entity {
     this.set("id", Value.fromString(value));
   }
 
+<<<<<<< HEAD
   get tokenID(): BigInt {
     let value = this.get("tokenID");
+=======
+  get tokenId(): string {
+    let value = this.get("tokenId");
+    return value.toString();
+  }
+
+  set tokenId(value: string) {
+    this.set("tokenId", Value.fromString(value));
+  }
+
+  get NFTContractAddress(): string {
+    let value = this.get("NFTContractAddress");
+    return value.toString();
+  }
+
+  set NFTContractAddress(value: string) {
+    this.set("NFTContractAddress", Value.fromString(value));
+  }
+
+  get seller(): string {
+    let value = this.get("seller");
+    return value.toString();
+  }
+
+  set seller(value: string) {
+    this.set("seller", Value.fromString(value));
+  }
+
+  get auctionID(): string {
+    let value = this.get("auctionID");
+    return value.toString();
+  }
+
+  set auctionID(value: string) {
+    this.set("auctionID", Value.fromString(value));
+  }
+
+  get reservePrice(): BigInt {
+    let value = this.get("reservePrice");
+    return value.toBigInt();
+  }
+
+  set reservePrice(value: BigInt) {
+    this.set("reservePrice", Value.fromBigInt(value));
+  }
+
+  get startTime(): BigInt {
+    let value = this.get("startTime");
+    return value.toBigInt();
+  }
+
+  set startTime(value: BigInt) {
+    this.set("startTime", Value.fromBigInt(value));
+  }
+
+  get endTime(): BigInt {
+    let value = this.get("endTime");
+>>>>>>> 24efe02af8ac40ae70aa04bf733d35e6567ee47e
     return value.toBigInt();
   }
 
