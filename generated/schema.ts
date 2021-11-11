@@ -196,67 +196,8 @@ export class Collection extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-<<<<<<< HEAD
   get tokenID(): BigInt {
     let value = this.get("tokenID");
-=======
-  get tokenId(): string {
-    let value = this.get("tokenId");
-    return value.toString();
-  }
-
-  set tokenId(value: string) {
-    this.set("tokenId", Value.fromString(value));
-  }
-
-  get NFTContractAddress(): string {
-    let value = this.get("NFTContractAddress");
-    return value.toString();
-  }
-
-  set NFTContractAddress(value: string) {
-    this.set("NFTContractAddress", Value.fromString(value));
-  }
-
-  get seller(): string {
-    let value = this.get("seller");
-    return value.toString();
-  }
-
-  set seller(value: string) {
-    this.set("seller", Value.fromString(value));
-  }
-
-  get auctionID(): string {
-    let value = this.get("auctionID");
-    return value.toString();
-  }
-
-  set auctionID(value: string) {
-    this.set("auctionID", Value.fromString(value));
-  }
-
-  get reservePrice(): BigInt {
-    let value = this.get("reservePrice");
-    return value.toBigInt();
-  }
-
-  set reservePrice(value: BigInt) {
-    this.set("reservePrice", Value.fromBigInt(value));
-  }
-
-  get startTime(): BigInt {
-    let value = this.get("startTime");
-    return value.toBigInt();
-  }
-
-  set startTime(value: BigInt) {
-    this.set("startTime", Value.fromBigInt(value));
-  }
-
-  get endTime(): BigInt {
-    let value = this.get("endTime");
->>>>>>> 24efe02af8ac40ae70aa04bf733d35e6567ee47e
     return value.toBigInt();
   }
 
@@ -370,5 +311,75 @@ export class Collection extends Entity {
 
   set NFTaction(value: string) {
     this.set("NFTaction", Value.fromString(value));
+  }
+
+  get ColCode(): string {
+    let value = this.get("ColCode");
+    return value.toString();
+  }
+
+  set ColCode(value: string) {
+    this.set("ColCode", Value.fromString(value));
+  }
+
+  get ColName(): string {
+    let value = this.get("ColName");
+    return value.toString();
+  }
+
+  set ColName(value: string) {
+    this.set("ColName", Value.fromString(value));
+  }
+
+  get ColDescription(): string {
+    let value = this.get("ColDescription");
+    return value.toString();
+  }
+
+  set ColDescription(value: string) {
+    this.set("ColDescription", Value.fromString(value));
+  }
+
+  get ColProperties(): Array<string | null> {
+    let value = this.get("ColProperties");
+    return value.toStringArray();
+  }
+
+  set ColProperties(value: Array<string | null>) {
+    this.set("ColProperties", Value.fromStringArray(value));
+  }
+
+  get quantity(): BigInt | null {
+    let value = this.get("quantity");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set quantity(value: BigInt | null) {
+    if (value === null) {
+      this.unset("quantity");
+    } else {
+      this.set("quantity", Value.fromBigInt(value as BigInt));
+    }
+  }
+
+  get nftCount(): BigInt | null {
+    let value = this.get("nftCount");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set nftCount(value: BigInt | null) {
+    if (value === null) {
+      this.unset("nftCount");
+    } else {
+      this.set("nftCount", Value.fromBigInt(value as BigInt));
+    }
   }
 }

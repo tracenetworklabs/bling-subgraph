@@ -109,6 +109,34 @@ export class BlingMaster__collectionsResult {
   }
 }
 
+export class BlingMaster__getCollectionDetailsResult {
+  value0: string;
+  value1: string;
+  value2: Array<string>;
+  value3: BigInt;
+
+  constructor(
+    value0: string,
+    value1: string,
+    value2: Array<string>,
+    value3: BigInt
+  ) {
+    this.value0 = value0;
+    this.value1 = value1;
+    this.value2 = value2;
+    this.value3 = value3;
+  }
+
+  toMap(): TypedMap<string, ethereum.Value> {
+    let map = new TypedMap<string, ethereum.Value>();
+    map.set("value0", ethereum.Value.fromString(this.value0));
+    map.set("value1", ethereum.Value.fromString(this.value1));
+    map.set("value2", ethereum.Value.fromStringArray(this.value2));
+    map.set("value3", ethereum.Value.fromUnsignedBigInt(this.value3));
+    return map;
+  }
+}
+
 export class BlingMaster extends ethereum.SmartContract {
   static bind(address: Address): BlingMaster {
     return new BlingMaster("BlingMaster", address);
@@ -242,6 +270,47 @@ export class BlingMaster extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  getCollectionDetails(
+    user: Address,
+    _code: string
+  ): BlingMaster__getCollectionDetailsResult {
+    let result = super.call(
+      "getCollectionDetails",
+      "getCollectionDetails(address,string):(string,string,string[],uint256)",
+      [ethereum.Value.fromAddress(user), ethereum.Value.fromString(_code)]
+    );
+
+    return new BlingMaster__getCollectionDetailsResult(
+      result[0].toString(),
+      result[1].toString(),
+      result[2].toStringArray(),
+      result[3].toBigInt()
+    );
+  }
+
+  try_getCollectionDetails(
+    user: Address,
+    _code: string
+  ): ethereum.CallResult<BlingMaster__getCollectionDetailsResult> {
+    let result = super.tryCall(
+      "getCollectionDetails",
+      "getCollectionDetails(address,string):(string,string,string[],uint256)",
+      [ethereum.Value.fromAddress(user), ethereum.Value.fromString(_code)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      new BlingMaster__getCollectionDetailsResult(
+        value[0].toString(),
+        value[1].toString(),
+        value[2].toStringArray(),
+        value[3].toBigInt()
+      )
+    );
   }
 }
 

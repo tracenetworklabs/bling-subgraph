@@ -6,9 +6,9 @@ dataSources:
     name: BlingMaster
     network: mumbai
     source:
-      address: "0x881Cb65DbFa48763eB8409e94969F1866C465f31"
+      address: "0x518a3b5AfDe97b07727f6D2F3C472F214732e7F5"
       abi: BlingMaster
-      startBlock: 21285158
+      startBlock: 21316495
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -46,21 +46,5 @@ templates:
         - name: BlingMaster
           file: Collection\abis\BlingMaster.json
       eventHandlers:
-<<<<<<< HEAD
         - event: Minted(indexed address,indexed uint256,indexed string,string)
           handler: handleMinted
-=======
-        - event: ReserveAuctionCreated(indexed address,indexed address,indexed
-            uint256,uint256,uint256)
-          handler: handleReserveAuctionCreated
-        - event: ReserveAuctionBidPlaced(indexed uint256,indexed address,uint256,uint256)
-          handler: handleReserveAuctionBidPlaced
-        - event: ReserveAuctionUpdated(indexed uint256,uint256)
-          handler: handleReserveAuctionUpdated
-        - event: ReserveAuctionCanceled(indexed uint256)
-          handler: handleReserveAuctionCanceled
-        - event: ReserveAuctionFinalized(indexed uint256,indexed address,indexed
-            address,uint256,uint256,uint256)
-          handler: handleReserveAuctionFinalized
-      file: NFT\NFT.wasm
->>>>>>> 24efe02af8ac40ae70aa04bf733d35e6567ee47e

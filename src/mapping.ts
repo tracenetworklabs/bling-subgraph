@@ -17,7 +17,6 @@ import { Collection, Master } from "../generated/schema";
 export function handleCollectionCreated(event: CollectionCreatedEvent): void {
   let token = Master.load(event.params.ColCode.toString());
   if (!token) {
-    //nftTemplate.create(event.params.myContract);
     token = new Master(event.params.ColCode.toString());
     token.creator = event.params.creator;
     token.ColCode = event.params.ColCode;
@@ -61,6 +60,15 @@ export function handleMinted(event: MintedEvent): void {
     let count = nextTokenID.minus(BigInt.fromI32(1));
 
     collection.nftCount = count;
+
+    let name = (instance.getCollectionDetails(event.params.creator, code));
+
+    token.ColName = name.value0;
+    token.ColDescription = name.value1;
+    token.ColProperties = name.value2;
+    token.quantity = CContract.totalSupply();
+    token.nftCount = count;
+    token.ColCode = code;
 
     collection.save();
 
