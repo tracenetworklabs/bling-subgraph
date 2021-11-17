@@ -3,13 +3,14 @@ type Master @entity {
   timestamp: BigInt!
   transactionHash: String!
   creator: Bytes! # address
-  ColCode: ID! # string
-  MyContract: Bytes
-  ColName: String! 
-  ColDescription: String!
-  ColProperties:[String]!
-  ColAction: String!
+  colCode: ID! # string
+  myContract: Bytes
+  colName: String! 
+  colDescription: String!
+  colProperties:[String]!
+  colAction: String!
   quantity: BigInt
+  collectionAction: String!
   nftCount: BigInt
 }
 
@@ -22,16 +23,37 @@ type Collection @entity {
   auctionID: String!
   tokenURI: String!
   nftInfo: String!
-  NFTContractAddress: Bytes!
-  MarketContractAddress: Bytes!
-  TreasuryContractAddress: Bytes!
-  NFTtransactionHash: String!
-  NFTtimestamp: BigInt!
-  NFTaction: String!
-  ColCode: ID! # string
-  ColName: String!
-  ColDescription: String!
-  ColProperties:[String]!
+  nftContractAddress: Bytes!
+  marketContractAddress: Bytes!
+  treasuryContractAddress: Bytes!
+  nftTransactionHash: String!
+  nftTimestamp: BigInt!
+  nftAction: String!
+  colCode: ID! # string
+  colName: String!
+  colDescription: String!
+  colProperties:[String]!
   quantity: BigInt
   nftCount: BigInt
+  seller: String
+  reservePrice: BigInt
+  startTime: BigInt
+  endTime: BigInt
+  bidder: Bytes
+  auctionTransactionHash: String
+  auctionTimestamp: BigInt
+  auctionAction: String
+  bidList: [Bid!]
+}
+
+type Bid @entity {
+  id: ID!
+  auctionID: String
+  number: BigInt
+  bidder: String # uint256
+  amount: BigInt # uint256
+  endTime: BigInt #uint256
+  transactionHash: String
+  timestamp: BigInt
+  action: String
 }

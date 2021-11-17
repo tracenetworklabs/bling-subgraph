@@ -206,6 +206,24 @@ export class NFTOwnerMigrated__Params {
   }
 }
 
+export class NftMarketUpdated extends ethereum.Event {
+  get params(): NftMarketUpdated__Params {
+    return new NftMarketUpdated__Params(this);
+  }
+}
+
+export class NftMarketUpdated__Params {
+  _event: NftMarketUpdated;
+
+  constructor(event: NftMarketUpdated) {
+    this._event = event;
+  }
+
+  get nftMarket(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+}
+
 export class PaymentAddressMigrated extends ethereum.Event {
   get params(): PaymentAddressMigrated__Params {
     return new PaymentAddressMigrated__Params(this);
@@ -396,83 +414,6 @@ export class Collection extends ethereum.SmartContract {
     return new Collection("Collection", address);
   }
 
-  mint(tokenIPFSPath: string): BigInt {
-    let result = super.call("mint", "mint(string):(uint256)", [
-      ethereum.Value.fromString(tokenIPFSPath)
-    ]);
-
-    return result[0].toBigInt();
-  }
-
-  try_mint(tokenIPFSPath: string): ethereum.CallResult<BigInt> {
-    let result = super.tryCall("mint", "mint(string):(uint256)", [
-      ethereum.Value.fromString(tokenIPFSPath)
-    ]);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  mintAndApproveMarket(tokenIPFSPath: string): BigInt {
-    let result = super.call(
-      "mintAndApproveMarket",
-      "mintAndApproveMarket(string):(uint256)",
-      [ethereum.Value.fromString(tokenIPFSPath)]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_mintAndApproveMarket(tokenIPFSPath: string): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "mintAndApproveMarket",
-      "mintAndApproveMarket(string):(uint256)",
-      [ethereum.Value.fromString(tokenIPFSPath)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  mintWithCreatorPaymentAddress(
-    tokenIPFSPath: string,
-    tokenCreatorPaymentAddress: Address
-  ): BigInt {
-    let result = super.call(
-      "mintWithCreatorPaymentAddress",
-      "mintWithCreatorPaymentAddress(string,address):(uint256)",
-      [
-        ethereum.Value.fromString(tokenIPFSPath),
-        ethereum.Value.fromAddress(tokenCreatorPaymentAddress)
-      ]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_mintWithCreatorPaymentAddress(
-    tokenIPFSPath: string,
-    tokenCreatorPaymentAddress: Address
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "mintWithCreatorPaymentAddress",
-      "mintWithCreatorPaymentAddress(string,address):(uint256)",
-      [
-        ethereum.Value.fromString(tokenIPFSPath),
-        ethereum.Value.fromAddress(tokenCreatorPaymentAddress)
-      ]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
   balanceOf(owner: Address): BigInt {
     let result = super.call("balanceOf", "balanceOf(address):(uint256)", [
       ethereum.Value.fromAddress(owner)
@@ -507,14 +448,14 @@ export class Collection extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toString());
   }
 
-  bling_master(): Address {
-    let result = super.call("bling_master", "bling_master():(address)", []);
+  blingMaster(): Address {
+    let result = super.call("blingMaster", "blingMaster():(address)", []);
 
     return result[0].toAddress();
   }
 
-  try_bling_master(): ethereum.CallResult<Address> {
-    let result = super.tryCall("bling_master", "bling_master():(address)", []);
+  try_blingMaster(): ethereum.CallResult<Address> {
+    let result = super.tryCall("blingMaster", "blingMaster():(address)", []);
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -674,6 +615,21 @@ export class Collection extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
+  getNFTMarket(): Address {
+    let result = super.call("getNFTMarket", "getNFTMarket():(address)", []);
+
+    return result[0].toAddress();
+  }
+
+  try_getNFTMarket(): ethereum.CallResult<Address> {
+    let result = super.tryCall("getNFTMarket", "getNFTMarket():(address)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
   getNextTokenId(): BigInt {
     let result = super.call("getNextTokenId", "getNextTokenId():(uint256)", []);
 
@@ -691,21 +647,6 @@ export class Collection extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getNFTMarket(): Address {
-    let result = super.call("getNFTMarket", "getNFTMarket():(address)", []);
-
-    return result[0].toAddress();
-  }
-
-  try_getNFTMarket(): ethereum.CallResult<Address> {
-    let result = super.tryCall("getNFTMarket", "getNFTMarket():(address)", []);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
   getTokenCreatorPaymentAddress(tokenId: BigInt): Address {
@@ -780,6 +721,83 @@ export class Collection extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBoolean());
+  }
+
+  mint(tokenIPFSPath: string): BigInt {
+    let result = super.call("mint", "mint(string):(uint256)", [
+      ethereum.Value.fromString(tokenIPFSPath)
+    ]);
+
+    return result[0].toBigInt();
+  }
+
+  try_mint(tokenIPFSPath: string): ethereum.CallResult<BigInt> {
+    let result = super.tryCall("mint", "mint(string):(uint256)", [
+      ethereum.Value.fromString(tokenIPFSPath)
+    ]);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  mintAndApproveMarket(tokenIPFSPath: string): BigInt {
+    let result = super.call(
+      "mintAndApproveMarket",
+      "mintAndApproveMarket(string):(uint256)",
+      [ethereum.Value.fromString(tokenIPFSPath)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_mintAndApproveMarket(tokenIPFSPath: string): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "mintAndApproveMarket",
+      "mintAndApproveMarket(string):(uint256)",
+      [ethereum.Value.fromString(tokenIPFSPath)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  mintWithCreatorPaymentAddress(
+    tokenIPFSPath: string,
+    tokenCreatorPaymentAddress: Address
+  ): BigInt {
+    let result = super.call(
+      "mintWithCreatorPaymentAddress",
+      "mintWithCreatorPaymentAddress(string,address):(uint256)",
+      [
+        ethereum.Value.fromString(tokenIPFSPath),
+        ethereum.Value.fromAddress(tokenCreatorPaymentAddress)
+      ]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_mintWithCreatorPaymentAddress(
+    tokenIPFSPath: string,
+    tokenCreatorPaymentAddress: Address
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "mintWithCreatorPaymentAddress",
+      "mintWithCreatorPaymentAddress(string,address):(uint256)",
+      [
+        ethereum.Value.fromString(tokenIPFSPath),
+        ethereum.Value.fromAddress(tokenCreatorPaymentAddress)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
   name(): string {
@@ -961,99 +979,60 @@ export class Collection extends ethereum.SmartContract {
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
+}
 
-  whitelisted(param0: Address): boolean {
-    let result = super.call("whitelisted", "whitelisted(address):(bool)", [
-      ethereum.Value.fromAddress(param0)
-    ]);
-
-    return result[0].toBoolean();
+export class ConstructorCall extends ethereum.Call {
+  get inputs(): ConstructorCall__Inputs {
+    return new ConstructorCall__Inputs(this);
   }
 
-  try_whitelisted(param0: Address): ethereum.CallResult<boolean> {
-    let result = super.tryCall("whitelisted", "whitelisted(address):(bool)", [
-      ethereum.Value.fromAddress(param0)
-    ]);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBoolean());
+  get outputs(): ConstructorCall__Outputs {
+    return new ConstructorCall__Outputs(this);
   }
 }
 
-export class AddWhitelistCall extends ethereum.Call {
-  get inputs(): AddWhitelistCall__Inputs {
-    return new AddWhitelistCall__Inputs(this);
-  }
+export class ConstructorCall__Inputs {
+  _call: ConstructorCall;
 
-  get outputs(): AddWhitelistCall__Outputs {
-    return new AddWhitelistCall__Outputs(this);
-  }
-}
-
-export class AddWhitelistCall__Inputs {
-  _call: AddWhitelistCall;
-
-  constructor(call: AddWhitelistCall) {
-    this._call = call;
-  }
-
-  get brands(): Array<Address> {
-    return this._call.inputValues[0].value.toAddressArray();
-  }
-}
-
-export class AddWhitelistCall__Outputs {
-  _call: AddWhitelistCall;
-
-  constructor(call: AddWhitelistCall) {
+  constructor(call: ConstructorCall) {
     this._call = call;
   }
 }
 
-export class AdminAccountMigrationCall extends ethereum.Call {
-  get inputs(): AdminAccountMigrationCall__Inputs {
-    return new AdminAccountMigrationCall__Inputs(this);
-  }
+export class ConstructorCall__Outputs {
+  _call: ConstructorCall;
 
-  get outputs(): AdminAccountMigrationCall__Outputs {
-    return new AdminAccountMigrationCall__Outputs(this);
+  constructor(call: ConstructorCall) {
+    this._call = call;
   }
 }
 
-export class AdminAccountMigrationCall__Inputs {
-  _call: AdminAccountMigrationCall;
+export class _updateSupplyCall extends ethereum.Call {
+  get inputs(): _updateSupplyCall__Inputs {
+    return new _updateSupplyCall__Inputs(this);
+  }
 
-  constructor(call: AdminAccountMigrationCall) {
+  get outputs(): _updateSupplyCall__Outputs {
+    return new _updateSupplyCall__Outputs(this);
+  }
+}
+
+export class _updateSupplyCall__Inputs {
+  _call: _updateSupplyCall;
+
+  constructor(call: _updateSupplyCall) {
     this._call = call;
   }
 
-  get createdTokenIds(): Array<BigInt> {
-    return this._call.inputValues[0].value.toBigIntArray();
-  }
-
-  get ownedTokenIds(): Array<BigInt> {
-    return this._call.inputValues[1].value.toBigIntArray();
-  }
-
-  get originalAddress(): Address {
-    return this._call.inputValues[2].value.toAddress();
-  }
-
-  get newAddress(): Address {
-    return this._call.inputValues[3].value.toAddress();
-  }
-
-  get signature(): Bytes {
-    return this._call.inputValues[4].value.toBytes();
+  get supply_(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
   }
 }
 
-export class AdminAccountMigrationCall__Outputs {
-  _call: AdminAccountMigrationCall;
+export class _updateSupplyCall__Outputs {
+  _call: _updateSupplyCall;
 
-  constructor(call: AdminAccountMigrationCall) {
+  constructor(call: _updateSupplyCall) {
     this._call = call;
   }
 }
@@ -1188,12 +1167,46 @@ export class InitializeCall__Inputs {
   get supply(): BigInt {
     return this._call.inputValues[3].value.toBigInt();
   }
+
+  get collectionCreator(): Address {
+    return this._call.inputValues[4].value.toAddress();
+  }
 }
 
 export class InitializeCall__Outputs {
   _call: InitializeCall;
 
   constructor(call: InitializeCall) {
+    this._call = call;
+  }
+}
+
+export class MasterUpdateSupplyCall extends ethereum.Call {
+  get inputs(): MasterUpdateSupplyCall__Inputs {
+    return new MasterUpdateSupplyCall__Inputs(this);
+  }
+
+  get outputs(): MasterUpdateSupplyCall__Outputs {
+    return new MasterUpdateSupplyCall__Outputs(this);
+  }
+}
+
+export class MasterUpdateSupplyCall__Inputs {
+  _call: MasterUpdateSupplyCall;
+
+  constructor(call: MasterUpdateSupplyCall) {
+    this._call = call;
+  }
+
+  get _supply(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+}
+
+export class MasterUpdateSupplyCall__Outputs {
+  _call: MasterUpdateSupplyCall;
+
+  constructor(call: MasterUpdateSupplyCall) {
     this._call = call;
   }
 }
@@ -1326,36 +1339,6 @@ export class RegisterInterfacesCall__Outputs {
   _call: RegisterInterfacesCall;
 
   constructor(call: RegisterInterfacesCall) {
-    this._call = call;
-  }
-}
-
-export class RemoveWhitelistCall extends ethereum.Call {
-  get inputs(): RemoveWhitelistCall__Inputs {
-    return new RemoveWhitelistCall__Inputs(this);
-  }
-
-  get outputs(): RemoveWhitelistCall__Outputs {
-    return new RemoveWhitelistCall__Outputs(this);
-  }
-}
-
-export class RemoveWhitelistCall__Inputs {
-  _call: RemoveWhitelistCall;
-
-  constructor(call: RemoveWhitelistCall) {
-    this._call = call;
-  }
-
-  get brands(): Array<Address> {
-    return this._call.inputValues[0].value.toAddressArray();
-  }
-}
-
-export class RemoveWhitelistCall__Outputs {
-  _call: RemoveWhitelistCall;
-
-  constructor(call: RemoveWhitelistCall) {
     this._call = call;
   }
 }
@@ -1542,32 +1525,6 @@ export class UpdateTokenURICall__Outputs {
   _call: UpdateTokenURICall;
 
   constructor(call: UpdateTokenURICall) {
-    this._call = call;
-  }
-}
-
-export class ConstructorCall extends ethereum.Call {
-  get inputs(): ConstructorCall__Inputs {
-    return new ConstructorCall__Inputs(this);
-  }
-
-  get outputs(): ConstructorCall__Outputs {
-    return new ConstructorCall__Outputs(this);
-  }
-}
-
-export class ConstructorCall__Inputs {
-  _call: ConstructorCall;
-
-  constructor(call: ConstructorCall) {
-    this._call = call;
-  }
-}
-
-export class ConstructorCall__Outputs {
-  _call: ConstructorCall;
-
-  constructor(call: ConstructorCall) {
     this._call = call;
   }
 }

@@ -10,25 +10,31 @@ import {
   Minted as MintedEvent,
 } from "../generated/templates/Collection/Collection";
 
+import {
+  Market as MarketContract,
+  ReserveAuctionCreated as AuctionEvent,
+  ReserveAuctionBidPlaced as BidsEvent,
+} from "../generated/Market/Market";
+
 import { Collection as collectionContract } from "../generated/templates";
 
-import { Collection, Master } from "../generated/schema";
+import { Collection, Master, Bid } from "../generated/schema";
 
 export function handleCollectionCreated(event: CollectionCreatedEvent): void {
   let token = Master.load(event.params.ColCode.toString());
   if (!token) {
     token = new Master(event.params.ColCode.toString());
     token.creator = event.params.creator;
-    token.ColCode = event.params.ColCode;
-    token.ColName = event.params.Colname;
-    token.ColDescription = event.params.ColDescription;
-    token.ColProperties = event.params.ColProperties;
+    token.colCode = event.params.ColCode;
+    token.colName = event.params.Colname;
+    token.colDescription = event.params.ColDescription;
+    token.colProperties = event.params.ColProperties;
     token.timestamp = event.block.timestamp;
+    token.collectionAction="Collection Added";
     token.transactionHash =
-      "https://mumbai.polygonscan.com/tx/" +
       event.transaction.hash.toHexString();
-    token.MyContract = event.params.myContract;
-    token.ColAction = "Collection Created";
+    token.myContract = event.params.myContract;
+    token.colAction = "Collection Created";
 
     let CContract = NFTContract.bind(event.params.myContract);
 
@@ -42,14 +48,30 @@ export function handleCollectionCreated(event: CollectionCreatedEvent): void {
   token.save();
 }
 
-export function handleMinted(event: MintedEvent): void {
-  let token = Collection.load(event.transaction.hash.toHex());
-  if (!token) {
-    token = new Collection(event.transaction.hash.toHex());
-    token.tokenID = event.params.tokenId;
+export function handleCollectionUpdated(event: CollectionUpdatedEvent): void {
+  let token = Master.load(event.params.ColCode.toString());
+    token.myContract=event.params.myContract;
+    token.creator = event.params.creator;
+    token.colCode = event.params.ColCode;
+    token.colName = event.params.Colname;
+    token.colDescription = event.params.ColDescription;
+    token.colProperties = event.params.ColProperties;
+    token.quantity = event.params.quantity;
+    token.timestamp = event.block.timestamp;
+    token.transactionHash =
+    event.transaction.hash.toHexString();
+    token.colAction= "Collection Updated";
+  token.save();
+}
 
+export function handleMinted(event: MintedEvent): void {
+  let hex = event.params.tokenId.toString()+event.address.toString();
+  let token = Collection.load(hex);
+  if (!token) {
+    token = new Collection(hex);
+    token.tokenID = event.params.tokenId;
     let CContract = NFTContract.bind(event.address);
-    let master = CContract.bling_master();
+    let master = CContract.blingMaster();
     let instance = masterContract.bind(master);
     let code = instance.getCode(event.address);
 
@@ -63,12 +85,12 @@ export function handleMinted(event: MintedEvent): void {
 
     let name = (instance.getCollectionDetails(event.params.creator, code));
 
-    token.ColName = name.value0;
-    token.ColDescription = name.value1;
-    token.ColProperties = name.value2;
+    token.colName = name.value0;
+    token.colDescription = name.value1;
+    token.colProperties = name.value2;
     token.quantity = CContract.totalSupply();
     token.nftCount = count;
-    token.ColCode = code;
+    token.colCode = code;
 
     collection.save();
 
@@ -88,16 +110,14 @@ export function handleMinted(event: MintedEvent): void {
 
     token.auctionID = "0";
 
-    token.NFTContractAddress = event.address;
-    token.MarketContractAddress = tokenContract.getNFTMarket();
-    token.TreasuryContractAddress = tokenContract.getFoundationTreasury();
+    token.nftContractAddress = event.address;
+    token.marketContractAddress = tokenContract.getNFTMarket();
+    token.treasuryContractAddress = tokenContract.getFoundationTreasury();
 
-    token.NFTtransactionHash =
-      "https://mumbai.polygonscan.com/tx/" +
-      event.transaction.hash.toHexString();
-    token.NFTtimestamp = event.block.timestamp;
+    token.nftTransactionHash = event.transaction.hash.toHexString();
+    token.nftTimestamp = event.block.timestamp;
 
-    token.NFTaction = "Token Minted";
+    token.nftAction = "Token Minted";
 
     if (temp == null) temp = ipfs.cat(token.ipfsHash);
 
@@ -105,6 +125,71 @@ export function handleMinted(event: MintedEvent): void {
 
     token.nftInfo = temp.toString();
   }
-
   token.save();
+}
+
+export function handleReserveAuctionCreated(event: AuctionEvent): void {
+  let hex = event.params.tokenId.toString() + event.params.nftContract.toString();
+  let auction = Collection.load(hex);
+  if (auction) {
+    auction = new Collection(hex);
+    auction.seller = event.params.seller.toHexString();
+    auction.auctionID = event.params.auctionId.toString();
+    auction.reservePrice = event.params.reservePrice;
+    auction.auctionTransactionHash = event.transaction.hash.toHexString();
+    auction.auctionTimestamp = event.block.timestamp;
+    auction.auctionAction = "Auction Started";
+
+    let Mcontract = MarketContract.bind(event.address);
+    let result = Mcontract.getReserveAuction(event.params.auctionId);
+    auction.startTime = result.startTime;
+    auction.endTime = result.endTime;
+    auction.bidder = result.bidder;
+    auction.bidList = [];
+  }
+  auction.save();
+}
+
+export function handleReserveAuctionBidPlaced(event: BidsEvent): void {
+  let bids = Bid.load(event.params.auctionId.toString());
+  let Mcontract = MarketContract.bind(event.address);
+  let result = Mcontract.getReserveAuction(event.params.auctionId);
+  let hex = result.tokenId.toString() + result.nftContract.toString();
+  let auction = Collection.load(hex);
+
+  if (auction.bidList.length == 0) {
+    bids = new Bid(event.transaction.hash.toString());
+    bids.auctionID = event.params.auctionId.toString();
+    bids.bidder = event.params.bidder.toHexString();
+    bids.amount = event.params.amount;
+    bids.endTime = event.params.endTime;
+    bids.transactionHash = event.transaction.hash.toHexString();
+    bids.timestamp = event.block.timestamp;
+    bids.action = "Place a bid";
+
+    auction.bidder = event.params.bidder;
+    auction.reservePrice = event.params.amount;
+    bids.number = BigInt.fromI32(auction.bidList.length);
+
+    let temp = auction.bidList;
+    auction.bidList = temp.concat([bids.id]);
+    auction.save();
+  } else {
+    bids = new Bid(event.transaction.hash.toString());
+    bids.auctionID = event.params.auctionId.toString();
+    bids.bidder = event.params.bidder.toHexString();
+    bids.amount = event.params.amount;
+    bids.endTime = event.params.endTime;
+    bids.transactionHash = event.transaction.hash.toHexString();
+    bids.timestamp = event.block.timestamp;
+    bids.action = "Place a bid";
+
+    auction.bidder = event.params.bidder;
+    auction.reservePrice = event.params.amount;
+    bids.number = BigInt.fromI32(auction.bidList.length);
+    let temp = auction.bidList;
+    auction.bidList = temp.concat([bids.id]);
+    auction.save();
+  }
+  bids.save();
 }

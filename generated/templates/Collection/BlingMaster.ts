@@ -46,6 +46,10 @@ export class CollectionCreated__Params {
   get myContract(): Address {
     return this._event.parameters[5].value.toAddress();
   }
+
+  get quantity(): BigInt {
+    return this._event.parameters[6].value.toBigInt();
+  }
 }
 
 export class CollectionUpdated extends ethereum.Event {
@@ -83,6 +87,10 @@ export class CollectionUpdated__Params {
 
   get myContract(): Address {
     return this._event.parameters[5].value.toAddress();
+  }
+
+  get quantity(): BigInt {
+    return this._event.parameters[6].value.toBigInt();
   }
 }
 
@@ -142,44 +150,6 @@ export class BlingMaster extends ethereum.SmartContract {
     return new BlingMaster("BlingMaster", address);
   }
 
-  collections(param0: Address, param1: string): BlingMaster__collectionsResult {
-    let result = super.call(
-      "collections",
-      "collections(address,string):(string,uint256,string,address)",
-      [ethereum.Value.fromAddress(param0), ethereum.Value.fromString(param1)]
-    );
-
-    return new BlingMaster__collectionsResult(
-      result[0].toString(),
-      result[1].toBigInt(),
-      result[2].toString(),
-      result[3].toAddress()
-    );
-  }
-
-  try_collections(
-    param0: Address,
-    param1: string
-  ): ethereum.CallResult<BlingMaster__collectionsResult> {
-    let result = super.tryCall(
-      "collections",
-      "collections(address,string):(string,uint256,string,address)",
-      [ethereum.Value.fromAddress(param0), ethereum.Value.fromString(param1)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(
-      new BlingMaster__collectionsResult(
-        value[0].toString(),
-        value[1].toBigInt(),
-        value[2].toString(),
-        value[3].toAddress()
-      )
-    );
-  }
-
   createCollection(
     _colCode: string,
     _colName: string,
@@ -225,6 +195,44 @@ export class BlingMaster extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  collections(param0: Address, param1: string): BlingMaster__collectionsResult {
+    let result = super.call(
+      "collections",
+      "collections(address,string):(string,uint256,string,address)",
+      [ethereum.Value.fromAddress(param0), ethereum.Value.fromString(param1)]
+    );
+
+    return new BlingMaster__collectionsResult(
+      result[0].toString(),
+      result[1].toBigInt(),
+      result[2].toString(),
+      result[3].toAddress()
+    );
+  }
+
+  try_collections(
+    param0: Address,
+    param1: string
+  ): ethereum.CallResult<BlingMaster__collectionsResult> {
+    let result = super.tryCall(
+      "collections",
+      "collections(address,string):(string,uint256,string,address)",
+      [ethereum.Value.fromAddress(param0), ethereum.Value.fromString(param1)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      new BlingMaster__collectionsResult(
+        value[0].toString(),
+        value[1].toBigInt(),
+        value[2].toString(),
+        value[3].toAddress()
+      )
+    );
   }
 
   getCode(param0: Address): string {
@@ -312,34 +320,53 @@ export class BlingMaster extends ethereum.SmartContract {
       )
     );
   }
-}
 
-export class ConstructorCall extends ethereum.Call {
-  get inputs(): ConstructorCall__Inputs {
-    return new ConstructorCall__Inputs(this);
+  whitelisted(param0: Address): boolean {
+    let result = super.call("whitelisted", "whitelisted(address):(bool)", [
+      ethereum.Value.fromAddress(param0)
+    ]);
+
+    return result[0].toBoolean();
   }
 
-  get outputs(): ConstructorCall__Outputs {
-    return new ConstructorCall__Outputs(this);
+  try_whitelisted(param0: Address): ethereum.CallResult<boolean> {
+    let result = super.tryCall("whitelisted", "whitelisted(address):(bool)", [
+      ethereum.Value.fromAddress(param0)
+    ]);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 }
 
-export class ConstructorCall__Inputs {
-  _call: ConstructorCall;
+export class AddWhitelistCall extends ethereum.Call {
+  get inputs(): AddWhitelistCall__Inputs {
+    return new AddWhitelistCall__Inputs(this);
+  }
 
-  constructor(call: ConstructorCall) {
+  get outputs(): AddWhitelistCall__Outputs {
+    return new AddWhitelistCall__Outputs(this);
+  }
+}
+
+export class AddWhitelistCall__Inputs {
+  _call: AddWhitelistCall;
+
+  constructor(call: AddWhitelistCall) {
     this._call = call;
   }
 
-  get _treasury(): Address {
-    return this._call.inputValues[0].value.toAddress();
+  get brands(): Array<Address> {
+    return this._call.inputValues[0].value.toAddressArray();
   }
 }
 
-export class ConstructorCall__Outputs {
-  _call: ConstructorCall;
+export class AddWhitelistCall__Outputs {
+  _call: AddWhitelistCall;
 
-  constructor(call: ConstructorCall) {
+  constructor(call: AddWhitelistCall) {
     this._call = call;
   }
 }
@@ -427,12 +454,12 @@ export class UpdateCollectionCall__Inputs {
     return this._call.inputValues[3].value.toString();
   }
 
-  get _colQuantity(): BigInt {
-    return this._call.inputValues[4].value.toBigInt();
+  get _colProperties(): Array<string> {
+    return this._call.inputValues[4].value.toStringArray();
   }
 
-  get _colProperties(): Array<string> {
-    return this._call.inputValues[5].value.toStringArray();
+  get _totalSupply(): BigInt {
+    return this._call.inputValues[5].value.toBigInt();
   }
 }
 
@@ -440,6 +467,40 @@ export class UpdateCollectionCall__Outputs {
   _call: UpdateCollectionCall;
 
   constructor(call: UpdateCollectionCall) {
+    this._call = call;
+  }
+}
+
+export class ConstructorCall extends ethereum.Call {
+  get inputs(): ConstructorCall__Inputs {
+    return new ConstructorCall__Inputs(this);
+  }
+
+  get outputs(): ConstructorCall__Outputs {
+    return new ConstructorCall__Outputs(this);
+  }
+}
+
+export class ConstructorCall__Inputs {
+  _call: ConstructorCall;
+
+  constructor(call: ConstructorCall) {
+    this._call = call;
+  }
+
+  get _treasury(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get _nftMarket(): Address {
+    return this._call.inputValues[1].value.toAddress();
+  }
+}
+
+export class ConstructorCall__Outputs {
+  _call: ConstructorCall;
+
+  constructor(call: ConstructorCall) {
     this._call = call;
   }
 }

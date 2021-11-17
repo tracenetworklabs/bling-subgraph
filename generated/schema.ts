@@ -69,17 +69,17 @@ export class Master extends Entity {
     this.set("creator", Value.fromBytes(value));
   }
 
-  get ColCode(): string {
-    let value = this.get("ColCode");
+  get colCode(): string {
+    let value = this.get("colCode");
     return value.toString();
   }
 
-  set ColCode(value: string) {
-    this.set("ColCode", Value.fromString(value));
+  set colCode(value: string) {
+    this.set("colCode", Value.fromString(value));
   }
 
-  get MyContract(): Bytes | null {
-    let value = this.get("MyContract");
+  get myContract(): Bytes | null {
+    let value = this.get("myContract");
     if (value === null || value.kind == ValueKind.NULL) {
       return null;
     } else {
@@ -87,48 +87,48 @@ export class Master extends Entity {
     }
   }
 
-  set MyContract(value: Bytes | null) {
+  set myContract(value: Bytes | null) {
     if (value === null) {
-      this.unset("MyContract");
+      this.unset("myContract");
     } else {
-      this.set("MyContract", Value.fromBytes(value as Bytes));
+      this.set("myContract", Value.fromBytes(value as Bytes));
     }
   }
 
-  get ColName(): string {
-    let value = this.get("ColName");
+  get colName(): string {
+    let value = this.get("colName");
     return value.toString();
   }
 
-  set ColName(value: string) {
-    this.set("ColName", Value.fromString(value));
+  set colName(value: string) {
+    this.set("colName", Value.fromString(value));
   }
 
-  get ColDescription(): string {
-    let value = this.get("ColDescription");
+  get colDescription(): string {
+    let value = this.get("colDescription");
     return value.toString();
   }
 
-  set ColDescription(value: string) {
-    this.set("ColDescription", Value.fromString(value));
+  set colDescription(value: string) {
+    this.set("colDescription", Value.fromString(value));
   }
 
-  get ColProperties(): Array<string | null> {
-    let value = this.get("ColProperties");
+  get colProperties(): Array<string | null> {
+    let value = this.get("colProperties");
     return value.toStringArray();
   }
 
-  set ColProperties(value: Array<string | null>) {
-    this.set("ColProperties", Value.fromStringArray(value));
+  set colProperties(value: Array<string | null>) {
+    this.set("colProperties", Value.fromStringArray(value));
   }
 
-  get ColAction(): string {
-    let value = this.get("ColAction");
+  get colAction(): string {
+    let value = this.get("colAction");
     return value.toString();
   }
 
-  set ColAction(value: string) {
-    this.set("ColAction", Value.fromString(value));
+  set colAction(value: string) {
+    this.set("colAction", Value.fromString(value));
   }
 
   get quantity(): BigInt | null {
@@ -146,6 +146,15 @@ export class Master extends Entity {
     } else {
       this.set("quantity", Value.fromBigInt(value as BigInt));
     }
+  }
+
+  get collectionAction(): string {
+    let value = this.get("collectionAction");
+    return value.toString();
+  }
+
+  set collectionAction(value: string) {
+    this.set("collectionAction", Value.fromString(value));
   }
 
   get nftCount(): BigInt | null {
@@ -259,94 +268,103 @@ export class Collection extends Entity {
     this.set("nftInfo", Value.fromString(value));
   }
 
-  get NFTContractAddress(): Bytes {
-    let value = this.get("NFTContractAddress");
-    return value.toBytes();
-  }
-
-  set NFTContractAddress(value: Bytes) {
-    this.set("NFTContractAddress", Value.fromBytes(value));
-  }
-
-  get MarketContractAddress(): Bytes {
-    let value = this.get("MarketContractAddress");
-    return value.toBytes();
-  }
-
-  set MarketContractAddress(value: Bytes) {
-    this.set("MarketContractAddress", Value.fromBytes(value));
-  }
-
-  get TreasuryContractAddress(): Bytes {
-    let value = this.get("TreasuryContractAddress");
-    return value.toBytes();
-  }
-
-  set TreasuryContractAddress(value: Bytes) {
-    this.set("TreasuryContractAddress", Value.fromBytes(value));
-  }
-
-  get NFTtransactionHash(): string {
-    let value = this.get("NFTtransactionHash");
+  get nftInformation(): string {
+    let value = this.get("nftInformation");
     return value.toString();
   }
 
-  set NFTtransactionHash(value: string) {
-    this.set("NFTtransactionHash", Value.fromString(value));
+  set nftInformation(value: string) {
+    this.set("nftInformation", Value.fromString(value));
   }
 
-  get NFTtimestamp(): BigInt {
-    let value = this.get("NFTtimestamp");
+  get nftContractAddress(): Bytes {
+    let value = this.get("nftContractAddress");
+    return value.toBytes();
+  }
+
+  set nftContractAddress(value: Bytes) {
+    this.set("nftContractAddress", Value.fromBytes(value));
+  }
+
+  get marketContractAddress(): Bytes {
+    let value = this.get("marketContractAddress");
+    return value.toBytes();
+  }
+
+  set marketContractAddress(value: Bytes) {
+    this.set("marketContractAddress", Value.fromBytes(value));
+  }
+
+  get treasuryContractAddress(): Bytes {
+    let value = this.get("treasuryContractAddress");
+    return value.toBytes();
+  }
+
+  set treasuryContractAddress(value: Bytes) {
+    this.set("treasuryContractAddress", Value.fromBytes(value));
+  }
+
+  get nftTransactionHash(): string {
+    let value = this.get("nftTransactionHash");
+    return value.toString();
+  }
+
+  set nftTransactionHash(value: string) {
+    this.set("nftTransactionHash", Value.fromString(value));
+  }
+
+  get nftTimestamp(): BigInt {
+    let value = this.get("nftTimestamp");
     return value.toBigInt();
   }
 
-  set NFTtimestamp(value: BigInt) {
-    this.set("NFTtimestamp", Value.fromBigInt(value));
+  set nftTimestamp(value: BigInt) {
+    this.set("nftTimestamp", Value.fromBigInt(value));
   }
 
-  get NFTaction(): string {
-    let value = this.get("NFTaction");
+  get nftAction(): string {
+    let value = this.get("nftAction");
     return value.toString();
   }
 
-  set NFTaction(value: string) {
-    this.set("NFTaction", Value.fromString(value));
+  set nftAction(value: string) {
+    this.set("nftAction", Value.fromString(value));
   }
 
-  get ColCode(): string {
-    let value = this.get("ColCode");
+  get colCode(): string {
+    let value = this.get("colCode");
     return value.toString();
   }
 
-  set ColCode(value: string) {
-    this.set("ColCode", Value.fromString(value));
+  set colCode(value: string) {
+    this.set("colCode", Value.fromString(value));
   }
 
-  get ColName(): string {
-    let value = this.get("ColName");
+  get colName(): string {
+    let value = this.get("colName");
     return value.toString();
   }
 
-  set ColName(value: string) {
-    this.set("ColName", Value.fromString(value));
+  set colName(value: string) {
+    this.set("colName", Value.fromString(value));
   }
 
-  get ColDescription(): string {
-    let value = this.get("ColDescription");
+  get colDescription(): string {
+    let value = this.get("colDescription");
     return value.toString();
   }
 
-  set ColDescription(value: string) {
-    this.set("ColDescription", Value.fromString(value));
+  set colDescription(value: string) {
+    this.set("colDescription", Value.fromString(value));
   }
 
-  get ColProperties(): Array<string | null> {
-    let value = this.get("ColProperties");
+  get colProperties(): Array<string | null> {
+    let value = this.get("colProperties");
     return value.toStringArray();
   }
 
-  set ColProperties(value: Array<string | null>) {
-    this.set("ColProperties", Value.fromStringArray(value));
+  set colProperties(value: Array<string | null>) {
+    this.set("colProperties", Value.fromStringArray(value));
   }
 
   get quantity(): BigInt | null {
@@ -380,6 +398,318 @@ export class Collection extends Entity {
       this.unset("nftCount");
     } else {
       this.set("nftCount", Value.fromBigInt(value as BigInt));
+    }
+  }
+
+  get seller(): string | null {
+    let value = this.get("seller");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set seller(value: string | null) {
+    if (value === null) {
+      this.unset("seller");
+    } else {
+      this.set("seller", Value.fromString(value as string));
+    }
+  }
+
+  get reservePrice(): BigInt | null {
+    let value = this.get("reservePrice");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set reservePrice(value: BigInt | null) {
+    if (value === null) {
+      this.unset("reservePrice");
+    } else {
+      this.set("reservePrice", Value.fromBigInt(value as BigInt));
+    }
+  }
+
+  get startTime(): BigInt | null {
+    let value = this.get("startTime");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set startTime(value: BigInt | null) {
+    if (value === null) {
+      this.unset("startTime");
+    } else {
+      this.set("startTime", Value.fromBigInt(value as BigInt));
+    }
+  }
+
+  get endTime(): BigInt | null {
+    let value = this.get("endTime");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set endTime(value: BigInt | null) {
+    if (value === null) {
+      this.unset("endTime");
+    } else {
+      this.set("endTime", Value.fromBigInt(value as BigInt));
+    }
+  }
+
+  get bidder(): Bytes | null {
+    let value = this.get("bidder");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set bidder(value: Bytes | null) {
+    if (value === null) {
+      this.unset("bidder");
+    } else {
+      this.set("bidder", Value.fromBytes(value as Bytes));
+    }
+  }
+
+  get auctionTransactionHash(): string | null {
+    let value = this.get("auctionTransactionHash");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set auctionTransactionHash(value: string | null) {
+    if (value === null) {
+      this.unset("auctionTransactionHash");
+    } else {
+      this.set("auctionTransactionHash", Value.fromString(value as string));
+    }
+  }
+
+  get auctionTimestamp(): BigInt | null {
+    let value = this.get("auctionTimestamp");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set auctionTimestamp(value: BigInt | null) {
+    if (value === null) {
+      this.unset("auctionTimestamp");
+    } else {
+      this.set("auctionTimestamp", Value.fromBigInt(value as BigInt));
+    }
+  }
+
+  get auctionAction(): string | null {
+    let value = this.get("auctionAction");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set auctionAction(value: string | null) {
+    if (value === null) {
+      this.unset("auctionAction");
+    } else {
+      this.set("auctionAction", Value.fromString(value as string));
+    }
+  }
+
+  get bidList(): Array<string | null> {
+    let value = this.get("bidList");
+    return value.toStringArray();
+  }
+
+  set bidList(value: Array<string | null>) {
+    this.set("bidList", Value.fromStringArray(value));
+  }
+}
+
+export class Bid extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id !== null, "Cannot save Bid entity without an ID");
+    assert(
+      id.kind == ValueKind.STRING,
+      "Cannot save Bid entity with non-string ID. " +
+        'Considering using .toHex() to convert the "id" to a string.'
+    );
+    store.set("Bid", id.toString(), this);
+  }
+
+  static load(id: string): Bid | null {
+    return store.get("Bid", id) as Bid | null;
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get auctionID(): string | null {
+    let value = this.get("auctionID");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set auctionID(value: string | null) {
+    if (value === null) {
+      this.unset("auctionID");
+    } else {
+      this.set("auctionID", Value.fromString(value as string));
+    }
+  }
+
+  get number(): BigInt | null {
+    let value = this.get("number");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set number(value: BigInt | null) {
+    if (value === null) {
+      this.unset("number");
+    } else {
+      this.set("number", Value.fromBigInt(value as BigInt));
+    }
+  }
+
+  get bidder(): string | null {
+    let value = this.get("bidder");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set bidder(value: string | null) {
+    if (value === null) {
+      this.unset("bidder");
+    } else {
+      this.set("bidder", Value.fromString(value as string));
+    }
+  }
+
+  get amount(): BigInt | null {
+    let value = this.get("amount");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set amount(value: BigInt | null) {
+    if (value === null) {
+      this.unset("amount");
+    } else {
+      this.set("amount", Value.fromBigInt(value as BigInt));
+    }
+  }
+
+  get endTime(): BigInt | null {
+    let value = this.get("endTime");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set endTime(value: BigInt | null) {
+    if (value === null) {
+      this.unset("endTime");
+    } else {
+      this.set("endTime", Value.fromBigInt(value as BigInt));
+    }
+  }
+
+  get transactionHash(): string | null {
+    let value = this.get("transactionHash");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set transactionHash(value: string | null) {
+    if (value === null) {
+      this.unset("transactionHash");
+    } else {
+      this.set("transactionHash", Value.fromString(value as string));
+    }
+  }
+
+  get timestamp(): BigInt | null {
+    let value = this.get("timestamp");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set timestamp(value: BigInt | null) {
+    if (value === null) {
+      this.unset("timestamp");
+    } else {
+      this.set("timestamp", Value.fromBigInt(value as BigInt));
+    }
+  }
+
+  get action(): string | null {
+    let value = this.get("action");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set action(value: string | null) {
+    if (value === null) {
+      this.unset("action");
+    } else {
+      this.set("action", Value.fromString(value as string));
     }
   }
 }

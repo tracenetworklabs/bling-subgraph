@@ -1,16 +1,5 @@
 [
 	{
-		"inputs": [
-			{
-				"internalType": "address payable",
-				"name": "_treasury",
-				"type": "address"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
 		"anonymous": false,
 		"inputs": [
 			{
@@ -48,6 +37,12 @@
 				"internalType": "address",
 				"name": "myContract",
 				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "quantity",
+				"type": "uint256"
 			}
 		],
 		"name": "CollectionCreated",
@@ -91,6 +86,12 @@
 				"internalType": "address",
 				"name": "myContract",
 				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "quantity",
+				"type": "uint256"
 			}
 		],
 		"name": "CollectionUpdated",
@@ -99,40 +100,14 @@
 	{
 		"inputs": [
 			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			},
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
+				"internalType": "address[]",
+				"name": "brands",
+				"type": "address[]"
 			}
 		],
-		"name": "collections",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "name",
-				"type": "string"
-			},
-			{
-				"internalType": "uint256",
-				"name": "quantity",
-				"type": "uint256"
-			},
-			{
-				"internalType": "string",
-				"name": "description",
-				"type": "string"
-			},
-			{
-				"internalType": "address",
-				"name": "myContract",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
+		"name": "addWhitelist",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -172,6 +147,99 @@
 			}
 		],
 		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_colContract",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "_colCode",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_colName",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_colDescription",
+				"type": "string"
+			},
+			{
+				"internalType": "string[]",
+				"name": "_colProperties",
+				"type": "string[]"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_totalSupply",
+				"type": "uint256"
+			}
+		],
+		"name": "updateCollection",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address payable",
+				"name": "_treasury",
+				"type": "address"
+			},
+			{
+				"internalType": "address payable",
+				"name": "_nftMarket",
+				"type": "address"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"name": "collections",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "name",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "quantity",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "description",
+				"type": "string"
+			},
+			{
+				"internalType": "address",
+				"name": "myContract",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -260,38 +328,19 @@
 		"inputs": [
 			{
 				"internalType": "address",
-				"name": "_colContract",
+				"name": "",
 				"type": "address"
-			},
-			{
-				"internalType": "string",
-				"name": "_colCode",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_colName",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_colDescription",
-				"type": "string"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_colQuantity",
-				"type": "uint256"
-			},
-			{
-				"internalType": "string[]",
-				"name": "_colProperties",
-				"type": "string[]"
 			}
 		],
-		"name": "updateCollection",
-		"outputs": [],
-		"stateMutability": "nonpayable",
+		"name": "whitelisted",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	}
 ]

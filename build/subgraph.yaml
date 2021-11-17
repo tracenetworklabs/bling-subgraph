@@ -6,27 +6,51 @@ dataSources:
     name: BlingMaster
     network: mumbai
     source:
-      address: "0x518a3b5AfDe97b07727f6D2F3C472F214732e7F5"
+      address: "0x9082b259Aa72C0aE38505F2693DE92f67A3aDee3"
       abi: BlingMaster
-      startBlock: 21316495
+      startBlock: 21531413
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
       file: BlingMaster\BlingMaster.wasm
       entities:
-        - collection
-        - Minted
+        - Master
+        - Collection
       abis:
         - name: BlingMaster
           file: BlingMaster\abis\BlingMaster.json
         - name: Collection
           file: BlingMaster\abis\Collection.json
       eventHandlers:
-        - event: CollectionCreated(address,string,string,string,string[],address)
+        - event: CollectionCreated(address,string,string,string,string[],address,uint256)
           handler: handleCollectionCreated
-        - event: CollectionUpdated(address,string,string,string,string[],address)
+        - event: CollectionUpdated(address,string,string,string,string[],address,uint256)
           handler: handleCollectionUpdated
+  - kind: ethereum/contract
+    name: Market
+    network: mumbai
+    source:
+      address: "0x45148432beCFf6a01aeF7ec59c9f222AeF69747f"
+      abi: Market
+      startBlock: 21531375
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Collection
+        - Bid
+      abis:
+        - name: Market
+          file: Market\abis\Market.json
+      eventHandlers:
+        - event: ReserveAuctionCreated(indexed address,indexed address,indexed
+            uint256,uint256,uint256)
+          handler: handleReserveAuctionCreated
+        - event: ReserveAuctionBidPlaced(indexed uint256,indexed address,uint256,uint256)
+          handler: handleReserveAuctionBidPlaced
+      file: BlingMaster\BlingMaster.wasm
 templates:
   - kind: ethereum/contract
     name: Collection
@@ -39,7 +63,7 @@ templates:
       language: wasm/assemblyscript
       file: BlingMaster\BlingMaster.wasm
       entities:
-        - Minted
+        - Collection
       abis:
         - name: Collection
           file: Collection\abis\Collection.json
