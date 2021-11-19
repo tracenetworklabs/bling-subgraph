@@ -14,11 +14,14 @@ import {
   Market as MarketContract,
   ReserveAuctionCreated as AuctionEvent,
   ReserveAuctionBidPlaced as BidsEvent,
+  ReserveAuctionCanceled as ReserveAuctionCanceledEvent,
+  ReserveAuctionFinalized as ReserveAuctionFinalizedEvent,
+  ReserveAuctionUpdated as ReserveAuctionUpdatedEvent,
 } from "../generated/Market/Market";
 
 import { Collection as collectionContract } from "../generated/templates";
 
-import { Collection, Master, Bid } from "../generated/schema";
+import { Collection, Master, Bid, Auction } from "../generated/schema";
 
 export function handleCollectionCreated(event: CollectionCreatedEvent): void {
   let token = Master.load(event.params.ColCode.toString());
@@ -30,9 +33,8 @@ export function handleCollectionCreated(event: CollectionCreatedEvent): void {
     token.colDescription = event.params.ColDescription;
     token.colProperties = event.params.ColProperties;
     token.timestamp = event.block.timestamp;
-    token.collectionAction="Collection Added";
-    token.transactionHash =
-      event.transaction.hash.toHexString();
+    token.collectionAction = "Collection Added";
+    token.transactionHash = event.transaction.hash.toHexString();
     token.myContract = event.params.myContract;
     token.colAction = "Collection Created";
 
@@ -43,29 +45,27 @@ export function handleCollectionCreated(event: CollectionCreatedEvent): void {
     token.quantity = supply;
 
     collectionContract.create(event.params.myContract);
-
   }
   token.save();
 }
 
 export function handleCollectionUpdated(event: CollectionUpdatedEvent): void {
   let token = Master.load(event.params.ColCode.toString());
-    token.myContract=event.params.myContract;
-    token.creator = event.params.creator;
-    token.colCode = event.params.ColCode;
-    token.colName = event.params.Colname;
-    token.colDescription = event.params.ColDescription;
-    token.colProperties = event.params.ColProperties;
-    token.quantity = event.params.quantity;
-    token.timestamp = event.block.timestamp;
-    token.transactionHash =
-    event.transaction.hash.toHexString();
-    token.colAction= "Collection Updated";
+  token.myContract = event.params.myContract;
+  token.creator = event.params.creator;
+  token.colCode = event.params.ColCode;
+  token.colName = event.params.Colname;
+  token.colDescription = event.params.ColDescription;
+  token.colProperties = event.params.ColProperties;
+  token.quantity = event.params.quantity;
+  token.timestamp = event.block.timestamp;
+  token.transactionHash = event.transaction.hash.toHexString();
+  token.colAction = "Collection Updated";
   token.save();
 }
 
 export function handleMinted(event: MintedEvent): void {
-  let hex = event.params.tokenId.toString()+event.address.toString();
+  let hex = event.params.tokenId.toString() + event.address.toString();
   let token = Collection.load(hex);
   if (!token) {
     token = new Collection(hex);
@@ -83,7 +83,7 @@ export function handleMinted(event: MintedEvent): void {
 
     collection.nftCount = count;
 
-    let name = (instance.getCollectionDetails(event.params.creator, code));
+    let name = instance.getCollectionDetails(event.params.creator, code);
 
     token.colName = name.value0;
     token.colDescription = name.value1;
@@ -129,8 +129,10 @@ export function handleMinted(event: MintedEvent): void {
 }
 
 export function handleReserveAuctionCreated(event: AuctionEvent): void {
-  let hex = event.params.tokenId.toString() + event.params.nftContract.toString();
+  let hex =
+    event.params.tokenId.toString() + event.params.nftContract.toString();
   let auction = Collection.load(hex);
+  let auctionInstance = Auction.load(event.params.auctionId.toString());
   if (auction) {
     auction = new Collection(hex);
     auction.seller = event.params.seller.toHexString();
@@ -146,6 +148,13 @@ export function handleReserveAuctionCreated(event: AuctionEvent): void {
     auction.endTime = result.endTime;
     auction.bidder = result.bidder;
     auction.bidList = [];
+  }
+  if (!auctionInstance) {
+    auctionInstance = new Auction(event.params.auctionId.toString());
+    auctionInstance.tokenID = event.params.tokenId;
+    auctionInstance.nftContract = event.params.nftContract;
+    auctionInstance.auctionID = hex.toString();
+    auctionInstance.save();
   }
   auction.save();
 }
@@ -192,4 +201,34 @@ export function handleReserveAuctionBidPlaced(event: BidsEvent): void {
     auction.save();
   }
   bids.save();
+}
+
+export function handleReserveAuctionCanceled(
+  event: ReserveAuctionCanceledEvent
+): void {
+  let auctionInstance = Auction.load(event.params.auctionId.toString());
+  let auction = Collection.load(auctionInstance.auctionID);
+  auction.auctionID = "0";
+  auction.auctionAction = "Auction Cancelled";
+  auction.save();
+}
+
+export function handleReserveAuctionFinalized(
+  event: ReserveAuctionFinalizedEvent
+): void {
+  let auctionInstance = Auction.load(event.params.auctionId.toString());
+  let auction = Collection.load(auctionInstance.auctionID);
+  auction.auctionAction = "Auction ended";
+  auction.bidder = event.params.bidder;
+  auction.owner = event.params.bidder;
+  auction.save();
+}
+
+export function handleReserveAuctionUpdated(
+  event: ReserveAuctionUpdatedEvent
+): void {
+  let auctionInstance = Auction.load(event.params.auctionId.toString());
+  let auction = Collection.load(auctionInstance.auctionID);
+  if (auction) auction.reservePrice = event.params.reservePrice;
+  auction.save();
 }
