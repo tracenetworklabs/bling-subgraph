@@ -48,7 +48,7 @@ type Collection @entity {
 
 type Bid @entity {
   id: ID!
-  auctionID: Collection!
+  auctionID: BigInt!
   number: BigInt
   bidder: String # uint256
   amount: BigInt # uint256
@@ -56,11 +56,12 @@ type Bid @entity {
   transactionHash: String
   timestamp: BigInt
   action: String
+  colDetails: Collection!
 }
 
 type Auction @entity {
   id: ID!
   tokenID : BigInt
   nftContract: Bytes
-  auctionID: String
+  index: String
 }

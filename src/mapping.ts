@@ -153,13 +153,14 @@ export function handleReserveAuctionCreated(event: AuctionEvent): void {
     auctionInstance = new Auction(event.params.auctionId.toString());
     auctionInstance.tokenID = event.params.tokenId;
     auctionInstance.nftContract = event.params.nftContract;
-    auctionInstance.auctionID = hex.toString();
+    auctionInstance.index = hex.toString();
     auctionInstance.save();
   }
   auction.save();
 }
 
 export function handleReserveAuctionBidPlaced(event: BidsEvent): void {
+  let auctionInstance = Auction.load(event.params.auctionId.toString());
   let bids = Bid.load(event.params.auctionId.toString());
   let Mcontract = MarketContract.bind(event.address);
   let result = Mcontract.getReserveAuction(event.params.auctionId);
@@ -168,13 +169,14 @@ export function handleReserveAuctionBidPlaced(event: BidsEvent): void {
 
   if (auction.bidList.length == 0) {
     bids = new Bid(event.transaction.hash.toString());
-    bids.auctionID = event.params.auctionId.toString();
+    bids.auctionID = event.params.auctionId;
     bids.bidder = event.params.bidder.toHexString();
     bids.amount = event.params.amount;
     bids.endTime = event.params.endTime;
     bids.transactionHash = event.transaction.hash.toHexString();
     bids.timestamp = event.block.timestamp;
     bids.action = "Place a bid";
+    bids.colDetails = auctionInstance.index;
 
     auction.bidder = event.params.bidder;
     auction.reservePrice = event.params.amount;
@@ -185,13 +187,14 @@ export function handleReserveAuctionBidPlaced(event: BidsEvent): void {
     auction.save();
   } else {
     bids = new Bid(event.transaction.hash.toString());
-    bids.auctionID = event.params.auctionId.toString();
+    bids.auctionID = event.params.auctionId;
     bids.bidder = event.params.bidder.toHexString();
     bids.amount = event.params.amount;
     bids.endTime = event.params.endTime;
     bids.transactionHash = event.transaction.hash.toHexString();
     bids.timestamp = event.block.timestamp;
     bids.action = "Place a bid";
+    bids.colDetails = auctionInstance.index;
 
     auction.bidder = event.params.bidder;
     auction.reservePrice = event.params.amount;
@@ -207,7 +210,7 @@ export function handleReserveAuctionCanceled(
   event: ReserveAuctionCanceledEvent
 ): void {
   let auctionInstance = Auction.load(event.params.auctionId.toString());
-  let auction = Collection.load(auctionInstance.auctionID);
+  let auction = Collection.load(auctionInstance.index);
   auction.auctionID = "0";
   auction.auctionAction = "Auction Cancelled";
   auction.save();
@@ -217,7 +220,7 @@ export function handleReserveAuctionFinalized(
   event: ReserveAuctionFinalizedEvent
 ): void {
   let auctionInstance = Auction.load(event.params.auctionId.toString());
-  let auction = Collection.load(auctionInstance.auctionID);
+  let auction = Collection.load(auctionInstance.index);
   auction.auctionAction = "Auction ended";
   auction.bidder = event.params.bidder;
   auction.owner = event.params.bidder;
@@ -228,7 +231,7 @@ export function handleReserveAuctionUpdated(
   event: ReserveAuctionUpdatedEvent
 ): void {
   let auctionInstance = Auction.load(event.params.auctionId.toString());
-  let auction = Collection.load(auctionInstance.auctionID);
+  let auction = Collection.load(auctionInstance.index);
   if (auction) auction.reservePrice = event.params.reservePrice;
   auction.save();
 }

@@ -576,13 +576,13 @@ export class Bid extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get auctionID(): string {
+  get auctionID(): BigInt {
     let value = this.get("auctionID");
-    return value.toString();
+    return value.toBigInt();
   }
 
-  set auctionID(value: string) {
-    this.set("auctionID", Value.fromString(value));
+  set auctionID(value: BigInt) {
+    this.set("auctionID", Value.fromBigInt(value));
   }
 
   get number(): BigInt | null {
@@ -703,6 +703,15 @@ export class Bid extends Entity {
       this.set("action", Value.fromString(value as string));
     }
   }
+
+  get colDetails(): string {
+    let value = this.get("colDetails");
+    return value.toString();
+  }
+
+  set colDetails(value: string) {
+    this.set("colDetails", Value.fromString(value));
+  }
 }
 
 export class Auction extends Entity {
@@ -769,8 +778,8 @@ export class Auction extends Entity {
     }
   }
 
-  get auctionID(): string | null {
-    let value = this.get("auctionID");
+  get index(): string | null {
+    let value = this.get("index");
     if (value === null || value.kind == ValueKind.NULL) {
       return null;
     } else {
@@ -778,11 +787,11 @@ export class Auction extends Entity {
     }
   }
 
-  set auctionID(value: string | null) {
+  set index(value: string | null) {
     if (value === null) {
-      this.unset("auctionID");
+      this.unset("index");
     } else {
-      this.set("auctionID", Value.fromString(value as string));
+      this.set("index", Value.fromString(value as string));
     }
   }
 }
