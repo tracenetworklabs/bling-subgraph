@@ -17,6 +17,7 @@ dataSources:
       entities:
         - Master
         - Collection
+        - History
       abis:
         - name: BlingMaster
           file: ./abis/BlingMaster.json
@@ -71,6 +72,7 @@ templates:
       file: ./src/mapping.ts
       entities:
         - Collection
+        - History
       abis:
         - name: Collection
           file: ./abis/Collection.json

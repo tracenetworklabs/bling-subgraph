@@ -21,7 +21,7 @@ import {
 
 import { Collection as collectionContract } from "../generated/templates";
 
-import { Collection, Master, Bid, Auction } from "../generated/schema";
+import { Collection, Master, Bid, Auction, History } from "../generated/schema";
 
 export function handleCollectionCreated(event: CollectionCreatedEvent): void {
   let token = Master.load(event.params.ColCode.toString());
@@ -65,6 +65,7 @@ export function handleCollectionUpdated(event: CollectionUpdatedEvent): void {
 }
 
 export function handleMinted(event: MintedEvent): void {
+  let history = History.load(event.params.tokenId.toString());
   let hex = event.params.tokenId.toString() + event.address.toString();
   let token = Collection.load(hex);
   if (!token) {
@@ -95,7 +96,6 @@ export function handleMinted(event: MintedEvent): void {
     collection.save();
 
     token.creator = event.params.creator;
-    //token.ipfsHash = event.params.tokenIPFSPath.toString();
     let tokenContract = NFTContract.bind(event.address);
     token.ipfsHash = tokenContract
       .getTokenIPFSPath(event.params.tokenId)
@@ -125,10 +125,32 @@ export function handleMinted(event: MintedEvent): void {
 
     token.nftInfo = temp.toString();
   }
+
+  if (token.history.length == 0) {
+    history = new History(event.params.tokenId.toString());
+    history.address = event.params.creator;
+    history.timestamp = event.block.timestamp;
+    history.action = "Token Minted";
+    history.amount = "0";
+    let Htemp = token.history;
+    token.history = Htemp.concat([history.id]);
+    history.save();
+  } else {
+    history = new History(event.params.tokenId.toString());
+    history.address = event.params.creator;
+    history.timestamp = event.block.timestamp;
+    history.action = "Token Minted";
+    history.amount = "0";
+    let Htemp = token.history;
+    token.history = Htemp.concat([history.id]);
+    history.save();
+  }
+
   token.save();
 }
 
 export function handleReserveAuctionCreated(event: AuctionEvent): void {
+  let history = History.load(event.params.tokenId.toString());
   let hex =
     event.params.tokenId.toString() + event.params.nftContract.toString();
   let auction = Collection.load(hex);
@@ -148,6 +170,15 @@ export function handleReserveAuctionCreated(event: AuctionEvent): void {
     auction.endTime = result.endTime;
     auction.bidder = result.bidder;
     auction.bidList = [];
+
+    history = new History(event.params.tokenId.toString());
+    history.address = event.params.seller;
+    history.timestamp = event.block.timestamp;
+    history.action = "Auction Started";
+    history.amount = event.params.reservePrice.toString();
+    let Htemp = auction.history;
+    auction.history = Htemp.concat([history.id]);
+    history.save();
   }
   if (!auctionInstance) {
     auctionInstance = new Auction(event.params.auctionId.toString());
@@ -180,7 +211,6 @@ export function handleReserveAuctionBidPlaced(event: BidsEvent): void {
 
     auction.bidder = event.params.bidder;
     auction.reservePrice = event.params.amount;
-    bids.number = BigInt.fromI32(auction.bidList.length);
 
     let temp = auction.bidList;
     auction.bidList = temp.concat([bids.id]);
@@ -198,7 +228,6 @@ export function handleReserveAuctionBidPlaced(event: BidsEvent): void {
 
     auction.bidder = event.params.bidder;
     auction.reservePrice = event.params.amount;
-    bids.number = BigInt.fromI32(auction.bidList.length);
     let temp = auction.bidList;
     auction.bidList = temp.concat([bids.id]);
     auction.save();
