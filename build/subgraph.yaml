@@ -17,6 +17,7 @@ dataSources:
       entities:
         - Master
         - Collection
+        - History
       abis:
         - name: BlingMaster
           file: BlingMaster\abis\BlingMaster.json
@@ -41,6 +42,7 @@ dataSources:
       entities:
         - Collection
         - Bid
+        - Auction
       abis:
         - name: Market
           file: Market\abis\Market.json
@@ -50,6 +52,13 @@ dataSources:
           handler: handleReserveAuctionCreated
         - event: ReserveAuctionBidPlaced(indexed uint256,indexed address,uint256,uint256)
           handler: handleReserveAuctionBidPlaced
+        - event: ReserveAuctionCanceled(indexed uint256)
+          handler: handleReserveAuctionCanceled
+        - event: ReserveAuctionFinalized(indexed uint256,indexed address,indexed
+            address,uint256,uint256,uint256)
+          handler: handleReserveAuctionFinalized
+        - event: ReserveAuctionUpdated(indexed uint256,uint256)
+          handler: handleReserveAuctionUpdated
       file: BlingMaster\BlingMaster.wasm
 templates:
   - kind: ethereum/contract
@@ -64,6 +73,7 @@ templates:
       file: BlingMaster\BlingMaster.wasm
       entities:
         - Collection
+        - History
       abis:
         - name: Collection
           file: Collection\abis\Collection.json
