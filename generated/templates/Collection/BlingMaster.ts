@@ -94,6 +94,32 @@ export class CollectionUpdated__Params {
   }
 }
 
+export class Whitelist extends ethereum.Event {
+  get params(): Whitelist__Params {
+    return new Whitelist__Params(this);
+  }
+}
+
+export class Whitelist__Params {
+  _event: Whitelist;
+
+  constructor(event: Whitelist) {
+    this._event = event;
+  }
+
+  get brand(): Array<Address> {
+    return this._event.parameters[0].value.toAddressArray();
+  }
+
+  get name(): Array<string> {
+    return this._event.parameters[1].value.toStringArray();
+  }
+
+  get status(): Array<boolean> {
+    return this._event.parameters[2].value.toBooleanArray();
+  }
+}
+
 export class BlingMaster__collectionsResult {
   value0: string;
   value1: BigInt;
@@ -195,6 +221,25 @@ export class BlingMaster extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  brandName(param0: Address): string {
+    let result = super.call("brandName", "brandName(address):(string)", [
+      ethereum.Value.fromAddress(param0)
+    ]);
+
+    return result[0].toString();
+  }
+
+  try_brandName(param0: Address): ethereum.CallResult<string> {
+    let result = super.tryCall("brandName", "brandName(address):(string)", [
+      ethereum.Value.fromAddress(param0)
+    ]);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toString());
   }
 
   collections(param0: Address, param1: string): BlingMaster__collectionsResult {
@@ -341,32 +386,36 @@ export class BlingMaster extends ethereum.SmartContract {
   }
 }
 
-export class AddWhitelistCall extends ethereum.Call {
-  get inputs(): AddWhitelistCall__Inputs {
-    return new AddWhitelistCall__Inputs(this);
+export class ConstructorCall extends ethereum.Call {
+  get inputs(): ConstructorCall__Inputs {
+    return new ConstructorCall__Inputs(this);
   }
 
-  get outputs(): AddWhitelistCall__Outputs {
-    return new AddWhitelistCall__Outputs(this);
+  get outputs(): ConstructorCall__Outputs {
+    return new ConstructorCall__Outputs(this);
   }
 }
 
-export class AddWhitelistCall__Inputs {
-  _call: AddWhitelistCall;
+export class ConstructorCall__Inputs {
+  _call: ConstructorCall;
 
-  constructor(call: AddWhitelistCall) {
+  constructor(call: ConstructorCall) {
     this._call = call;
   }
 
-  get brands(): Array<Address> {
-    return this._call.inputValues[0].value.toAddressArray();
+  get _treasury(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get _nftMarket(): Address {
+    return this._call.inputValues[1].value.toAddress();
   }
 }
 
-export class AddWhitelistCall__Outputs {
-  _call: AddWhitelistCall;
+export class ConstructorCall__Outputs {
+  _call: ConstructorCall;
 
-  constructor(call: AddWhitelistCall) {
+  constructor(call: ConstructorCall) {
     this._call = call;
   }
 }
@@ -421,6 +470,48 @@ export class CreateCollectionCall__Outputs {
   }
 }
 
+export class UpdateAdminConfigCall extends ethereum.Call {
+  get inputs(): UpdateAdminConfigCall__Inputs {
+    return new UpdateAdminConfigCall__Inputs(this);
+  }
+
+  get outputs(): UpdateAdminConfigCall__Outputs {
+    return new UpdateAdminConfigCall__Outputs(this);
+  }
+}
+
+export class UpdateAdminConfigCall__Inputs {
+  _call: UpdateAdminConfigCall;
+
+  constructor(call: UpdateAdminConfigCall) {
+    this._call = call;
+  }
+
+  get _colContract(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get _colCode(): string {
+    return this._call.inputValues[1].value.toString();
+  }
+
+  get _nftMarket(): Address {
+    return this._call.inputValues[2].value.toAddress();
+  }
+
+  get baseURI(): string {
+    return this._call.inputValues[3].value.toString();
+  }
+}
+
+export class UpdateAdminConfigCall__Outputs {
+  _call: UpdateAdminConfigCall;
+
+  constructor(call: UpdateAdminConfigCall) {
+    this._call = call;
+  }
+}
+
 export class UpdateCollectionCall extends ethereum.Call {
   get inputs(): UpdateCollectionCall__Inputs {
     return new UpdateCollectionCall__Inputs(this);
@@ -471,36 +562,40 @@ export class UpdateCollectionCall__Outputs {
   }
 }
 
-export class ConstructorCall extends ethereum.Call {
-  get inputs(): ConstructorCall__Inputs {
-    return new ConstructorCall__Inputs(this);
+export class UpdateWhitelistCall extends ethereum.Call {
+  get inputs(): UpdateWhitelistCall__Inputs {
+    return new UpdateWhitelistCall__Inputs(this);
   }
 
-  get outputs(): ConstructorCall__Outputs {
-    return new ConstructorCall__Outputs(this);
+  get outputs(): UpdateWhitelistCall__Outputs {
+    return new UpdateWhitelistCall__Outputs(this);
   }
 }
 
-export class ConstructorCall__Inputs {
-  _call: ConstructorCall;
+export class UpdateWhitelistCall__Inputs {
+  _call: UpdateWhitelistCall;
 
-  constructor(call: ConstructorCall) {
+  constructor(call: UpdateWhitelistCall) {
     this._call = call;
   }
 
-  get _treasury(): Address {
-    return this._call.inputValues[0].value.toAddress();
+  get brands(): Array<Address> {
+    return this._call.inputValues[0].value.toAddressArray();
   }
 
-  get _nftMarket(): Address {
-    return this._call.inputValues[1].value.toAddress();
+  get name(): Array<string> {
+    return this._call.inputValues[1].value.toStringArray();
+  }
+
+  get status(): Array<boolean> {
+    return this._call.inputValues[2].value.toBooleanArray();
   }
 }
 
-export class ConstructorCall__Outputs {
-  _call: ConstructorCall;
+export class UpdateWhitelistCall__Outputs {
+  _call: UpdateWhitelistCall;
 
-  constructor(call: ConstructorCall) {
+  constructor(call: UpdateWhitelistCall) {
     this._call = call;
   }
 }

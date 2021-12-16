@@ -12,6 +12,7 @@ type Master @entity {
   quantity: BigInt
   collectionAction: String!
   nftCount: BigInt
+  brandName: String
 }
 
 type Collection @entity {
@@ -22,7 +23,6 @@ type Collection @entity {
   owner: Bytes!
   auctionID: String!
   tokenURI: String!
-  nftInfo: String!
   nftContractAddress: Bytes!
   marketContractAddress: Bytes!
   treasuryContractAddress: Bytes!
@@ -35,6 +35,7 @@ type Collection @entity {
   colProperties:[String]!
   quantity: BigInt
   nftCount: BigInt
+  brandName: String
   seller: String
   reservePrice: BigInt
   startTime: BigInt
@@ -43,14 +44,14 @@ type Collection @entity {
   auctionTransactionHash: String
   auctionTimestamp: BigInt
   auctionAction: String
+  tokenAddress: String
+  tokenName: String
   bidList: [Bid!]
   history:[History!]
 }
-
 type Bid @entity {
   id: ID!
   auctionID: BigInt!
-  number: BigInt
   bidder: String # uint256
   amount: BigInt # uint256
   endTime: BigInt #uint256
@@ -59,6 +60,19 @@ type Bid @entity {
   action: String
   colDetails: Collection!
 }
+
+type BidPlaced @entity {
+  id: ID!
+  auctionID: BigInt!
+  bidder: String # uint256
+  amount: BigInt # uint256
+  endTime: BigInt #uint256
+  transactionHash: String
+  timestamp: BigInt
+  action: String
+  colDetails: Collection!
+}
+
 
 type Auction @entity {
   id: ID!
@@ -69,13 +83,32 @@ type Auction @entity {
 
 type History @entity {
   id: ID!
+  tokenID: BigInt
+  auctionID: String
   mintAddress: Bytes
+  nftContractAddress: Bytes
   mintTimestamp: BigInt
   mintAction: String
   mintAmount: String
+  tokenAddress: String
+  tokenName: String
   auctionAddress: Bytes
   auctionTimestamp: BigInt
   auctionAction: String
   auctionAmount: String
+  finalizeAddress: Bytes
+  finalizeTimestamp: BigInt
+  finalizeAuction: String
+  updateTimestamp: BigInt
+  updateAuction: String
+  updateAmount: String
+  cancelTimestamp: BigInt
+  cancelAuction: String
   bidList: [Bid!]
+}
+
+type TokenDetail @entity {
+  id: ID!
+  tokenAddress: Bytes
+  status: String
 }

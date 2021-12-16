@@ -6,9 +6,9 @@ dataSources:
     name: BlingMaster
     network: mumbai
     source:
-      address: "0x9082b259Aa72C0aE38505F2693DE92f67A3aDee3"
+      address: "0x73AA3A6Fc9b1936705315D6a2F70b35353f703fF"
       abi: BlingMaster
-      startBlock: 21531413
+      startBlock: 22728769
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -32,9 +32,9 @@ dataSources:
     name: Market
     network: mumbai
     source:
-      address: "0x45148432beCFf6a01aeF7ec59c9f222AeF69747f"
+      address: "0xF99319A175825f93bAb942b965aC9F41a72b7885"
       abi: Market
-      startBlock: 21531375
+      startBlock: 22728741
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -42,13 +42,15 @@ dataSources:
       entities:
         - Collection
         - Bid
+        - BidPlaced
         - Auction
+        - TokenDetail
       abis:
         - name: Market
           file: Market\abis\Market.json
       eventHandlers:
         - event: ReserveAuctionCreated(indexed address,indexed address,indexed
-            uint256,uint256,uint256)
+            uint256,uint256,uint256,address,string)
           handler: handleReserveAuctionCreated
         - event: ReserveAuctionBidPlaced(indexed uint256,indexed address,uint256,uint256)
           handler: handleReserveAuctionBidPlaced
@@ -59,6 +61,8 @@ dataSources:
           handler: handleReserveAuctionFinalized
         - event: ReserveAuctionUpdated(indexed uint256,uint256)
           handler: handleReserveAuctionUpdated
+        - event: TokenAdded(indexed address[],indexed bool[])
+          handler: handleTokenAdded
       file: BlingMaster\BlingMaster.wasm
 templates:
   - kind: ethereum/contract

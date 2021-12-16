@@ -1,5 +1,21 @@
 [
   {
+    "inputs": [
+      {
+        "internalType": "address payable",
+        "name": "_treasury",
+        "type": "address"
+      },
+      {
+        "internalType": "address payable",
+        "name": "_nftMarket",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
     "anonymous": false,
     "inputs": [
       {
@@ -100,19 +116,6 @@
   {
     "inputs": [
       {
-        "internalType": "address[]",
-        "name": "brands",
-        "type": "address[]"
-      }
-    ],
-    "name": "addWhitelist",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "string",
         "name": "_colCode",
         "type": "string"
@@ -162,6 +165,34 @@
         "type": "string"
       },
       {
+        "internalType": "address",
+        "name": "_nftMarket",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "baseURI",
+        "type": "string"
+      }
+    ],
+    "name": "updateAdminConfig",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_colContract",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "_colCode",
+        "type": "string"
+      },
+      {
         "internalType": "string",
         "name": "_colName",
         "type": "string"
@@ -190,18 +221,69 @@
   {
     "inputs": [
       {
-        "internalType": "address payable",
-        "name": "_treasury",
-        "type": "address"
+        "internalType": "address[]",
+        "name": "brands",
+        "type": "address[]"
       },
       {
-        "internalType": "address payable",
-        "name": "_nftMarket",
+        "internalType": "string[]",
+        "name": "name",
+        "type": "string[]"
+      },
+      {
+        "internalType": "bool[]",
+        "name": "status",
+        "type": "bool[]"
+      }
+    ],
+    "name": "updateWhitelist",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address[]",
+        "name": "brand",
+        "type": "address[]"
+      },
+      {
+        "indexed": false,
+        "internalType": "string[]",
+        "name": "name",
+        "type": "string[]"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool[]",
+        "name": "status",
+        "type": "bool[]"
+      }
+    ],
+    "name": "Whitelist",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
         "type": "address"
       }
     ],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
+    "name": "brandName",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
   },
   {
     "inputs": [

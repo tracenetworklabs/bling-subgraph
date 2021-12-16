@@ -173,6 +173,23 @@ export class Master extends Entity {
       this.set("nftCount", Value.fromBigInt(value as BigInt));
     }
   }
+
+  get brandName(): string | null {
+    let value = this.get("brandName");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set brandName(value: string | null) {
+    if (value === null) {
+      this.unset("brandName");
+    } else {
+      this.set("brandName", Value.fromString(value as string));
+    }
+  }
 }
 
 export class Collection extends Entity {
@@ -257,15 +274,6 @@ export class Collection extends Entity {
 
   set tokenURI(value: string) {
     this.set("tokenURI", Value.fromString(value));
-  }
-
-  get nftInfo(): string {
-    let value = this.get("nftInfo");
-    return value.toString();
-  }
-
-  set nftInfo(value: string) {
-    this.set("nftInfo", Value.fromString(value));
   }
 
   get nftContractAddress(): Bytes {
@@ -389,6 +397,23 @@ export class Collection extends Entity {
       this.unset("nftCount");
     } else {
       this.set("nftCount", Value.fromBigInt(value as BigInt));
+    }
+  }
+
+  get brandName(): string | null {
+    let value = this.get("brandName");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set brandName(value: string | null) {
+    if (value === null) {
+      this.unset("brandName");
+    } else {
+      this.set("brandName", Value.fromString(value as string));
     }
   }
 
@@ -528,6 +553,40 @@ export class Collection extends Entity {
     }
   }
 
+  get tokenAddress(): string | null {
+    let value = this.get("tokenAddress");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set tokenAddress(value: string | null) {
+    if (value === null) {
+      this.unset("tokenAddress");
+    } else {
+      this.set("tokenAddress", Value.fromString(value as string));
+    }
+  }
+
+  get tokenName(): string | null {
+    let value = this.get("tokenName");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set tokenName(value: string | null) {
+    if (value === null) {
+      this.unset("tokenName");
+    } else {
+      this.set("tokenName", Value.fromString(value as string));
+    }
+  }
+
   get bidList(): Array<string> | null {
     let value = this.get("bidList");
     if (value === null || value.kind == ValueKind.NULL) {
@@ -602,8 +661,25 @@ export class Bid extends Entity {
     this.set("auctionID", Value.fromBigInt(value));
   }
 
-  get number(): BigInt | null {
-    let value = this.get("number");
+  get bidder(): string | null {
+    let value = this.get("bidder");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set bidder(value: string | null) {
+    if (value === null) {
+      this.unset("bidder");
+    } else {
+      this.set("bidder", Value.fromString(value as string));
+    }
+  }
+
+  get amount(): BigInt | null {
+    let value = this.get("amount");
     if (value === null || value.kind == ValueKind.NULL) {
       return null;
     } else {
@@ -611,12 +687,129 @@ export class Bid extends Entity {
     }
   }
 
-  set number(value: BigInt | null) {
+  set amount(value: BigInt | null) {
     if (value === null) {
-      this.unset("number");
+      this.unset("amount");
     } else {
-      this.set("number", Value.fromBigInt(value as BigInt));
+      this.set("amount", Value.fromBigInt(value as BigInt));
     }
+  }
+
+  get endTime(): BigInt | null {
+    let value = this.get("endTime");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set endTime(value: BigInt | null) {
+    if (value === null) {
+      this.unset("endTime");
+    } else {
+      this.set("endTime", Value.fromBigInt(value as BigInt));
+    }
+  }
+
+  get transactionHash(): string | null {
+    let value = this.get("transactionHash");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set transactionHash(value: string | null) {
+    if (value === null) {
+      this.unset("transactionHash");
+    } else {
+      this.set("transactionHash", Value.fromString(value as string));
+    }
+  }
+
+  get timestamp(): BigInt | null {
+    let value = this.get("timestamp");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set timestamp(value: BigInt | null) {
+    if (value === null) {
+      this.unset("timestamp");
+    } else {
+      this.set("timestamp", Value.fromBigInt(value as BigInt));
+    }
+  }
+
+  get action(): string | null {
+    let value = this.get("action");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set action(value: string | null) {
+    if (value === null) {
+      this.unset("action");
+    } else {
+      this.set("action", Value.fromString(value as string));
+    }
+  }
+
+  get colDetails(): string {
+    let value = this.get("colDetails");
+    return value.toString();
+  }
+
+  set colDetails(value: string) {
+    this.set("colDetails", Value.fromString(value));
+  }
+}
+
+export class BidPlaced extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id !== null, "Cannot save BidPlaced entity without an ID");
+    assert(
+      id.kind == ValueKind.STRING,
+      "Cannot save BidPlaced entity with non-string ID. " +
+        'Considering using .toHex() to convert the "id" to a string.'
+    );
+    store.set("BidPlaced", id.toString(), this);
+  }
+
+  static load(id: string): BidPlaced | null {
+    return store.get("BidPlaced", id) as BidPlaced | null;
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get auctionID(): BigInt {
+    let value = this.get("auctionID");
+    return value.toBigInt();
+  }
+
+  set auctionID(value: BigInt) {
+    this.set("auctionID", Value.fromBigInt(value));
   }
 
   get bidder(): string | null {
@@ -843,6 +1036,40 @@ export class History extends Entity {
     this.set("id", Value.fromString(value));
   }
 
+  get tokenID(): BigInt | null {
+    let value = this.get("tokenID");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set tokenID(value: BigInt | null) {
+    if (value === null) {
+      this.unset("tokenID");
+    } else {
+      this.set("tokenID", Value.fromBigInt(value as BigInt));
+    }
+  }
+
+  get auctionID(): string | null {
+    let value = this.get("auctionID");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set auctionID(value: string | null) {
+    if (value === null) {
+      this.unset("auctionID");
+    } else {
+      this.set("auctionID", Value.fromString(value as string));
+    }
+  }
+
   get mintAddress(): Bytes | null {
     let value = this.get("mintAddress");
     if (value === null || value.kind == ValueKind.NULL) {
@@ -857,6 +1084,23 @@ export class History extends Entity {
       this.unset("mintAddress");
     } else {
       this.set("mintAddress", Value.fromBytes(value as Bytes));
+    }
+  }
+
+  get nftContractAddress(): Bytes | null {
+    let value = this.get("nftContractAddress");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set nftContractAddress(value: Bytes | null) {
+    if (value === null) {
+      this.unset("nftContractAddress");
+    } else {
+      this.set("nftContractAddress", Value.fromBytes(value as Bytes));
     }
   }
 
@@ -908,6 +1152,40 @@ export class History extends Entity {
       this.unset("mintAmount");
     } else {
       this.set("mintAmount", Value.fromString(value as string));
+    }
+  }
+
+  get tokenAddress(): string | null {
+    let value = this.get("tokenAddress");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set tokenAddress(value: string | null) {
+    if (value === null) {
+      this.unset("tokenAddress");
+    } else {
+      this.set("tokenAddress", Value.fromString(value as string));
+    }
+  }
+
+  get tokenName(): string | null {
+    let value = this.get("tokenName");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set tokenName(value: string | null) {
+    if (value === null) {
+      this.unset("tokenName");
+    } else {
+      this.set("tokenName", Value.fromString(value as string));
     }
   }
 
@@ -979,6 +1257,142 @@ export class History extends Entity {
     }
   }
 
+  get finalizeAddress(): Bytes | null {
+    let value = this.get("finalizeAddress");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set finalizeAddress(value: Bytes | null) {
+    if (value === null) {
+      this.unset("finalizeAddress");
+    } else {
+      this.set("finalizeAddress", Value.fromBytes(value as Bytes));
+    }
+  }
+
+  get finalizeTimestamp(): BigInt | null {
+    let value = this.get("finalizeTimestamp");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set finalizeTimestamp(value: BigInt | null) {
+    if (value === null) {
+      this.unset("finalizeTimestamp");
+    } else {
+      this.set("finalizeTimestamp", Value.fromBigInt(value as BigInt));
+    }
+  }
+
+  get finalizeAuction(): string | null {
+    let value = this.get("finalizeAuction");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set finalizeAuction(value: string | null) {
+    if (value === null) {
+      this.unset("finalizeAuction");
+    } else {
+      this.set("finalizeAuction", Value.fromString(value as string));
+    }
+  }
+
+  get updateTimestamp(): BigInt | null {
+    let value = this.get("updateTimestamp");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set updateTimestamp(value: BigInt | null) {
+    if (value === null) {
+      this.unset("updateTimestamp");
+    } else {
+      this.set("updateTimestamp", Value.fromBigInt(value as BigInt));
+    }
+  }
+
+  get updateAuction(): string | null {
+    let value = this.get("updateAuction");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set updateAuction(value: string | null) {
+    if (value === null) {
+      this.unset("updateAuction");
+    } else {
+      this.set("updateAuction", Value.fromString(value as string));
+    }
+  }
+
+  get updateAmount(): string | null {
+    let value = this.get("updateAmount");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set updateAmount(value: string | null) {
+    if (value === null) {
+      this.unset("updateAmount");
+    } else {
+      this.set("updateAmount", Value.fromString(value as string));
+    }
+  }
+
+  get cancelTimestamp(): BigInt | null {
+    let value = this.get("cancelTimestamp");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set cancelTimestamp(value: BigInt | null) {
+    if (value === null) {
+      this.unset("cancelTimestamp");
+    } else {
+      this.set("cancelTimestamp", Value.fromBigInt(value as BigInt));
+    }
+  }
+
+  get cancelAuction(): string | null {
+    let value = this.get("cancelAuction");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set cancelAuction(value: string | null) {
+    if (value === null) {
+      this.unset("cancelAuction");
+    } else {
+      this.set("cancelAuction", Value.fromString(value as string));
+    }
+  }
+
   get bidList(): Array<string> | null {
     let value = this.get("bidList");
     if (value === null || value.kind == ValueKind.NULL) {
@@ -993,6 +1407,71 @@ export class History extends Entity {
       this.unset("bidList");
     } else {
       this.set("bidList", Value.fromStringArray(value as Array<string>));
+    }
+  }
+}
+
+export class TokenDetail extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id !== null, "Cannot save TokenDetail entity without an ID");
+    assert(
+      id.kind == ValueKind.STRING,
+      "Cannot save TokenDetail entity with non-string ID. " +
+        'Considering using .toHex() to convert the "id" to a string.'
+    );
+    store.set("TokenDetail", id.toString(), this);
+  }
+
+  static load(id: string): TokenDetail | null {
+    return store.get("TokenDetail", id) as TokenDetail | null;
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get tokenAddress(): Bytes | null {
+    let value = this.get("tokenAddress");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set tokenAddress(value: Bytes | null) {
+    if (value === null) {
+      this.unset("tokenAddress");
+    } else {
+      this.set("tokenAddress", Value.fromBytes(value as Bytes));
+    }
+  }
+
+  get status(): string | null {
+    let value = this.get("status");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set status(value: string | null) {
+    if (value === null) {
+      this.unset("status");
+    } else {
+      this.set("status", Value.fromString(value as string));
     }
   }
 }
