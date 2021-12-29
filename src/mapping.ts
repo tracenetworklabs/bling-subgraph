@@ -8,7 +8,7 @@ import {
 import {
   Collection as NFTContract,
   Minted as MintedEvent,
-  Updated as UpdatedEvent
+  Updated as UpdatedEvent,
 } from "../generated/templates/Collection/Collection";
 
 import {
@@ -18,12 +18,25 @@ import {
   ReserveAuctionCanceled as ReserveAuctionCanceledEvent,
   ReserveAuctionFinalized as ReserveAuctionFinalizedEvent,
   ReserveAuctionUpdated as ReserveAuctionUpdatedEvent,
-  TokenAdded as TokenAddedEvent
+  TokenAdded as TokenAddedEvent,
 } from "../generated/Market/Market";
 
 import { Collection as collectionContract } from "../generated/templates";
 
-import { Collection, Master, Bid, Auction, History, BidPlaced, TokenDetail, AllAuction, CancelAuction, URI, Update, Finalize } from "../generated/schema";
+import {
+  Collection,
+  Master,
+  Bid,
+  Auction,
+  History,
+  BidPlaced,
+  TokenDetail,
+  AllAuction,
+  CancelAuction,
+  URI,
+  Update,
+  Finalize,
+} from "../generated/schema";
 
 export function handleCollectionCreated(event: CollectionCreatedEvent): void {
   let token = Master.load(event.params.ColCode.toString());
@@ -43,13 +56,12 @@ export function handleCollectionCreated(event: CollectionCreatedEvent): void {
     let CContract = NFTContract.bind(event.params.myContract);
     let supply = CContract.totalSupply();
     token.quantity = supply;
-    
-    let master = CContract.blingMaster();
-    let instance = masterContract.bind(master);
+
+    let instance = masterContract.bind(event.address);
     let brandname = instance.brandName(event.params.creator);
     token.beneficiary = instance.shares(event.params.myContract);
     token.brandName = brandname;
-    
+
     collectionContract.create(event.params.myContract);
   }
   token.save();
@@ -64,7 +76,8 @@ export function handleCollectionUpdated(event: CollectionUpdatedEvent): void {
   token.colDescription = event.params.ColDescription;
   token.colProperties = event.params.ColProperties;
   token.quantity = event.params.quantity;
-  token.beneficiary = event.params.beneficiary;
+  let instance = masterContract.bind(event.address);
+  token.beneficiary = instance.shares(event.params.myContract);
   token.timestamp = event.block.timestamp;
   token.transactionHash = event.transaction.hash.toHexString();
   token.colAction = "Collection Updated";
@@ -114,7 +127,6 @@ export function handleMinted(event: MintedEvent): void {
     token.tokenURI = tokenContract.tokenURI(event.params.tokenId).toString();
     token.owner = tokenContract.ownerOf(event.params.tokenId);
 
-
     token.auctionID = "0";
 
     token.nftContractAddress = event.address;
@@ -133,7 +145,7 @@ export function handleMinted(event: MintedEvent): void {
     history.mintTimestamp = event.block.timestamp;
     history.mintAction = "Token Minted";
     history.mintAmount = "0";
-    history.nftContractAddress=event.address;
+    history.nftContractAddress = event.address;
     let Htemp = token.history;
     token.history = Htemp.concat([history.id]);
     history.save();
@@ -144,7 +156,7 @@ export function handleMinted(event: MintedEvent): void {
     history.mintTimestamp = event.block.timestamp;
     history.mintAction = "Token Minted";
     history.mintAmount = "0";
-    history.nftContractAddress=event.address;
+    history.nftContractAddress = event.address;
     let Htemp = token.history;
     token.history = Htemp.concat([history.id]);
     history.save();
@@ -154,12 +166,11 @@ export function handleMinted(event: MintedEvent): void {
 
 export function handleTokenAdded(event: TokenAddedEvent): void {
   let token = TokenDetail.load(event.params.tokenAddress.toString());
-  if(!token) {
+  if (!token) {
     token = new TokenDetail(event.params.tokenAddress.toString());
     token.tokenAddress = event.params.tokenAddress;
     token.status = event.params.status.toString();
-  }
-  else {
+  } else {
     token.status = event.params.status.toString();
   }
 }
@@ -171,7 +182,7 @@ export function handleReserveAuctionCreated(event: AuctionEvent): void {
   //let history = History.load(hex);
   let allAuctionHistory = History.load(hex);
   let allAuction = AllAuction.load(hex);
-  if(auction.auctionList.length==0) {
+  if (auction.auctionList.length == 0) {
     allAuction = new AllAuction(event.transaction.hash.toString());
     //allAuction = new AllAuction(hex);
     allAuction.tokenID = event.params.tokenId;
@@ -191,8 +202,7 @@ export function handleReserveAuctionCreated(event: AuctionEvent): void {
     allAuctionHistory.auctionList = tempVar.concat([allAuction.id]);
     allAuctionHistory.save();
     auction.save();
-  }
-  else {
+  } else {
     allAuction = new AllAuction(event.transaction.hash.toString());
     //allAuction = new AllAuction(hex);
     allAuction.tokenID = event.params.tokenId;
@@ -214,8 +224,7 @@ export function handleReserveAuctionCreated(event: AuctionEvent): void {
   }
 
   allAuction.save();
- 
- 
+
   let auctionInstance = Auction.load(event.params.auctionId.toString());
   if (auction) {
     auction = new Collection(hex);
@@ -313,7 +322,7 @@ export function handleReserveAuctionBidPlaced(event: BidsEvent): void {
   }
 
   let bidPlaced = BidPlaced.load(event.params.auctionId.toString());
-   if(!bidPlaced) {
+  if (!bidPlaced) {
     bidPlaced = new BidPlaced(event.params.auctionId.toString());
     bidPlaced.auctionID = event.params.auctionId;
     bidPlaced.bidder = event.params.bidder.toHexString();
@@ -323,8 +332,7 @@ export function handleReserveAuctionBidPlaced(event: BidsEvent): void {
     bidPlaced.timestamp = event.block.timestamp;
     bidPlaced.action = "Bid Placed";
     bidPlaced.colDetails = auctionInstance.index;
-   }
-   else {
+  } else {
     bidPlaced.auctionID = event.params.auctionId;
     bidPlaced.bidder = event.params.bidder.toHexString();
     bidPlaced.amount = event.params.amount;
@@ -333,8 +341,8 @@ export function handleReserveAuctionBidPlaced(event: BidsEvent): void {
     bidPlaced.timestamp = event.block.timestamp;
     bidPlaced.action = "Bid Placed";
     bidPlaced.colDetails = auctionInstance.index;
-   }
-   bidPlaced.save();
+  }
+  bidPlaced.save();
   bids.save();
 }
 
@@ -345,7 +353,7 @@ export function handleReserveAuctionCanceled(
   let auction = Collection.load(auctionInstance.index);
   let history = History.load(auctionInstance.index);
   let cancelAuction = CancelAuction.load(auctionInstance.index);
-  if(auction.cancelAuctionList.length==0) {
+  if (auction.cancelAuctionList.length == 0) {
     cancelAuction = new CancelAuction(event.transaction.hash.toString());
     //cancelAuction = new CancelAuction(auctionInstance.index);
     cancelAuction.auctionID = event.params.auctionId.toString();
@@ -361,9 +369,7 @@ export function handleReserveAuctionCanceled(
     history.cancelAuctionList = tempVar.concat([cancelAuction.id]);
     history.save();
     auction.save();
-
-  }
-  else {
+  } else {
     cancelAuction = new CancelAuction(event.transaction.hash.toString());
     cancelAuction.auctionID = event.params.auctionId.toString();
     cancelAuction.cancelTimestamp = event.block.timestamp;
@@ -423,7 +429,7 @@ export function handleReserveAuctionUpdated(
   let auction = Collection.load(auctionInstance.index);
   let history = History.load(auctionInstance.index);
   let update = Update.load(auctionInstance.index);
-  if(history.amountUpdateList.length==0) {
+  if (history.amountUpdateList.length == 0) {
     update = new Update(event.transaction.hash.toString());
     update.tokenID = auctionInstance.tokenID;
     update.auctionID = event.params.auctionId.toString();
@@ -438,8 +444,7 @@ export function handleReserveAuctionUpdated(
     history.amountUpdateList = temp.concat([update.id]);
     history.save();
     update.save();
-  }
-  else {
+  } else {
     update = new Update(event.transaction.hash.toString());
     update.tokenID = auctionInstance.tokenID;
     update.auctionID = event.params.auctionId.toString();
@@ -462,12 +467,12 @@ export function handleReserveAuctionUpdated(
   auction.save();
 }
 
-export function handleURIUpdated(event: UpdatedEvent) : void {
+export function handleURIUpdated(event: UpdatedEvent): void {
   let hex = event.params.tokenId.toString() + event.address.toString();
   let auction = Collection.load(hex);
   let history = History.load(hex);
   let update = URI.load(event.params.tokenId.toString());
-  if(auction.metadataUpdateList.length==0) {
+  if (auction.metadataUpdateList.length == 0) {
     update = new URI(event.params.tokenId.toString());
     update.tokenID = event.params.tokenId;
     update.creator = event.params.creator;
@@ -481,9 +486,7 @@ export function handleURIUpdated(event: UpdatedEvent) : void {
     history.metadataUpdateList = tempVar.concat([update.id]);
     history.save();
     auction.save();
-  }
-
-  else {
+  } else {
     update = new URI(event.params.tokenId.toString());
     update.tokenID = event.params.tokenId;
     update.creator = event.params.creator;
@@ -500,7 +503,3 @@ export function handleURIUpdated(event: UpdatedEvent) : void {
   }
   update.save();
 }
-
-
-
-
