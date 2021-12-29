@@ -461,6 +461,7 @@ export function handleReserveAuctionUpdated(
     auction.auctionAction = "Auction updated";
   }
   auction.save();
+  
 }
 
 export function handleURIUpdated(event: UpdatedEvent) : void {
