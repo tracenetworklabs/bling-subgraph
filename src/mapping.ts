@@ -39,7 +39,6 @@ export function handleCollectionCreated(event: CollectionCreatedEvent): void {
     token.transactionHash = event.transaction.hash.toHexString();
     token.myContract = event.params.myContract;
     token.colAction = "Collection Created";
-    token.beneficiary = event.params.beneficiary;
 
     let CContract = NFTContract.bind(event.params.myContract);
     let supply = CContract.totalSupply();
@@ -48,9 +47,9 @@ export function handleCollectionCreated(event: CollectionCreatedEvent): void {
     let master = CContract.blingMaster();
     let instance = masterContract.bind(master);
     let brandname = instance.brandName(event.params.creator);
+    token.beneficiary = instance.shares(event.params.myContract);
     token.brandName = brandname;
     
-
     collectionContract.create(event.params.myContract);
   }
   token.save();

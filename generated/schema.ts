@@ -207,6 +207,23 @@ export class Master extends Entity {
       this.set("brandName", Value.fromString(value as string));
     }
   }
+
+  get splitAddress(): Bytes | null {
+    let value = this.get("splitAddress");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set splitAddress(value: Bytes | null) {
+    if (value === null) {
+      this.unset("splitAddress");
+    } else {
+      this.set("splitAddress", Value.fromBytes(value as Bytes));
+    }
+  }
 }
 
 export class Collection extends Entity {

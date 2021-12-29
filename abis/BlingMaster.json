@@ -62,8 +62,8 @@
 			},
 			{
 				"indexed": false,
-				"internalType": "address",
-				"name": "beneficiary",
+				"internalType": "address payable",
+				"name": "split",
 				"type": "address"
 			}
 		],
@@ -117,8 +117,8 @@
 			},
 			{
 				"indexed": false,
-				"internalType": "address",
-				"name": "beneficiary",
+				"internalType": "address payable",
+				"name": "split",
 				"type": "address"
 			}
 		],
@@ -206,7 +206,7 @@
 			},
 			{
 				"internalType": "address payable",
-				"name": "beneficiary",
+				"name": "paymentSplit",
 				"type": "address"
 			}
 		],
@@ -244,6 +244,11 @@
 				"internalType": "address payable",
 				"name": "_beneficiary",
 				"type": "address"
+			},
+			{
+				"internalType": "bytes",
+				"name": "paymentAddressCallData",
+				"type": "bytes"
 			}
 		],
 		"name": "createCollection",
@@ -251,6 +256,11 @@
 			{
 				"internalType": "address",
 				"name": "collection",
+				"type": "address"
+			},
+			{
+				"internalType": "address payable",
+				"name": "split",
 				"type": "address"
 			}
 		],
@@ -343,6 +353,25 @@
 		"inputs": [
 			{
 				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "shares",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
 				"name": "_colContract",
 				"type": "address"
 			},
@@ -403,6 +432,11 @@
 				"internalType": "address payable",
 				"name": "_beneficiary",
 				"type": "address"
+			},
+			{
+				"internalType": "bytes",
+				"name": "paymentAddressCallData",
+				"type": "bytes"
 			}
 		],
 		"name": "updateCollection",
