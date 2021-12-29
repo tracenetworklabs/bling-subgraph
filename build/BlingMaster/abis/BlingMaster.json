@@ -59,6 +59,12 @@
         "internalType": "uint256",
         "name": "quantity",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "beneficiary",
+        "type": "address"
       }
     ],
     "name": "CollectionCreated",
@@ -108,138 +114,16 @@
         "internalType": "uint256",
         "name": "quantity",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "beneficiary",
+        "type": "address"
       }
     ],
     "name": "CollectionUpdated",
     "type": "event"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "_colCode",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "_colName",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "_colDescription",
-        "type": "string"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_colQuantity",
-        "type": "uint256"
-      },
-      {
-        "internalType": "string[]",
-        "name": "_colProperties",
-        "type": "string[]"
-      }
-    ],
-    "name": "createCollection",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "collection",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_colContract",
-        "type": "address"
-      },
-      {
-        "internalType": "string",
-        "name": "_colCode",
-        "type": "string"
-      },
-      {
-        "internalType": "address",
-        "name": "_nftMarket",
-        "type": "address"
-      },
-      {
-        "internalType": "string",
-        "name": "baseURI",
-        "type": "string"
-      }
-    ],
-    "name": "updateAdminConfig",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_colContract",
-        "type": "address"
-      },
-      {
-        "internalType": "string",
-        "name": "_colCode",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "_colName",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "_colDescription",
-        "type": "string"
-      },
-      {
-        "internalType": "string[]",
-        "name": "_colProperties",
-        "type": "string[]"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_totalSupply",
-        "type": "uint256"
-      }
-    ],
-    "name": "updateCollection",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address[]",
-        "name": "brands",
-        "type": "address[]"
-      },
-      {
-        "internalType": "string[]",
-        "name": "name",
-        "type": "string[]"
-      },
-      {
-        "internalType": "bool[]",
-        "name": "status",
-        "type": "bool[]"
-      }
-    ],
-    "name": "updateWhitelist",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
   },
   {
     "anonymous": false,
@@ -319,9 +203,58 @@
         "internalType": "address",
         "name": "myContract",
         "type": "address"
+      },
+      {
+        "internalType": "address payable",
+        "name": "beneficiary",
+        "type": "address"
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "_colCode",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_colName",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_colDescription",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_colQuantity",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string[]",
+        "name": "_colProperties",
+        "type": "string[]"
+      },
+      {
+        "internalType": "address payable",
+        "name": "_beneficiary",
+        "type": "address"
+      }
+    ],
+    "name": "createCollection",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "collection",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -404,6 +337,100 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_colContract",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "_colCode",
+        "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "_nftMarket",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "baseURI",
+        "type": "string"
+      }
+    ],
+    "name": "updateAdminConfig",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_colContract",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "_colCode",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_colName",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_colDescription",
+        "type": "string"
+      },
+      {
+        "internalType": "string[]",
+        "name": "_colProperties",
+        "type": "string[]"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_totalSupply",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address payable",
+        "name": "_beneficiary",
+        "type": "address"
+      }
+    ],
+    "name": "updateCollection",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address[]",
+        "name": "brands",
+        "type": "address[]"
+      },
+      {
+        "internalType": "string[]",
+        "name": "name",
+        "type": "string[]"
+      },
+      {
+        "internalType": "bool[]",
+        "name": "status",
+        "type": "bool[]"
+      }
+    ],
+    "name": "updateWhitelist",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {

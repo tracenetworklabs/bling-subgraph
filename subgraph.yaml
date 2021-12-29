@@ -6,9 +6,9 @@ dataSources:
     name: BlingMaster
     network: mumbai
     source:
-      address: "0x73AA3A6Fc9b1936705315D6a2F70b35353f703fF"
+      address: "0x78CD9bbd2Ff186954F115B449f7b5A90F1E32B63"
       abi: BlingMaster
-      startBlock: 22728769 
+      startBlock: 23190829 
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -24,18 +24,18 @@ dataSources:
         - name: Collection
           file: ./abis/Collection.json
       eventHandlers:
-        - event: CollectionCreated(address,string,string,string,string[],address,uint256)
+        - event: CollectionCreated(address,string,string,string,string[],address,uint256,address)
           handler: handleCollectionCreated
-        - event: CollectionUpdated(address,string,string,string,string[],address,uint256)
+        - event: CollectionUpdated(address,string,string,string,string[],address,uint256,address)
           handler: handleCollectionUpdated  
 
   - kind: ethereum/contract
     name: Market
     network: mumbai
     source:
-      address: "0xF99319A175825f93bAb942b965aC9F41a72b7885"
+      address: "0xE0F3B3A5C68A26eac1a55C82cfe761DA2259f44D"
       abi: Market
-      startBlock: 22728741
+      startBlock: 23190801
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -85,3 +85,5 @@ templates:
       eventHandlers:
         - event: Minted(indexed address,indexed uint256,indexed string,string)
           handler: handleMinted
+        - event: Updated(indexed address,indexed uint256,indexed string,string)
+          handler: handleURIUpdated

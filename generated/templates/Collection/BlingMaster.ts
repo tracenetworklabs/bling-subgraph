@@ -50,6 +50,10 @@ export class CollectionCreated__Params {
   get quantity(): BigInt {
     return this._event.parameters[6].value.toBigInt();
   }
+
+  get beneficiary(): Address {
+    return this._event.parameters[7].value.toAddress();
+  }
 }
 
 export class CollectionUpdated extends ethereum.Event {
@@ -92,6 +96,10 @@ export class CollectionUpdated__Params {
   get quantity(): BigInt {
     return this._event.parameters[6].value.toBigInt();
   }
+
+  get beneficiary(): Address {
+    return this._event.parameters[7].value.toAddress();
+  }
 }
 
 export class Whitelist extends ethereum.Event {
@@ -125,12 +133,20 @@ export class BlingMaster__collectionsResult {
   value1: BigInt;
   value2: string;
   value3: Address;
+  value4: Address;
 
-  constructor(value0: string, value1: BigInt, value2: string, value3: Address) {
+  constructor(
+    value0: string,
+    value1: BigInt,
+    value2: string,
+    value3: Address,
+    value4: Address
+  ) {
     this.value0 = value0;
     this.value1 = value1;
     this.value2 = value2;
     this.value3 = value3;
+    this.value4 = value4;
   }
 
   toMap(): TypedMap<string, ethereum.Value> {
@@ -139,6 +155,7 @@ export class BlingMaster__collectionsResult {
     map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
     map.set("value2", ethereum.Value.fromString(this.value2));
     map.set("value3", ethereum.Value.fromAddress(this.value3));
+    map.set("value4", ethereum.Value.fromAddress(this.value4));
     return map;
   }
 }
@@ -176,53 +193,6 @@ export class BlingMaster extends ethereum.SmartContract {
     return new BlingMaster("BlingMaster", address);
   }
 
-  createCollection(
-    _colCode: string,
-    _colName: string,
-    _colDescription: string,
-    _colQuantity: BigInt,
-    _colProperties: Array<string>
-  ): Address {
-    let result = super.call(
-      "createCollection",
-      "createCollection(string,string,string,uint256,string[]):(address)",
-      [
-        ethereum.Value.fromString(_colCode),
-        ethereum.Value.fromString(_colName),
-        ethereum.Value.fromString(_colDescription),
-        ethereum.Value.fromUnsignedBigInt(_colQuantity),
-        ethereum.Value.fromStringArray(_colProperties)
-      ]
-    );
-
-    return result[0].toAddress();
-  }
-
-  try_createCollection(
-    _colCode: string,
-    _colName: string,
-    _colDescription: string,
-    _colQuantity: BigInt,
-    _colProperties: Array<string>
-  ): ethereum.CallResult<Address> {
-    let result = super.tryCall(
-      "createCollection",
-      "createCollection(string,string,string,uint256,string[]):(address)",
-      [
-        ethereum.Value.fromString(_colCode),
-        ethereum.Value.fromString(_colName),
-        ethereum.Value.fromString(_colDescription),
-        ethereum.Value.fromUnsignedBigInt(_colQuantity),
-        ethereum.Value.fromStringArray(_colProperties)
-      ]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddress());
-  }
-
   brandName(param0: Address): string {
     let result = super.call("brandName", "brandName(address):(string)", [
       ethereum.Value.fromAddress(param0)
@@ -245,7 +215,7 @@ export class BlingMaster extends ethereum.SmartContract {
   collections(param0: Address, param1: string): BlingMaster__collectionsResult {
     let result = super.call(
       "collections",
-      "collections(address,string):(string,uint256,string,address)",
+      "collections(address,string):(string,uint256,string,address,address)",
       [ethereum.Value.fromAddress(param0), ethereum.Value.fromString(param1)]
     );
 
@@ -253,7 +223,8 @@ export class BlingMaster extends ethereum.SmartContract {
       result[0].toString(),
       result[1].toBigInt(),
       result[2].toString(),
-      result[3].toAddress()
+      result[3].toAddress(),
+      result[4].toAddress()
     );
   }
 
@@ -263,7 +234,7 @@ export class BlingMaster extends ethereum.SmartContract {
   ): ethereum.CallResult<BlingMaster__collectionsResult> {
     let result = super.tryCall(
       "collections",
-      "collections(address,string):(string,uint256,string,address)",
+      "collections(address,string):(string,uint256,string,address,address)",
       [ethereum.Value.fromAddress(param0), ethereum.Value.fromString(param1)]
     );
     if (result.reverted) {
@@ -275,9 +246,61 @@ export class BlingMaster extends ethereum.SmartContract {
         value[0].toString(),
         value[1].toBigInt(),
         value[2].toString(),
-        value[3].toAddress()
+        value[3].toAddress(),
+        value[4].toAddress()
       )
     );
+  }
+
+  createCollection(
+    _colCode: string,
+    _colName: string,
+    _colDescription: string,
+    _colQuantity: BigInt,
+    _colProperties: Array<string>,
+    _beneficiary: Address
+  ): Address {
+    let result = super.call(
+      "createCollection",
+      "createCollection(string,string,string,uint256,string[],address):(address)",
+      [
+        ethereum.Value.fromString(_colCode),
+        ethereum.Value.fromString(_colName),
+        ethereum.Value.fromString(_colDescription),
+        ethereum.Value.fromUnsignedBigInt(_colQuantity),
+        ethereum.Value.fromStringArray(_colProperties),
+        ethereum.Value.fromAddress(_beneficiary)
+      ]
+    );
+
+    return result[0].toAddress();
+  }
+
+  try_createCollection(
+    _colCode: string,
+    _colName: string,
+    _colDescription: string,
+    _colQuantity: BigInt,
+    _colProperties: Array<string>,
+    _beneficiary: Address
+  ): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "createCollection",
+      "createCollection(string,string,string,uint256,string[],address):(address)",
+      [
+        ethereum.Value.fromString(_colCode),
+        ethereum.Value.fromString(_colName),
+        ethereum.Value.fromString(_colDescription),
+        ethereum.Value.fromUnsignedBigInt(_colQuantity),
+        ethereum.Value.fromStringArray(_colProperties),
+        ethereum.Value.fromAddress(_beneficiary)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
   getCode(param0: Address): string {
@@ -456,6 +479,10 @@ export class CreateCollectionCall__Inputs {
   get _colProperties(): Array<string> {
     return this._call.inputValues[4].value.toStringArray();
   }
+
+  get _beneficiary(): Address {
+    return this._call.inputValues[5].value.toAddress();
+  }
 }
 
 export class CreateCollectionCall__Outputs {
@@ -551,6 +578,10 @@ export class UpdateCollectionCall__Inputs {
 
   get _totalSupply(): BigInt {
     return this._call.inputValues[5].value.toBigInt();
+  }
+
+  get _beneficiary(): Address {
+    return this._call.inputValues[6].value.toAddress();
   }
 }
 

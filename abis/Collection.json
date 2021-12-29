@@ -103,31 +103,6 @@
 		"inputs": [
 			{
 				"indexed": true,
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			},
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "originalAddress",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "newAddress",
-				"type": "address"
-			}
-		],
-		"name": "NFTCreatorMigrated",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
 				"internalType": "address",
 				"name": "nftMarket",
 				"type": "address"
@@ -159,81 +134,6 @@
 			}
 		],
 		"name": "NFTMetadataUpdated",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			},
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "originalAddress",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "newAddress",
-				"type": "address"
-			}
-		],
-		"name": "NFTOwnerMigrated",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "nftMarket",
-				"type": "address"
-			}
-		],
-		"name": "NftMarketUpdated",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			},
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "originalAddress",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "newAddress",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "address",
-				"name": "originalPaymentAddress",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "address",
-				"name": "newPaymentAddress",
-				"type": "address"
-			}
-		],
-		"name": "PaymentAddressMigrated",
 		"type": "event"
 	},
 	{
@@ -370,19 +270,6 @@
 	{
 		"inputs": [
 			{
-				"internalType": "uint256",
-				"name": "supply_",
-				"type": "uint256"
-			}
-		],
-		"name": "_updateSupply",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
 				"internalType": "address",
 				"name": "_nftMarket",
 				"type": "address"
@@ -394,6 +281,19 @@
 			}
 		],
 		"name": "adminUpdateConfig",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_supply",
+				"type": "uint256"
+			}
+		],
+		"name": "adminUpdateSupply",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -716,44 +616,12 @@
 	{
 		"inputs": [
 			{
-				"internalType": "uint256",
-				"name": "_supply",
-				"type": "uint256"
-			}
-		],
-		"name": "masterUpdateSupply",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
 				"internalType": "string",
 				"name": "tokenIPFSPath",
 				"type": "string"
 			}
 		],
 		"name": "mint",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "tokenIPFSPath",
-				"type": "string"
-			}
-		],
-		"name": "mintAndApproveMarket",
 		"outputs": [
 			{
 				"internalType": "uint256",
@@ -778,6 +646,35 @@
 			}
 		],
 		"name": "mintWithCreatorPaymentAddress",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "tokenIPFSPath",
+				"type": "string"
+			},
+			{
+				"internalType": "address",
+				"name": "paymentAddressFactory",
+				"type": "address"
+			},
+			{
+				"internalType": "bytes",
+				"name": "paymentAddressCallData",
+				"type": "bytes"
+			}
+		],
+		"name": "mintWithCreatorPaymentFactory",
 		"outputs": [
 			{
 				"internalType": "uint256",

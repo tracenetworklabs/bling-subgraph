@@ -5,6 +5,7 @@ type Master @entity {
   creator: Bytes! # address
   colCode: ID! # string
   myContract: Bytes
+  beneficiary: Bytes
   colName: String! 
   colDescription: String!
   colProperties:[String]!
@@ -33,6 +34,7 @@ type Collection @entity {
   colName: String!
   colDescription: String!
   colProperties:[String]!
+  beneficiary: Bytes!
   quantity: BigInt
   nftCount: BigInt
   brandName: String
@@ -46,18 +48,58 @@ type Collection @entity {
   auctionAction: String
   tokenAddress: String
   tokenName: String
+  metadataUpdateList: [URI!]
   bidList: [Bid!]
+  auctionList: [AllAuction!]
+  cancelAuctionList: [CancelAuction!]
   history:[History!]
 }
+
+type Finalize @entity {
+  id: ID!
+  tokenID: BigInt
+  auctionID: String
+  nftContractAddress: Bytes
+  finalizeAddress: Bytes
+  finalizeTimestamp: BigInt
+  finalizeAction: String
+}
+
+type Update @entity {
+  id: ID!
+  tokenID: BigInt
+  auctionID: String
+  nftContractAddress: Bytes
+  updateTimestamp: BigInt
+  updateAction: String
+  updateAddress: String
+  updateAmount: String
+  tokenAddress: String
+  tokenName: String
+
+}
+
+type URI @entity {
+  id: ID!
+  tokenID: BigInt
+  creator: Bytes
+  ipfsHash: String
+  uriAction: String
+  metadataTimestamp: BigInt
+}
+
 type Bid @entity {
   id: ID!
   auctionID: BigInt!
+  tokenID: BigInt
   bidder: String # uint256
   amount: BigInt # uint256
   endTime: BigInt #uint256
   transactionHash: String
   timestamp: BigInt
   action: String
+  tokenAddress: String
+  tokenName: String
   colDetails: Collection!
 }
 
@@ -73,6 +115,30 @@ type BidPlaced @entity {
   colDetails: Collection!
 }
 
+type AllAuction @entity {
+  id: ID!
+  tokenID: BigInt
+  auctionID: String
+  nftContractAddress: Bytes
+  auctionAmount: BigInt
+  auctionAddress: String
+  auctionTransactionHash: String
+  auctionTimestamp: BigInt
+  auctionAction: String
+  tokenAddress: String
+  tokenName: String
+}
+
+type CancelAuction @entity {
+  id: ID!
+  tokenID: BigInt
+  auctionID: String
+  cancelTimestamp: BigInt
+  cancelAction: String
+  cancelAddress: String 
+  tokenAddress: String
+  tokenName: String
+}
 
 type Auction @entity {
   id: ID!
@@ -85,26 +151,17 @@ type History @entity {
   id: ID!
   tokenID: BigInt
   auctionID: String
-  mintAddress: Bytes
   nftContractAddress: Bytes
+  mintAddress: Bytes
   mintTimestamp: BigInt
   mintAction: String
   mintAmount: String
-  tokenAddress: String
-  tokenName: String
-  auctionAddress: Bytes
-  auctionTimestamp: BigInt
-  auctionAction: String
-  auctionAmount: String
-  finalizeAddress: Bytes
-  finalizeTimestamp: BigInt
-  finalizeAuction: String
-  updateTimestamp: BigInt
-  updateAuction: String
-  updateAmount: String
-  cancelTimestamp: BigInt
-  cancelAuction: String
+  metadataUpdateList: [URI!]
+  amountUpdateList: [Update!]
+  auctionList: [AllAuction!]
+  cancelAuctionList: [CancelAuction!]
   bidList: [Bid!]
+  claimList: [Finalize!]
 }
 
 type TokenDetail @entity {

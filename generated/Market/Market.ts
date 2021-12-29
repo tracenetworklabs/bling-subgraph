@@ -707,6 +707,29 @@ export class Market extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
+  getTokenAddress(): Array<Address> {
+    let result = super.call(
+      "getTokenAddress",
+      "getTokenAddress():(address[])",
+      []
+    );
+
+    return result[0].toAddressArray();
+  }
+
+  try_getTokenAddress(): ethereum.CallResult<Array<Address>> {
+    let result = super.tryCall(
+      "getTokenAddress",
+      "getTokenAddress():(address[])",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddressArray());
+  }
+
   tokens(param0: Address): boolean {
     let result = super.call("tokens", "tokens(address):(bool)", [
       ethereum.Value.fromAddress(param0)
