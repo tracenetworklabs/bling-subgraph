@@ -408,7 +408,7 @@ export function handleReserveAuctionFinalized(
   claim.tokenID = auctionInstance.tokenID;
   claim.auctionID = event.params.auctionId.toString();
   claim.nftContractAddress = auctionInstance.nftContract;
-  claim.finalizeAction = "Auction ended";
+  claim.finalizeAction = "NFT claimed";
   claim.finalizeTimestamp = event.block.timestamp;
   claim.finalizeAddress = event.params.bidder;
   claim.save();
@@ -416,7 +416,7 @@ export function handleReserveAuctionFinalized(
   history.claimList = temp.concat([claim.id]);
   history.save();
 
-  auction.auctionAction = "Auction ended";
+  auction.auctionAction = "NFT claimed";
   auction.bidder = event.params.bidder;
   auction.owner = event.params.bidder;
   auction.save();
@@ -473,7 +473,8 @@ export function handleURIUpdated(event: UpdatedEvent): void {
   let history = History.load(hex);
   let update = URI.load(event.params.tokenId.toString());
   if (auction.metadataUpdateList.length == 0) {
-    update = new URI(event.params.tokenId.toString());
+    //update = new URI(event.params.tokenId.toString());
+    update = new URI(event.transaction.hash.toString());
     update.tokenID = event.params.tokenId;
     update.creator = event.params.creator;
     update.ipfsHash = event.params.tokenIPFSPath;
@@ -487,7 +488,8 @@ export function handleURIUpdated(event: UpdatedEvent): void {
     history.save();
     auction.save();
   } else {
-    update = new URI(event.params.tokenId.toString());
+    //update = new URI(event.params.tokenId.toString());
+    update = new URI(event.transaction.hash.toString());
     update.tokenID = event.params.tokenId;
     update.creator = event.params.creator;
     update.ipfsHash = event.params.tokenIPFSPath;
