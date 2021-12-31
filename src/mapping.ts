@@ -473,7 +473,6 @@ export function handleURIUpdated(event: UpdatedEvent): void {
   let history = History.load(hex);
   let update = URI.load(event.params.tokenId.toString());
   if (auction.metadataUpdateList.length == 0) {
-    //update = new URI(event.params.tokenId.toString());
     update = new URI(event.transaction.hash.toString());
     update.tokenID = event.params.tokenId;
     update.creator = event.params.creator;
@@ -488,7 +487,6 @@ export function handleURIUpdated(event: UpdatedEvent): void {
     history.save();
     auction.save();
   } else {
-    //update = new URI(event.params.tokenId.toString());
     update = new URI(event.transaction.hash.toString());
     update.tokenID = event.params.tokenId;
     update.creator = event.params.creator;
