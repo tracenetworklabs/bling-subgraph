@@ -638,6 +638,29 @@ export class Collection extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
+  mintAndApproveMarket(tokenIPFSPath: string): BigInt {
+    let result = super.call(
+      "mintAndApproveMarket",
+      "mintAndApproveMarket(string):(uint256)",
+      [ethereum.Value.fromString(tokenIPFSPath)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_mintAndApproveMarket(tokenIPFSPath: string): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "mintAndApproveMarket",
+      "mintAndApproveMarket(string):(uint256)",
+      [ethereum.Value.fromString(tokenIPFSPath)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
   mintWithCreatorPaymentAddress(
     tokenIPFSPath: string,
     tokenCreatorPaymentAddress: Address
@@ -673,36 +696,32 @@ export class Collection extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  mintWithCreatorPaymentFactory(
+  mintWithCreatorPaymentAddressAndApproveMarket(
     tokenIPFSPath: string,
-    paymentAddressFactory: Address,
-    paymentAddressCallData: Bytes
+    tokenCreatorPaymentAddress: Address
   ): BigInt {
     let result = super.call(
-      "mintWithCreatorPaymentFactory",
-      "mintWithCreatorPaymentFactory(string,address,bytes):(uint256)",
+      "mintWithCreatorPaymentAddressAndApproveMarket",
+      "mintWithCreatorPaymentAddressAndApproveMarket(string,address):(uint256)",
       [
         ethereum.Value.fromString(tokenIPFSPath),
-        ethereum.Value.fromAddress(paymentAddressFactory),
-        ethereum.Value.fromBytes(paymentAddressCallData)
+        ethereum.Value.fromAddress(tokenCreatorPaymentAddress)
       ]
     );
 
     return result[0].toBigInt();
   }
 
-  try_mintWithCreatorPaymentFactory(
+  try_mintWithCreatorPaymentAddressAndApproveMarket(
     tokenIPFSPath: string,
-    paymentAddressFactory: Address,
-    paymentAddressCallData: Bytes
+    tokenCreatorPaymentAddress: Address
   ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
-      "mintWithCreatorPaymentFactory",
-      "mintWithCreatorPaymentFactory(string,address,bytes):(uint256)",
+      "mintWithCreatorPaymentAddressAndApproveMarket",
+      "mintWithCreatorPaymentAddressAndApproveMarket(string,address):(uint256)",
       [
         ethereum.Value.fromString(tokenIPFSPath),
-        ethereum.Value.fromAddress(paymentAddressFactory),
-        ethereum.Value.fromBytes(paymentAddressCallData)
+        ethereum.Value.fromAddress(tokenCreatorPaymentAddress)
       ]
     );
     if (result.reverted) {
@@ -1127,6 +1146,40 @@ export class MintCall__Outputs {
   }
 }
 
+export class MintAndApproveMarketCall extends ethereum.Call {
+  get inputs(): MintAndApproveMarketCall__Inputs {
+    return new MintAndApproveMarketCall__Inputs(this);
+  }
+
+  get outputs(): MintAndApproveMarketCall__Outputs {
+    return new MintAndApproveMarketCall__Outputs(this);
+  }
+}
+
+export class MintAndApproveMarketCall__Inputs {
+  _call: MintAndApproveMarketCall;
+
+  constructor(call: MintAndApproveMarketCall) {
+    this._call = call;
+  }
+
+  get tokenIPFSPath(): string {
+    return this._call.inputValues[0].value.toString();
+  }
+}
+
+export class MintAndApproveMarketCall__Outputs {
+  _call: MintAndApproveMarketCall;
+
+  constructor(call: MintAndApproveMarketCall) {
+    this._call = call;
+  }
+
+  get tokenId(): BigInt {
+    return this._call.outputValues[0].value.toBigInt();
+  }
+}
+
 export class MintWithCreatorPaymentAddressCall extends ethereum.Call {
   get inputs(): MintWithCreatorPaymentAddressCall__Inputs {
     return new MintWithCreatorPaymentAddressCall__Inputs(this);
@@ -1165,20 +1218,20 @@ export class MintWithCreatorPaymentAddressCall__Outputs {
   }
 }
 
-export class MintWithCreatorPaymentFactoryCall extends ethereum.Call {
-  get inputs(): MintWithCreatorPaymentFactoryCall__Inputs {
-    return new MintWithCreatorPaymentFactoryCall__Inputs(this);
+export class MintWithCreatorPaymentAddressAndApproveMarketCall extends ethereum.Call {
+  get inputs(): MintWithCreatorPaymentAddressAndApproveMarketCall__Inputs {
+    return new MintWithCreatorPaymentAddressAndApproveMarketCall__Inputs(this);
   }
 
-  get outputs(): MintWithCreatorPaymentFactoryCall__Outputs {
-    return new MintWithCreatorPaymentFactoryCall__Outputs(this);
+  get outputs(): MintWithCreatorPaymentAddressAndApproveMarketCall__Outputs {
+    return new MintWithCreatorPaymentAddressAndApproveMarketCall__Outputs(this);
   }
 }
 
-export class MintWithCreatorPaymentFactoryCall__Inputs {
-  _call: MintWithCreatorPaymentFactoryCall;
+export class MintWithCreatorPaymentAddressAndApproveMarketCall__Inputs {
+  _call: MintWithCreatorPaymentAddressAndApproveMarketCall;
 
-  constructor(call: MintWithCreatorPaymentFactoryCall) {
+  constructor(call: MintWithCreatorPaymentAddressAndApproveMarketCall) {
     this._call = call;
   }
 
@@ -1186,19 +1239,15 @@ export class MintWithCreatorPaymentFactoryCall__Inputs {
     return this._call.inputValues[0].value.toString();
   }
 
-  get paymentAddressFactory(): Address {
+  get tokenCreatorPaymentAddress(): Address {
     return this._call.inputValues[1].value.toAddress();
-  }
-
-  get paymentAddressCallData(): Bytes {
-    return this._call.inputValues[2].value.toBytes();
   }
 }
 
-export class MintWithCreatorPaymentFactoryCall__Outputs {
-  _call: MintWithCreatorPaymentFactoryCall;
+export class MintWithCreatorPaymentAddressAndApproveMarketCall__Outputs {
+  _call: MintWithCreatorPaymentAddressAndApproveMarketCall;
 
-  constructor(call: MintWithCreatorPaymentFactoryCall) {
+  constructor(call: MintWithCreatorPaymentAddressAndApproveMarketCall) {
     this._call = call;
   }
 

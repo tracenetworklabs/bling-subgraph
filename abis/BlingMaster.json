@@ -10,6 +10,11 @@
 				"internalType": "address payable",
 				"name": "_nftMarket",
 				"type": "address"
+			},
+			{
+				"internalType": "address payable",
+				"name": "_paymentSplit",
+				"type": "address"
 			}
 		],
 		"stateMutability": "nonpayable",
@@ -347,6 +352,25 @@
 			}
 		],
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes",
+				"name": "paymentAddressCallData",
+				"type": "bytes"
+			}
+		],
+		"name": "getPaymentAddress",
+		"outputs": [
+			{
+				"internalType": "address payable",
+				"name": "split",
+				"type": "address"
+			}
+		],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{

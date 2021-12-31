@@ -275,17 +275,19 @@ export class BlingMaster extends ethereum.SmartContract {
     _colDescription: string,
     _colQuantity: BigInt,
     _colProperties: Array<string>,
+    _beneficiary: Address,
     paymentAddressCallData: Bytes
   ): BlingMaster__createCollectionResult {
     let result = super.call(
       "createCollection",
-      "createCollection(string,string,string,uint256,string[],bytes):(address,address)",
+      "createCollection(string,string,string,uint256,string[],address,bytes):(address,address)",
       [
         ethereum.Value.fromString(_colCode),
         ethereum.Value.fromString(_colName),
         ethereum.Value.fromString(_colDescription),
         ethereum.Value.fromUnsignedBigInt(_colQuantity),
         ethereum.Value.fromStringArray(_colProperties),
+        ethereum.Value.fromAddress(_beneficiary),
         ethereum.Value.fromBytes(paymentAddressCallData)
       ]
     );
@@ -302,17 +304,19 @@ export class BlingMaster extends ethereum.SmartContract {
     _colDescription: string,
     _colQuantity: BigInt,
     _colProperties: Array<string>,
+    _beneficiary: Address,
     paymentAddressCallData: Bytes
   ): ethereum.CallResult<BlingMaster__createCollectionResult> {
     let result = super.tryCall(
       "createCollection",
-      "createCollection(string,string,string,uint256,string[],bytes):(address,address)",
+      "createCollection(string,string,string,uint256,string[],address,bytes):(address,address)",
       [
         ethereum.Value.fromString(_colCode),
         ethereum.Value.fromString(_colName),
         ethereum.Value.fromString(_colDescription),
         ethereum.Value.fromUnsignedBigInt(_colQuantity),
         ethereum.Value.fromStringArray(_colProperties),
+        ethereum.Value.fromAddress(_beneficiary),
         ethereum.Value.fromBytes(paymentAddressCallData)
       ]
     );
@@ -414,6 +418,31 @@ export class BlingMaster extends ethereum.SmartContract {
     );
   }
 
+  getPaymentAddress(paymentAddressCallData: Bytes): Address {
+    let result = super.call(
+      "getPaymentAddress",
+      "getPaymentAddress(bytes):(address)",
+      [ethereum.Value.fromBytes(paymentAddressCallData)]
+    );
+
+    return result[0].toAddress();
+  }
+
+  try_getPaymentAddress(
+    paymentAddressCallData: Bytes
+  ): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "getPaymentAddress",
+      "getPaymentAddress(bytes):(address)",
+      [ethereum.Value.fromBytes(paymentAddressCallData)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
   shares(param0: Address): Address {
     let result = super.call("shares", "shares(address):(address)", [
       ethereum.Value.fromAddress(param0)
@@ -477,6 +506,10 @@ export class ConstructorCall__Inputs {
   get _nftMarket(): Address {
     return this._call.inputValues[1].value.toAddress();
   }
+
+  get _paymentSplit(): Address {
+    return this._call.inputValues[2].value.toAddress();
+  }
 }
 
 export class ConstructorCall__Outputs {
@@ -524,8 +557,12 @@ export class CreateCollectionCall__Inputs {
     return this._call.inputValues[4].value.toStringArray();
   }
 
+  get _beneficiary(): Address {
+    return this._call.inputValues[5].value.toAddress();
+  }
+
   get paymentAddressCallData(): Bytes {
-    return this._call.inputValues[5].value.toBytes();
+    return this._call.inputValues[6].value.toBytes();
   }
 }
 
@@ -542,6 +579,40 @@ export class CreateCollectionCall__Outputs {
 
   get split(): Address {
     return this._call.outputValues[1].value.toAddress();
+  }
+}
+
+export class GetPaymentAddressCall extends ethereum.Call {
+  get inputs(): GetPaymentAddressCall__Inputs {
+    return new GetPaymentAddressCall__Inputs(this);
+  }
+
+  get outputs(): GetPaymentAddressCall__Outputs {
+    return new GetPaymentAddressCall__Outputs(this);
+  }
+}
+
+export class GetPaymentAddressCall__Inputs {
+  _call: GetPaymentAddressCall;
+
+  constructor(call: GetPaymentAddressCall) {
+    this._call = call;
+  }
+
+  get paymentAddressCallData(): Bytes {
+    return this._call.inputValues[0].value.toBytes();
+  }
+}
+
+export class GetPaymentAddressCall__Outputs {
+  _call: GetPaymentAddressCall;
+
+  constructor(call: GetPaymentAddressCall) {
+    this._call = call;
+  }
+
+  get split(): Address {
+    return this._call.outputValues[0].value.toAddress();
   }
 }
 
@@ -628,8 +699,12 @@ export class UpdateCollectionCall__Inputs {
     return this._call.inputValues[5].value.toBigInt();
   }
 
+  get _beneficiary(): Address {
+    return this._call.inputValues[6].value.toAddress();
+  }
+
   get paymentAddressCallData(): Bytes {
-    return this._call.inputValues[6].value.toBytes();
+    return this._call.inputValues[7].value.toBytes();
   }
 }
 

@@ -76,7 +76,6 @@ type Update @entity {
   updateAmount: String
   tokenAddress: String
   tokenName: String
-
 }
 
 type URI @entity {

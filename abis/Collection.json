@@ -638,6 +638,25 @@
 				"internalType": "string",
 				"name": "tokenIPFSPath",
 				"type": "string"
+			}
+		],
+		"name": "mintAndApproveMarket",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "tokenIPFSPath",
+				"type": "string"
 			},
 			{
 				"internalType": "address payable",
@@ -664,17 +683,12 @@
 				"type": "string"
 			},
 			{
-				"internalType": "address",
-				"name": "paymentAddressFactory",
+				"internalType": "address payable",
+				"name": "tokenCreatorPaymentAddress",
 				"type": "address"
-			},
-			{
-				"internalType": "bytes",
-				"name": "paymentAddressCallData",
-				"type": "bytes"
 			}
 		],
-		"name": "mintWithCreatorPaymentFactory",
+		"name": "mintWithCreatorPaymentAddressAndApproveMarket",
 		"outputs": [
 			{
 				"internalType": "uint256",
