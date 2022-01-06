@@ -2224,20 +2224,12 @@ export class TokenDetail extends Entity {
     }
   }
 
-  get status(): string | null {
+  get status(): boolean {
     let value = this.get("status");
-    if (value === null || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toString();
-    }
+    return value.toBoolean();
   }
 
-  set status(value: string | null) {
-    if (value === null) {
-      this.unset("status");
-    } else {
-      this.set("status", Value.fromString(value as string));
-    }
+  set status(value: boolean) {
+    this.set("status", Value.fromBoolean(value));
   }
 }

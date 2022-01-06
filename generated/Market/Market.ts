@@ -268,25 +268,25 @@ export class ReserveAuctionUpdated__Params {
   }
 }
 
-export class TokenAdded extends ethereum.Event {
-  get params(): TokenAdded__Params {
-    return new TokenAdded__Params(this);
+export class TokenUpdated extends ethereum.Event {
+  get params(): TokenUpdated__Params {
+    return new TokenUpdated__Params(this);
   }
 }
 
-export class TokenAdded__Params {
-  _event: TokenAdded;
+export class TokenUpdated__Params {
+  _event: TokenUpdated;
 
-  constructor(event: TokenAdded) {
+  constructor(event: TokenUpdated) {
     this._event = event;
   }
 
-  get tokenAddress(): Bytes {
-    return this._event.parameters[0].value.toBytes();
+  get tokenAddress(): Address {
+    return this._event.parameters[0].value.toAddress();
   }
 
-  get status(): Bytes {
-    return this._event.parameters[1].value.toBytes();
+  get status(): boolean {
+    return this._event.parameters[1].value.toBoolean();
   }
 }
 
@@ -889,12 +889,12 @@ export class AdminUpdateTokenCall__Inputs {
     this._call = call;
   }
 
-  get tokenAddress(): Array<Address> {
-    return this._call.inputValues[0].value.toAddressArray();
+  get tokenAddress(): Address {
+    return this._call.inputValues[0].value.toAddress();
   }
 
-  get status(): Array<boolean> {
-    return this._call.inputValues[1].value.toBooleanArray();
+  get status(): boolean {
+    return this._call.inputValues[1].value.toBoolean();
   }
 }
 

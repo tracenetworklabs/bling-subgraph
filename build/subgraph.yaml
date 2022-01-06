@@ -32,9 +32,9 @@ dataSources:
     name: Market
     network: mumbai
     source:
-      address: "0xc684C109aF4d9086d0446afc71E23316d95E0431"
+      address: "0xa6051195c7beE6bFb95C3eEC3ccD05c69027C648"
       abi: Market
-      startBlock: 23550669
+      startBlock: 23593600
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -61,8 +61,8 @@ dataSources:
           handler: handleReserveAuctionFinalized
         - event: ReserveAuctionUpdated(indexed uint256,uint256)
           handler: handleReserveAuctionUpdated
-        - event: TokenAdded(indexed address[],indexed bool[])
-          handler: handleTokenAdded
+        - event: TokenUpdated(indexed address,indexed bool)
+          handler: handleTokenUpdated
       file: BlingMaster\BlingMaster.wasm
 templates:
   - kind: ethereum/contract

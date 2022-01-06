@@ -18,7 +18,7 @@ import {
   ReserveAuctionCanceled as ReserveAuctionCanceledEvent,
   ReserveAuctionFinalized as ReserveAuctionFinalizedEvent,
   ReserveAuctionUpdated as ReserveAuctionUpdatedEvent,
-  TokenAdded as TokenAddedEvent,
+  TokenUpdated as TokenAddedEvent,
 } from "../generated/Market/Market";
 
 import { Collection as collectionContract } from "../generated/templates";
@@ -164,15 +164,17 @@ export function handleMinted(event: MintedEvent): void {
   token.save();
 }
 
-export function handleTokenAdded(event: TokenAddedEvent): void {
+export function handleTokenUpdated(event: TokenAddedEvent): void {
   let token = TokenDetail.load(event.params.tokenAddress.toString());
   if (!token) {
     token = new TokenDetail(event.params.tokenAddress.toString());
     token.tokenAddress = event.params.tokenAddress;
-    token.status = event.params.status.toString();
+    token.status = event.params.status;
   } else {
-    token.status = event.params.status.toString();
+    // token.tokenAddress = event.params.tokenAddress;
+    token.status = event.params.status;
   }
+  token.save();
 }
 
 export function handleReserveAuctionCreated(event: AuctionEvent): void {
