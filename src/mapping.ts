@@ -50,7 +50,7 @@ export function handleCollectionCreated(event: CollectionCreatedEvent): void {
     token.timestamp = event.block.timestamp;
     token.collectionAction = "Collection Added";
     token.transactionHash = event.transaction.hash.toHexString();
-    token.myContract = event.params.myContract;
+    token.myContract = event.params.myContract.toHexString();
     token.colAction = "Collection Created";
 
     let CContract = NFTContract.bind(event.params.myContract);
@@ -59,7 +59,7 @@ export function handleCollectionCreated(event: CollectionCreatedEvent): void {
 
     let instance = masterContract.bind(event.address);
     let brandname = instance.brandName(event.params.creator);
-    token.beneficiary = instance.shares(event.params.myContract);
+    token.beneficiary = instance.shares(event.params.myContract).toHexString();
     token.brandName = brandname;
 
     collectionContract.create(event.params.myContract);
@@ -69,7 +69,7 @@ export function handleCollectionCreated(event: CollectionCreatedEvent): void {
 
 export function handleCollectionUpdated(event: CollectionUpdatedEvent): void {
   let token = Master.load(event.params.ColCode.toString());
-  token.myContract = event.params.myContract;
+  token.myContract = event.params.myContract.toHexString();
   token.creator = event.params.creator;
   token.colCode = event.params.ColCode;
   token.colName = event.params.Colname;
@@ -77,7 +77,7 @@ export function handleCollectionUpdated(event: CollectionUpdatedEvent): void {
   token.colProperties = event.params.ColProperties;
   token.quantity = event.params.quantity;
   let instance = masterContract.bind(event.address);
-  token.beneficiary = instance.shares(event.params.myContract);
+  token.beneficiary = instance.shares(event.params.myContract).toHexString();
   token.timestamp = event.block.timestamp;
   token.transactionHash = event.transaction.hash.toHexString();
   token.colAction = "Collection Updated";

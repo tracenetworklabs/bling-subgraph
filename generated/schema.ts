@@ -78,37 +78,29 @@ export class Master extends Entity {
     this.set("colCode", Value.fromString(value));
   }
 
-  get myContract(): Bytes | null {
+  get myContract(): string {
     let value = this.get("myContract");
-    if (value === null || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBytes();
-    }
+    return value.toString();
   }
 
-  set myContract(value: Bytes | null) {
-    if (value === null) {
-      this.unset("myContract");
-    } else {
-      this.set("myContract", Value.fromBytes(value as Bytes));
-    }
+  set myContract(value: string) {
+    this.set("myContract", Value.fromString(value));
   }
 
-  get beneficiary(): Bytes | null {
+  get beneficiary(): string | null {
     let value = this.get("beneficiary");
     if (value === null || value.kind == ValueKind.NULL) {
       return null;
     } else {
-      return value.toBytes();
+      return value.toString();
     }
   }
 
-  set beneficiary(value: Bytes | null) {
+  set beneficiary(value: string | null) {
     if (value === null) {
       this.unset("beneficiary");
     } else {
-      this.set("beneficiary", Value.fromBytes(value as Bytes));
+      this.set("beneficiary", Value.fromString(value as string));
     }
   }
 

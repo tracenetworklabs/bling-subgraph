@@ -3,9 +3,9 @@ type Master @entity {
   timestamp: BigInt!
   transactionHash: String!
   creator: Bytes! # address
-  colCode: ID! # string
-  myContract: Bytes
-  beneficiary: Bytes
+  colCode: String! # string
+  myContract: String!
+  beneficiary: String
   colName: String! 
   colDescription: String!
   colProperties:[String]!
@@ -15,6 +15,16 @@ type Master @entity {
   nftCount: BigInt
   brandName: String
 }
+
+type _Schema_
+  @fulltext(
+    name: "collectionSearch"
+    language: en
+    algorithm: rank
+    include: [{ entity: "Master", fields: [{ name: "colCode" },{ name: "colName" }, { name: "myContract" }, { name: "beneficiary" }] }]
+    
+  )
+
 
 type Collection @entity {
   id: ID!
