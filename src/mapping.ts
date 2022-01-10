@@ -20,7 +20,11 @@ import {
   ReserveAuctionCanceled as ReserveAuctionCanceledEvent,
   ReserveAuctionFinalized as ReserveAuctionFinalizedEvent,
   ReserveAuctionUpdated as ReserveAuctionUpdatedEvent,
+<<<<<<< HEAD
   TokenUpdated as TokenUpdatedEvent,
+=======
+  TokenUpdated as TokenAddedEvent,
+>>>>>>> 356f5319eeec655137eb8c888219367b4e04b35c
 } from "../generated/Market/Market";
 
 import { Collection as collectionContract } from "../generated/templates";
@@ -185,13 +189,18 @@ export function handleMinted(event: MintedEvent): void {
   token.save();
 }
 
+<<<<<<< HEAD
 export function handleTokenUpdated(event: TokenUpdatedEvent): void {
+=======
+export function handleTokenUpdated(event: TokenAddedEvent): void {
+>>>>>>> 356f5319eeec655137eb8c888219367b4e04b35c
   let token = TokenDetail.load(event.params.tokenAddress.toString());
   if (!token) {
     token = new TokenDetail(event.params.tokenAddress.toString());
     token.tokenAddress = event.params.tokenAddress;
     token.status = event.params.status;
   } else {
+<<<<<<< HEAD
     token.status = event.params.status;
   }
   token.save();
@@ -208,6 +217,10 @@ export function handleWhiteListUpdated(event: WhiteListUpdatedEvent): void {
     else {
     token.status = event.params.status;
     token.brandName = event.params.name;
+=======
+    // token.tokenAddress = event.params.tokenAddress;
+    token.status = event.params.status;
+>>>>>>> 356f5319eeec655137eb8c888219367b4e04b35c
   }
   token.save();
 }
