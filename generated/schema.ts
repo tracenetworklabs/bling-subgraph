@@ -2319,7 +2319,6 @@ export class TokenDetail extends Entity {
   get status(): boolean {
     let value = this.get("status");
     return value.toBoolean();
-<<<<<<< HEAD
   }
 
   set status(value: boolean) {
@@ -2488,11 +2487,5 @@ export class SplitDetail extends Entity {
     } else {
       this.set("percent", Value.fromBigInt(value as BigInt));
     }
-=======
-  }
-
-  set status(value: boolean) {
-    this.set("status", Value.fromBoolean(value));
->>>>>>> 356f5319eeec655137eb8c888219367b4e04b35c
   }
 }

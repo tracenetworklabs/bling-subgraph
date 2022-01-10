@@ -466,7 +466,6 @@
         "internalType": "bool",
         "name": "status",
         "type": "bool"
-<<<<<<< HEAD
       }
     ],
     "name": "TokenUpdated",
@@ -486,8 +485,6 @@
         "internalType": "uint256",
         "name": "amount",
         "type": "uint256"
-=======
->>>>>>> 356f5319eeec655137eb8c888219367b4e04b35c
       }
     ],
     "name": "TokenUpdated",
@@ -522,7 +519,6 @@
     "anonymous": false,
     "inputs": [
       {
-<<<<<<< HEAD
         "internalType": "address",
         "name": "tokenAddress",
         "type": "address"
@@ -541,15 +537,6 @@
   {
     "inputs": [
       {
-=======
-        "indexed": true,
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-      },
-      {
-        "indexed": false,
->>>>>>> 356f5319eeec655137eb8c888219367b4e04b35c
         "internalType": "uint256",
         "name": "amount",
         "type": "uint256"

@@ -35,15 +35,9 @@ dataSources:
     name: Market
     network: mumbai
     source:
-<<<<<<< HEAD
       address: "0x61eddE1514b126EBbae635B568952B106039e91b"
       abi: Market
       startBlock: 23641218
-=======
-      address: "0xa6051195c7beE6bFb95C3eEC3ccD05c69027C648"
-      abi: Market
-      startBlock: 23593600
->>>>>>> 356f5319eeec655137eb8c888219367b4e04b35c
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
