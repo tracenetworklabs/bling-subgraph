@@ -1,5 +1,36 @@
 [
 	{
+		"inputs": [
+			{
+				"components": [
+					{
+						"internalType": "address payable",
+						"name": "recipient",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "percentInBasisPoints",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct PercentSplitETH.Share[]",
+				"name": "shares",
+				"type": "tuple[]"
+			}
+		],
+		"name": "createSplit",
+		"outputs": [
+			{
+				"internalType": "contract PercentSplitETH",
+				"name": "splitInstance",
+				"type": "address"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"anonymous": false,
 		"inputs": [
 			{
@@ -44,6 +75,31 @@
 		"type": "event"
 	},
 	{
+		"inputs": [
+			{
+				"components": [
+					{
+						"internalType": "address payable",
+						"name": "recipient",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "percentInBasisPoints",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct PercentSplitETH.Share[]",
+				"name": "shares",
+				"type": "tuple[]"
+			}
+		],
+		"name": "initialize",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"anonymous": false,
 		"inputs": [
 			{
@@ -78,33 +134,44 @@
 	{
 		"inputs": [
 			{
-				"components": [
-					{
-						"internalType": "address payable",
-						"name": "recipient",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "percentInBasisPoints",
-						"type": "uint256"
-					}
-				],
-				"internalType": "struct PercentSplitETH.Share[]",
-				"name": "shares",
-				"type": "tuple[]"
+				"internalType": "address payable",
+				"name": "target",
+				"type": "address"
+			},
+			{
+				"internalType": "bytes",
+				"name": "callData",
+				"type": "bytes"
 			}
 		],
-		"name": "createSplit",
-		"outputs": [
+		"name": "proxyCall",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
 			{
-				"internalType": "contract PercentSplitETH",
-				"name": "splitInstance",
+				"internalType": "contract IERC20",
+				"name": "erc20Contract",
 				"type": "address"
 			}
 		],
+		"name": "splitERC20Tokens",
+		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "splitETH",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"stateMutability": "payable",
+		"type": "receive"
 	},
 	{
 		"inputs": [
@@ -212,72 +279,5 @@
 		],
 		"stateMutability": "view",
 		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"components": [
-					{
-						"internalType": "address payable",
-						"name": "recipient",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "percentInBasisPoints",
-						"type": "uint256"
-					}
-				],
-				"internalType": "struct PercentSplitETH.Share[]",
-				"name": "shares",
-				"type": "tuple[]"
-			}
-		],
-		"name": "initialize",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address payable",
-				"name": "target",
-				"type": "address"
-			},
-			{
-				"internalType": "bytes",
-				"name": "callData",
-				"type": "bytes"
-			}
-		],
-		"name": "proxyCall",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "contract IERC20",
-				"name": "erc20Contract",
-				"type": "address"
-			}
-		],
-		"name": "splitERC20Tokens",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "splitETH",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"stateMutability": "payable",
-		"type": "receive"
 	}
 ]

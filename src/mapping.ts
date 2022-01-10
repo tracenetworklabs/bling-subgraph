@@ -10,7 +10,7 @@ import {
   Collection as NFTContract,
   Minted as MintedEvent,
   Updated as UpdatedEvent,
-  TokenCreatorPaymentAddressSet as TokenCreatorPaymentAddressSetEvent
+  TokenCreatorPaymentAddressSet as TokenCreatorPaymentAddressSetEvent,
 } from "../generated/templates/Collection/Collection";
 
 import {
@@ -24,7 +24,7 @@ import {
 } from "../generated/Market/Market";
 
 import { Collection as collectionContract } from "../generated/templates";
-import { splitContract as SplitContract  } from "../generated/templates";
+import { splitContract as SplitContract } from "../generated/templates";
 
 import {
   Collection,
@@ -43,11 +43,7 @@ import {
   SplitDetail,
 } from "../generated/schema";
 
-import {
-  PercentSplitShare as PercentSplitShareEvent
-} from "../generated/templates/splitContract/splitContract"
-
-
+import { PercentSplitShare as PercentSplitShareEvent } from "../generated/templates/splitContract/splitContract";
 
 export function handleCollectionCreated(event: CollectionCreatedEvent): void {
   let token = Master.load(event.params.ColCode.toString());
@@ -63,7 +59,7 @@ export function handleCollectionCreated(event: CollectionCreatedEvent): void {
     token.transactionHash = event.transaction.hash.toHexString();
     token.myContract = event.params.myContract.toHexString();
     token.colAction = "Collection created";
-     
+
     let changeName = whitelist.load(event.params.creator.toHexString());
     token.brandName = changeName.brandName;
     changeName.save();
@@ -75,7 +71,8 @@ export function handleCollectionCreated(event: CollectionCreatedEvent): void {
     //let brandname = instance.brandName(event.params.creator);
     token.beneficiary = instance.shares(event.params.myContract).toHexString();
     //token.brandName = brandname;
-    token.search = token.colCode + token.colName + token.myContract + token.beneficiary;
+    token.search =
+      token.colCode + token.colName + token.myContract + token.beneficiary;
     //To check whether bene
     collectionContract.create(event.params.myContract);
     //splitContract.create(instance.shares(event.params.myContract));
@@ -97,7 +94,8 @@ export function handleCollectionUpdated(event: CollectionUpdatedEvent): void {
   token.beneficiary = instance.shares(event.params.myContract).toHexString();
   token.timestamp = event.block.timestamp;
   token.transactionHash = event.transaction.hash.toHexString();
-  token.search = token.colCode + token.colName + token.myContract + token.beneficiary;
+  token.search =
+    token.colCode + token.colName + token.myContract + token.beneficiary;
   token.colAction = "Collection updated";
   token.save();
 }
@@ -199,13 +197,12 @@ export function handleTokenUpdated(event: TokenUpdatedEvent): void {
 
 export function handleWhiteListUpdated(event: WhiteListUpdatedEvent): void {
   let token = whitelist.load(event.params.brand.toHexString());
-    if (!token) {    
-      token = new whitelist(event.params.brand.toHexString());
-      token.address = event.params.brand.toHexString();
-      token.brandName = event.params.name;
-      token.status = event.params.status;
-    }
-    else {
+  if (!token) {
+    token = new whitelist(event.params.brand.toHexString());
+    token.address = event.params.brand.toHexString();
+    token.brandName = event.params.name;
+    token.status = event.params.status;
+  } else {
     token.status = event.params.status;
     token.brandName = event.params.name;
   }
@@ -542,25 +539,17 @@ export function handleURIUpdated(event: UpdatedEvent): void {
   update.save();
 }
 
-/*export function handleTokenCreatorPaymentAddressSet(event: TokenCreatorPaymentAddressSetEvent): void {
-  let split = Split.load(event.params.toPaymentAddress.toString());
-  if(!split) {
-    split = new Split(event.params.toPaymentAddress.toString());
-    split.splitContract = event.params.toPaymentAddress;
-    split.tokenID = event.params.tokenId;
-  }
-  split.save();
-}*/
-
-
 export function handlePercentSplitShare(event: PercentSplitShareEvent): void {
-  let splitDetails = SplitDetail.load(event.address.toString()); // event.add
+  let hex = event.address.toString() + event.params.recipient.toString();
+  let splitDetails = SplitDetail.load(hex); // event.add
   if(!splitDetails) {
-    splitDetails = new SplitDetail(event.address.toString());
+    splitDetails = new SplitDetail(hex);
     splitDetails.recipient = event.params.recipient;
     splitDetails.percent = event.params.percentInBasisPoints;
     splitDetails.splitContract = event.address;
   }
+  else{
+    splitDetails.percent = splitDetails.percent.plus(event.params.percentInBasisPoints);
+  }
   splitDetails.save();
 }
-
