@@ -115,16 +115,16 @@ export class Whitelist__Params {
     this._event = event;
   }
 
-  get brand(): Array<Address> {
-    return this._event.parameters[0].value.toAddressArray();
+  get brand(): Address {
+    return this._event.parameters[0].value.toAddress();
   }
 
-  get name(): Array<string> {
-    return this._event.parameters[1].value.toStringArray();
+  get name(): string {
+    return this._event.parameters[1].value.toString();
   }
 
-  get status(): Array<boolean> {
-    return this._event.parameters[2].value.toBooleanArray();
+  get status(): boolean {
+    return this._event.parameters[2].value.toBoolean();
   }
 }
 

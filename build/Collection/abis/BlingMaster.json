@@ -135,21 +135,21 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "address[]",
+        "internalType": "address",
         "name": "brand",
-        "type": "address[]"
+        "type": "address"
       },
       {
         "indexed": false,
-        "internalType": "string[]",
+        "internalType": "string",
         "name": "name",
-        "type": "string[]"
+        "type": "string"
       },
       {
         "indexed": false,
-        "internalType": "bool[]",
+        "internalType": "bool",
         "name": "status",
-        "type": "bool[]"
+        "type": "bool"
       }
     ],
     "name": "Whitelist",

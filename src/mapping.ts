@@ -3,12 +3,14 @@ import {
   BlingMaster as masterContract,
   CollectionCreated as CollectionCreatedEvent,
   CollectionUpdated as CollectionUpdatedEvent,
+  Whitelist as WhiteListUpdatedEvent,
 } from "../generated/BlingMaster/BlingMaster";
 
 import {
   Collection as NFTContract,
   Minted as MintedEvent,
   Updated as UpdatedEvent,
+  TokenCreatorPaymentAddressSet as TokenCreatorPaymentAddressSetEvent
 } from "../generated/templates/Collection/Collection";
 
 import {
@@ -18,10 +20,11 @@ import {
   ReserveAuctionCanceled as ReserveAuctionCanceledEvent,
   ReserveAuctionFinalized as ReserveAuctionFinalizedEvent,
   ReserveAuctionUpdated as ReserveAuctionUpdatedEvent,
-  TokenAdded as TokenAddedEvent,
+  TokenUpdated as TokenUpdatedEvent,
 } from "../generated/Market/Market";
 
 import { Collection as collectionContract } from "../generated/templates";
+import { splitContract as SplitContract  } from "../generated/templates";
 
 import {
   Collection,
@@ -36,7 +39,15 @@ import {
   URI,
   Update,
   Finalize,
+  whitelist,
+  SplitDetail,
 } from "../generated/schema";
+
+import {
+  PercentSplitShare as PercentSplitShareEvent
+} from "../generated/templates/splitContract/splitContract"
+
+
 
 export function handleCollectionCreated(event: CollectionCreatedEvent): void {
   let token = Master.load(event.params.ColCode.toString());
@@ -48,21 +59,27 @@ export function handleCollectionCreated(event: CollectionCreatedEvent): void {
     token.colDescription = event.params.ColDescription;
     token.colProperties = event.params.ColProperties;
     token.timestamp = event.block.timestamp;
-    token.collectionAction = "Collection Added";
+    token.collectionAction = "Collection added";
     token.transactionHash = event.transaction.hash.toHexString();
     token.myContract = event.params.myContract.toHexString();
-    token.colAction = "Collection Created";
-
+    token.colAction = "Collection created";
+     
+    let changeName = whitelist.load(event.params.creator.toHexString());
+    token.brandName = changeName.brandName;
+    changeName.save();
     let CContract = NFTContract.bind(event.params.myContract);
     let supply = CContract.totalSupply();
     token.quantity = supply;
 
     let instance = masterContract.bind(event.address);
-    let brandname = instance.brandName(event.params.creator);
+    //let brandname = instance.brandName(event.params.creator);
     token.beneficiary = instance.shares(event.params.myContract).toHexString();
-    token.brandName = brandname;
-
+    //token.brandName = brandname;
+    token.search = token.colCode + token.colName + token.myContract + token.beneficiary;
+    //To check whether bene
     collectionContract.create(event.params.myContract);
+    //splitContract.create(instance.shares(event.params.myContract));
+    SplitContract.create(event.params.split);
   }
   token.save();
 }
@@ -80,7 +97,8 @@ export function handleCollectionUpdated(event: CollectionUpdatedEvent): void {
   token.beneficiary = instance.shares(event.params.myContract).toHexString();
   token.timestamp = event.block.timestamp;
   token.transactionHash = event.transaction.hash.toHexString();
-  token.colAction = "Collection Updated";
+  token.search = token.colCode + token.colName + token.myContract + token.beneficiary;
+  token.colAction = "Collection updated";
   token.save();
 }
 
@@ -106,7 +124,7 @@ export function handleMinted(event: MintedEvent): void {
 
     let name = instance.getCollectionDetails(event.params.creator, code);
     let value = instance.collections(event.params.creator, code);
-    let brandname = instance.brandName(event.params.creator);
+    //let brandname = instance.brandName(event.params.creator);
     token.colName = name.value0;
     token.colDescription = name.value1;
     token.colProperties = name.value2;
@@ -114,9 +132,12 @@ export function handleMinted(event: MintedEvent): void {
     //token.quantity = CContract.totalSupply();
     token.nftCount = count;
     token.colCode = code;
-    token.brandName = brandname;
+    //token.brandName = brandname;
+    let changeName = whitelist.load(event.params.creator.toHexString());
+    token.brandName = changeName.brandName;
+    changeName.save();
     token.beneficiary = value.value4;
-
+    token.search = token.colCode + token.colName + token.brandName;
     collection.save();
 
     token.creator = event.params.creator;
@@ -136,14 +157,14 @@ export function handleMinted(event: MintedEvent): void {
     token.nftTransactionHash = event.transaction.hash.toHexString();
     token.nftTimestamp = event.block.timestamp;
 
-    token.nftAction = "Token Minted";
+    token.nftAction = "Token minted";
   }
   if (token.history.length == 0) {
     history = new History(hex);
     history.tokenID = event.params.tokenId;
     history.mintAddress = event.params.creator;
     history.mintTimestamp = event.block.timestamp;
-    history.mintAction = "Token Minted";
+    history.mintAction = "Token minted";
     history.mintAmount = "0";
     history.nftContractAddress = event.address;
     let Htemp = token.history;
@@ -154,7 +175,7 @@ export function handleMinted(event: MintedEvent): void {
     history.tokenID = event.params.tokenId;
     history.mintAddress = event.params.creator;
     history.mintTimestamp = event.block.timestamp;
-    history.mintAction = "Token Minted";
+    history.mintAction = "Token minted";
     history.mintAmount = "0";
     history.nftContractAddress = event.address;
     let Htemp = token.history;
@@ -164,15 +185,31 @@ export function handleMinted(event: MintedEvent): void {
   token.save();
 }
 
-export function handleTokenAdded(event: TokenAddedEvent): void {
+export function handleTokenUpdated(event: TokenUpdatedEvent): void {
   let token = TokenDetail.load(event.params.tokenAddress.toString());
   if (!token) {
     token = new TokenDetail(event.params.tokenAddress.toString());
     token.tokenAddress = event.params.tokenAddress;
-    token.status = event.params.status.toString();
+    token.status = event.params.status;
   } else {
-    token.status = event.params.status.toString();
+    token.status = event.params.status;
   }
+  token.save();
+}
+
+export function handleWhiteListUpdated(event: WhiteListUpdatedEvent): void {
+  let token = whitelist.load(event.params.brand.toHexString());
+    if (!token) {    
+      token = new whitelist(event.params.brand.toHexString());
+      token.address = event.params.brand.toHexString();
+      token.brandName = event.params.name;
+      token.status = event.params.status;
+    }
+    else {
+    token.status = event.params.status;
+    token.brandName = event.params.name;
+  }
+  token.save();
 }
 
 export function handleReserveAuctionCreated(event: AuctionEvent): void {
@@ -191,7 +228,7 @@ export function handleReserveAuctionCreated(event: AuctionEvent): void {
     allAuction.auctionAmount = event.params.reservePrice;
     allAuction.auctionTransactionHash = event.transaction.hash.toHexString();
     allAuction.auctionTimestamp = event.block.timestamp;
-    allAuction.auctionAction = "Auction Started";
+    allAuction.auctionAction = "Auction started";
     allAuction.tokenAddress = event.params.paymentMode.toHexString();
     allAuction.tokenName = event.params.name;
     allAuction.auctionAddress = event.params.seller.toHexString();
@@ -211,7 +248,7 @@ export function handleReserveAuctionCreated(event: AuctionEvent): void {
     allAuction.auctionAmount = event.params.reservePrice;
     allAuction.auctionTransactionHash = event.transaction.hash.toHexString();
     allAuction.auctionTimestamp = event.block.timestamp;
-    allAuction.auctionAction = "Auction Started";
+    allAuction.auctionAction = "Auction started";
     allAuction.tokenAddress = event.params.paymentMode.toHexString();
     allAuction.tokenName = event.params.name;
     allAuction.auctionAddress = event.params.seller.toHexString();
@@ -233,7 +270,7 @@ export function handleReserveAuctionCreated(event: AuctionEvent): void {
     auction.reservePrice = event.params.reservePrice;
     auction.auctionTransactionHash = event.transaction.hash.toHexString();
     auction.auctionTimestamp = event.block.timestamp;
-    auction.auctionAction = "Auction Started";
+    auction.auctionAction = "Auction started";
     auction.tokenAddress = event.params.paymentMode.toHexString();
     auction.tokenName = event.params.name;
 
@@ -282,7 +319,7 @@ export function handleReserveAuctionBidPlaced(event: BidsEvent): void {
     bids.endTime = event.params.endTime;
     bids.transactionHash = event.transaction.hash.toHexString();
     bids.timestamp = event.block.timestamp;
-    bids.action = "Bid Placed";
+    bids.action = "Bid placed";
     bids.colDetails = auctionInstance.index;
     bids.tokenID = auction.tokenID;
     bids.tokenName = auction.tokenName;
@@ -305,7 +342,7 @@ export function handleReserveAuctionBidPlaced(event: BidsEvent): void {
     bids.endTime = event.params.endTime;
     bids.transactionHash = event.transaction.hash.toHexString();
     bids.timestamp = event.block.timestamp;
-    bids.action = "Bid Placed";
+    bids.action = "Bid placed";
     bids.colDetails = auctionInstance.index;
     bids.tokenID = auction.tokenID;
     bids.tokenName = auction.tokenName;
@@ -330,7 +367,7 @@ export function handleReserveAuctionBidPlaced(event: BidsEvent): void {
     bidPlaced.endTime = event.params.endTime;
     bidPlaced.transactionHash = event.transaction.hash.toHexString();
     bidPlaced.timestamp = event.block.timestamp;
-    bidPlaced.action = "Bid Placed";
+    bidPlaced.action = "Bid placed";
     bidPlaced.colDetails = auctionInstance.index;
   } else {
     bidPlaced.auctionID = event.params.auctionId;
@@ -339,7 +376,7 @@ export function handleReserveAuctionBidPlaced(event: BidsEvent): void {
     bidPlaced.endTime = event.params.endTime;
     bidPlaced.transactionHash = event.transaction.hash.toHexString();
     bidPlaced.timestamp = event.block.timestamp;
-    bidPlaced.action = "Bid Placed";
+    bidPlaced.action = "Bid placed";
     bidPlaced.colDetails = auctionInstance.index;
   }
   bidPlaced.save();
@@ -358,7 +395,7 @@ export function handleReserveAuctionCanceled(
     //cancelAuction = new CancelAuction(auctionInstance.index);
     cancelAuction.auctionID = event.params.auctionId.toString();
     cancelAuction.cancelTimestamp = event.block.timestamp;
-    cancelAuction.cancelAction = "Auction Cancelled";
+    cancelAuction.cancelAction = "Auction cancelled";
     cancelAuction.tokenID = auctionInstance.tokenID;
     cancelAuction.tokenName = auction.tokenName;
     cancelAuction.tokenAddress = auction.tokenAddress;
@@ -373,7 +410,7 @@ export function handleReserveAuctionCanceled(
     cancelAuction = new CancelAuction(event.transaction.hash.toString());
     cancelAuction.auctionID = event.params.auctionId.toString();
     cancelAuction.cancelTimestamp = event.block.timestamp;
-    cancelAuction.cancelAction = "Auction Cancelled";
+    cancelAuction.cancelAction = "Auction cancelled";
     cancelAuction.tokenID = auctionInstance.tokenID;
     cancelAuction.tokenName = auction.tokenName;
     cancelAuction.tokenAddress = auction.tokenAddress;
@@ -394,9 +431,10 @@ export function handleReserveAuctionCanceled(
   history.save();*/
 
   auction.auctionID = "0";
-  auction.auctionAction = "Auction Cancelled";
+  auction.auctionAction = "Auction cancelled";
   auction.save();
 }
+
 export function handleReserveAuctionFinalized(
   event: ReserveAuctionFinalizedEvent
 ): void {
@@ -477,7 +515,7 @@ export function handleURIUpdated(event: UpdatedEvent): void {
     update.tokenID = event.params.tokenId;
     update.creator = event.params.creator;
     update.ipfsHash = event.params.tokenIPFSPath;
-    update.uriAction = "Metadata Updated";
+    update.uriAction = "Metadata updated";
     update.metadataTimestamp = event.block.timestamp;
     auction.ipfsHash = event.params.tokenIPFSPath;
     let temp = auction.metadataUpdateList;
@@ -491,7 +529,7 @@ export function handleURIUpdated(event: UpdatedEvent): void {
     update.tokenID = event.params.tokenId;
     update.creator = event.params.creator;
     update.ipfsHash = event.params.tokenIPFSPath;
-    update.uriAction = "Metadata Updated";
+    update.uriAction = "Metadata updated";
     update.metadataTimestamp = event.block.timestamp;
     auction.ipfsHash = event.params.tokenIPFSPath;
     let temp = auction.metadataUpdateList;
@@ -503,3 +541,26 @@ export function handleURIUpdated(event: UpdatedEvent): void {
   }
   update.save();
 }
+
+/*export function handleTokenCreatorPaymentAddressSet(event: TokenCreatorPaymentAddressSetEvent): void {
+  let split = Split.load(event.params.toPaymentAddress.toString());
+  if(!split) {
+    split = new Split(event.params.toPaymentAddress.toString());
+    split.splitContract = event.params.toPaymentAddress;
+    split.tokenID = event.params.tokenId;
+  }
+  split.save();
+}*/
+
+
+export function handlePercentSplitShare(event: PercentSplitShareEvent): void {
+  let splitDetails = SplitDetail.load(event.address.toString()); // event.add
+  if(!splitDetails) {
+    splitDetails = new SplitDetail(event.address.toString());
+    splitDetails.recipient = event.params.recipient;
+    splitDetails.percent = event.params.percentInBasisPoints;
+    splitDetails.splitContract = event.address;
+  }
+  splitDetails.save();
+}
+

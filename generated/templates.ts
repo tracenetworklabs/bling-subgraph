@@ -19,3 +19,17 @@ export class Collection extends DataSourceTemplate {
     );
   }
 }
+
+export class splitContract extends DataSourceTemplate {
+  static create(address: Address): void {
+    DataSourceTemplate.create("splitContract", [address.toHex()]);
+  }
+
+  static createWithContext(address: Address, context: DataSourceContext): void {
+    DataSourceTemplate.createWithContext(
+      "splitContract",
+      [address.toHex()],
+      context
+    );
+  }
+}

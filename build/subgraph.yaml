@@ -6,9 +6,9 @@ dataSources:
     name: BlingMaster
     network: mumbai
     source:
-      address: "0x11d331B95E50182a9a0641e8FE78aCd741d54866"
+      address: "0xC561Dfac4714C538AA1cF8Ce72aE95e62729DEEa"
       abi: BlingMaster
-      startBlock: 23550888
+      startBlock: 23641287
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -28,13 +28,15 @@ dataSources:
           handler: handleCollectionCreated
         - event: CollectionUpdated(address,string,string,string,string[],address,uint256,address)
           handler: handleCollectionUpdated
+        - event: Whitelist(address,string,bool)
+          handler: handleWhiteListUpdated
   - kind: ethereum/contract
     name: Market
     network: mumbai
     source:
-      address: "0xc684C109aF4d9086d0446afc71E23316d95E0431"
+      address: "0x61eddE1514b126EBbae635B568952B106039e91b"
       abi: Market
-      startBlock: 23550669
+      startBlock: 23641218
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -61,8 +63,8 @@ dataSources:
           handler: handleReserveAuctionFinalized
         - event: ReserveAuctionUpdated(indexed uint256,uint256)
           handler: handleReserveAuctionUpdated
-        - event: TokenAdded(indexed address[],indexed bool[])
-          handler: handleTokenAdded
+        - event: TokenUpdated(indexed address,indexed bool)
+          handler: handleTokenUpdated
       file: BlingMaster\BlingMaster.wasm
 templates:
   - kind: ethereum/contract
@@ -88,3 +90,24 @@ templates:
           handler: handleMinted
         - event: Updated(indexed address,indexed uint256,indexed string,string)
           handler: handleURIUpdated
+  - kind: ethereum/contract
+    name: splitContract
+    network: mumbai
+    source:
+      abi: splitContract
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: BlingMaster\BlingMaster.wasm
+      entities:
+        - SplitDetails
+        - Split
+      abis:
+        - name: splitContract
+          file: splitContract\abis\splitContract.json
+        - name: Collection
+          file: splitContract\abis\Collection.json
+      eventHandlers:
+        - event: PercentSplitShare(indexed address,uint256)
+          handler: handlePercentSplitShare

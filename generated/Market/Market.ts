@@ -268,25 +268,25 @@ export class ReserveAuctionUpdated__Params {
   }
 }
 
-export class TokenAdded extends ethereum.Event {
-  get params(): TokenAdded__Params {
-    return new TokenAdded__Params(this);
+export class TokenUpdated extends ethereum.Event {
+  get params(): TokenUpdated__Params {
+    return new TokenUpdated__Params(this);
   }
 }
 
-export class TokenAdded__Params {
-  _event: TokenAdded;
+export class TokenUpdated__Params {
+  _event: TokenUpdated;
 
-  constructor(event: TokenAdded) {
+  constructor(event: TokenUpdated) {
     this._event = event;
   }
 
-  get tokenAddress(): Bytes {
-    return this._event.parameters[0].value.toBytes();
+  get tokenAddress(): Address {
+    return this._event.parameters[0].value.toAddress();
   }
 
-  get status(): Bytes {
-    return this._event.parameters[1].value.toBytes();
+  get status(): boolean {
+    return this._event.parameters[1].value.toBoolean();
   }
 }
 
@@ -707,29 +707,6 @@ export class Market extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  getTokenAddress(): Array<Address> {
-    let result = super.call(
-      "getTokenAddress",
-      "getTokenAddress():(address[])",
-      []
-    );
-
-    return result[0].toAddressArray();
-  }
-
-  try_getTokenAddress(): ethereum.CallResult<Array<Address>> {
-    let result = super.tryCall(
-      "getTokenAddress",
-      "getTokenAddress():(address[])",
-      []
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddressArray());
-  }
-
   tokens(param0: Address): boolean {
     let result = super.call("tokens", "tokens(address):(bool)", [
       ethereum.Value.fromAddress(param0)
@@ -889,12 +866,12 @@ export class AdminUpdateTokenCall__Inputs {
     this._call = call;
   }
 
-  get tokenAddress(): Array<Address> {
-    return this._call.inputValues[0].value.toAddressArray();
+  get tokenAddress(): Address {
+    return this._call.inputValues[0].value.toAddress();
   }
 
-  get status(): Array<boolean> {
-    return this._call.inputValues[1].value.toBooleanArray();
+  get status(): boolean {
+    return this._call.inputValues[1].value.toBoolean();
   }
 }
 

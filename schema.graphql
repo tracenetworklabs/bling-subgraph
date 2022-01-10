@@ -5,7 +5,7 @@ type Master @entity {
   creator: Bytes! # address
   colCode: String! # string
   myContract: String!
-  beneficiary: String
+  beneficiary: String!
   colName: String! 
   colDescription: String!
   colProperties:[String]!
@@ -14,6 +14,7 @@ type Master @entity {
   collectionAction: String!
   nftCount: BigInt
   brandName: String
+  search: String!
 }
 
 type _Schema_
@@ -40,7 +41,7 @@ type Collection @entity {
   nftTransactionHash: String!
   nftTimestamp: BigInt!
   nftAction: String!
-  colCode: ID! # string
+  colCode: String! # string
   colName: String!
   colDescription: String!
   colProperties:[String]!
@@ -58,11 +59,19 @@ type Collection @entity {
   auctionAction: String
   tokenAddress: String
   tokenName: String
+  search: String @lowercase
   metadataUpdateList: [URI!]
   bidList: [Bid!]
   auctionList: [AllAuction!]
   cancelAuctionList: [CancelAuction!]
   history:[History!]
+}
+
+type whitelist @entity {
+  id: ID!
+  address: String
+  brandName: String
+  status: Boolean
 }
 
 type Finalize @entity {
@@ -176,5 +185,13 @@ type History @entity {
 type TokenDetail @entity {
   id: ID!
   tokenAddress: Bytes
-  status: String
+  status: Boolean
+}
+
+type SplitDetail @entity {
+  id: ID!  
+  tokenID: BigInt
+  splitContract: Bytes
+  recipient: Bytes
+  percent: BigInt
 }

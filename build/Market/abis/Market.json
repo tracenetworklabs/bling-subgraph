@@ -265,18 +265,18 @@
     "inputs": [
       {
         "indexed": true,
-        "internalType": "address[]",
+        "internalType": "address",
         "name": "tokenAddress",
-        "type": "address[]"
+        "type": "address"
       },
       {
         "indexed": true,
-        "internalType": "bool[]",
+        "internalType": "bool",
         "name": "status",
-        "type": "bool[]"
+        "type": "bool"
       }
     ],
-    "name": "TokenAdded",
+    "name": "TokenUpdated",
     "type": "event"
   },
   {
@@ -399,14 +399,14 @@
   {
     "inputs": [
       {
-        "internalType": "address[]",
+        "internalType": "address",
         "name": "tokenAddress",
-        "type": "address[]"
+        "type": "address"
       },
       {
-        "internalType": "bool[]",
+        "internalType": "bool",
         "name": "status",
-        "type": "bool[]"
+        "type": "bool"
       }
     ],
     "name": "adminUpdateToken",
@@ -713,19 +713,6 @@
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getTokenAddress",
-    "outputs": [
-      {
-        "internalType": "address[]",
-        "name": "",
-        "type": "address[]"
       }
     ],
     "stateMutability": "view",

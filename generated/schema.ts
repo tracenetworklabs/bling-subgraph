@@ -87,21 +87,13 @@ export class Master extends Entity {
     this.set("myContract", Value.fromString(value));
   }
 
-  get beneficiary(): string | null {
+  get beneficiary(): string {
     let value = this.get("beneficiary");
-    if (value === null || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toString();
-    }
+    return value.toString();
   }
 
-  set beneficiary(value: string | null) {
-    if (value === null) {
-      this.unset("beneficiary");
-    } else {
-      this.set("beneficiary", Value.fromString(value as string));
-    }
+  set beneficiary(value: string) {
+    this.set("beneficiary", Value.fromString(value));
   }
 
   get colName(): string {
@@ -198,6 +190,15 @@ export class Master extends Entity {
     } else {
       this.set("brandName", Value.fromString(value as string));
     }
+  }
+
+  get search(): string {
+    let value = this.get("search");
+    return value.toString();
+  }
+
+  set search(value: string) {
+    this.set("search", Value.fromString(value));
   }
 }
 
@@ -605,6 +606,23 @@ export class Collection extends Entity {
     }
   }
 
+  get search(): string | null {
+    let value = this.get("search");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set search(value: string | null) {
+    if (value === null) {
+      this.unset("search");
+    } else {
+      this.set("search", Value.fromString(value as string));
+    }
+  }
+
   get metadataUpdateList(): Array<string> | null {
     let value = this.get("metadataUpdateList");
     if (value === null || value.kind == ValueKind.NULL) {
@@ -694,6 +712,80 @@ export class Collection extends Entity {
     } else {
       this.set("history", Value.fromStringArray(value as Array<string>));
     }
+  }
+}
+
+export class whitelist extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id !== null, "Cannot save whitelist entity without an ID");
+    assert(
+      id.kind == ValueKind.STRING,
+      "Cannot save whitelist entity with non-string ID. " +
+        'Considering using .toHex() to convert the "id" to a string.'
+    );
+    store.set("whitelist", id.toString(), this);
+  }
+
+  static load(id: string): whitelist | null {
+    return store.get("whitelist", id) as whitelist | null;
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get address(): string | null {
+    let value = this.get("address");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set address(value: string | null) {
+    if (value === null) {
+      this.unset("address");
+    } else {
+      this.set("address", Value.fromString(value as string));
+    }
+  }
+
+  get brandName(): string | null {
+    let value = this.get("brandName");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set brandName(value: string | null) {
+    if (value === null) {
+      this.unset("brandName");
+    } else {
+      this.set("brandName", Value.fromString(value as string));
+    }
+  }
+
+  get status(): boolean {
+    let value = this.get("status");
+    return value.toBoolean();
+  }
+
+  set status(value: boolean) {
+    this.set("status", Value.fromBoolean(value));
   }
 }
 
@@ -2224,20 +2316,176 @@ export class TokenDetail extends Entity {
     }
   }
 
-  get status(): string | null {
+  get status(): boolean {
     let value = this.get("status");
+    return value.toBoolean();
+  }
+
+  set status(value: boolean) {
+    this.set("status", Value.fromBoolean(value));
+  }
+}
+
+export class Split extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id !== null, "Cannot save Split entity without an ID");
+    assert(
+      id.kind == ValueKind.STRING,
+      "Cannot save Split entity with non-string ID. " +
+        'Considering using .toHex() to convert the "id" to a string.'
+    );
+    store.set("Split", id.toString(), this);
+  }
+
+  static load(id: string): Split | null {
+    return store.get("Split", id) as Split | null;
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get splitContract(): Bytes | null {
+    let value = this.get("splitContract");
     if (value === null || value.kind == ValueKind.NULL) {
       return null;
     } else {
-      return value.toString();
+      return value.toBytes();
     }
   }
 
-  set status(value: string | null) {
+  set splitContract(value: Bytes | null) {
     if (value === null) {
-      this.unset("status");
+      this.unset("splitContract");
     } else {
-      this.set("status", Value.fromString(value as string));
+      this.set("splitContract", Value.fromBytes(value as Bytes));
+    }
+  }
+
+  get splitList(): Array<string> | null {
+    let value = this.get("splitList");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set splitList(value: Array<string> | null) {
+    if (value === null) {
+      this.unset("splitList");
+    } else {
+      this.set("splitList", Value.fromStringArray(value as Array<string>));
+    }
+  }
+}
+
+export class SplitDetail extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id !== null, "Cannot save SplitDetail entity without an ID");
+    assert(
+      id.kind == ValueKind.STRING,
+      "Cannot save SplitDetail entity with non-string ID. " +
+        'Considering using .toHex() to convert the "id" to a string.'
+    );
+    store.set("SplitDetail", id.toString(), this);
+  }
+
+  static load(id: string): SplitDetail | null {
+    return store.get("SplitDetail", id) as SplitDetail | null;
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get tokenID(): BigInt | null {
+    let value = this.get("tokenID");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set tokenID(value: BigInt | null) {
+    if (value === null) {
+      this.unset("tokenID");
+    } else {
+      this.set("tokenID", Value.fromBigInt(value as BigInt));
+    }
+  }
+
+  get splitContract(): Bytes | null {
+    let value = this.get("splitContract");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set splitContract(value: Bytes | null) {
+    if (value === null) {
+      this.unset("splitContract");
+    } else {
+      this.set("splitContract", Value.fromBytes(value as Bytes));
+    }
+  }
+
+  get recipient(): Bytes | null {
+    let value = this.get("recipient");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set recipient(value: Bytes | null) {
+    if (value === null) {
+      this.unset("recipient");
+    } else {
+      this.set("recipient", Value.fromBytes(value as Bytes));
+    }
+  }
+
+  get percent(): BigInt | null {
+    let value = this.get("percent");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set percent(value: BigInt | null) {
+    if (value === null) {
+      this.unset("percent");
+    } else {
+      this.set("percent", Value.fromBigInt(value as BigInt));
     }
   }
 }
