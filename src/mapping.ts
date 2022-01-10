@@ -1,4 +1,4 @@
-import { BigInt } from "@graphprotocol/graph-ts";
+import { Address, BigInt } from "@graphprotocol/graph-ts";
 import {
   BlingMaster as masterContract,
   CollectionCreated as CollectionCreatedEvent,
@@ -185,10 +185,12 @@ export function handleMinted(event: MintedEvent): void {
 
 export function handleTokenUpdated(event: TokenUpdatedEvent): void {
   let token = TokenDetail.load(event.params.tokenAddress.toString());
+
   if (!token) {
     token = new TokenDetail(event.params.tokenAddress.toString());
     token.tokenAddress = event.params.tokenAddress;
     token.status = event.params.status;
+    token.name = event.params.name;
   } else {
     token.status = event.params.status;
   }
@@ -366,6 +368,13 @@ export function handleReserveAuctionBidPlaced(event: BidsEvent): void {
     bidPlaced.timestamp = event.block.timestamp;
     bidPlaced.action = "Bid placed";
     bidPlaced.colDetails = auctionInstance.index;
+    bidPlaced.colCode = auction.colCode;
+    bidPlaced.colName = auction.colName;
+    bidPlaced.myContract = auction.nftContractAddress.toHexString();
+    bidPlaced.beneficiary= auction.beneficiary.toHexString();
+
+    bidPlaced.search =
+    bidPlaced.colCode + bidPlaced.colName + bidPlaced.myContract + bidPlaced.beneficiary;
   } else {
     bidPlaced.auctionID = event.params.auctionId;
     bidPlaced.bidder = event.params.bidder.toHexString();
@@ -375,6 +384,13 @@ export function handleReserveAuctionBidPlaced(event: BidsEvent): void {
     bidPlaced.timestamp = event.block.timestamp;
     bidPlaced.action = "Bid placed";
     bidPlaced.colDetails = auctionInstance.index;
+    bidPlaced.colCode = auction.colCode;
+    bidPlaced.colName = auction.colName;
+    bidPlaced.myContract = auction.nftContractAddress.toHexString();
+    bidPlaced.beneficiary= auction.beneficiary.toHexString();
+
+    bidPlaced.search =
+    bidPlaced.colCode + bidPlaced.colName + bidPlaced.myContract + bidPlaced.beneficiary;
   }
   bidPlaced.save();
   bids.save();
@@ -542,14 +558,15 @@ export function handleURIUpdated(event: UpdatedEvent): void {
 export function handlePercentSplitShare(event: PercentSplitShareEvent): void {
   let hex = event.address.toString() + event.params.recipient.toString();
   let splitDetails = SplitDetail.load(hex); // event.add
-  if(!splitDetails) {
+  if (!splitDetails) {
     splitDetails = new SplitDetail(hex);
     splitDetails.recipient = event.params.recipient;
     splitDetails.percent = event.params.percentInBasisPoints;
     splitDetails.splitContract = event.address;
-  }
-  else{
-    splitDetails.percent = splitDetails.percent.plus(event.params.percentInBasisPoints);
+  } else {
+    splitDetails.percent = splitDetails.percent.plus(
+      event.params.percentInBasisPoints
+    );
   }
   splitDetails.save();
 }

@@ -131,6 +131,11 @@ type BidPlaced @entity {
   timestamp: BigInt
   action: String
   colDetails: Collection!
+  search: String
+  colCode: String
+  colName: String
+  myContract: String
+  beneficiary: String
 }
 
 type AllAuction @entity {
@@ -186,6 +191,7 @@ type TokenDetail @entity {
   id: ID!
   tokenAddress: Bytes
   status: Boolean
+  name: String
 }
 
 type SplitDetail @entity {
