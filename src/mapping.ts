@@ -69,7 +69,8 @@ export function handleCollectionCreated(event: CollectionCreatedEvent): void {
 
     let instance = masterContract.bind(event.address);
     //let brandname = instance.brandName(event.params.creator);
-    token.beneficiary = instance.shares(event.params.myContract).toHexString();
+    //token.beneficiary = instance.shares(event.params.myContract).toHexString();
+    token.beneficiary = event.params.split.toHexString();
     //token.brandName = brandname;
     token.search =
       token.colCode + token.colName + token.myContract + token.beneficiary;
@@ -97,6 +98,7 @@ export function handleCollectionUpdated(event: CollectionUpdatedEvent): void {
   token.search =
     token.colCode + token.colName + token.myContract + token.beneficiary;
   token.colAction = "Collection updated";
+  SplitContract.create(event.params.split);
   token.save();
 }
 
