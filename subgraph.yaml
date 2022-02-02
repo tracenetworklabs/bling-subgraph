@@ -6,9 +6,9 @@ dataSources:
     name: BlingMaster
     network: mumbai
     source:
-      address: "0x7FC22aFdD17bA213720941823787D710752A0002"
+      address: "0xc2F47a0c5303f2657dCD9BC4dAa562a0fBB5b3a1"
       abi: BlingMaster
-      startBlock: 23742410
+      startBlock: 24115713
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -35,9 +35,9 @@ dataSources:
     name: Market
     network: mumbai
     source:
-      address: "0xcC0023b9F459f7729576bd3D6F5CDeF9715bf3e4"
+      address: "0xAbBfA9e7fcF4D2307452480FA3F94b127AAc886f"
       abi: Market
-      startBlock: 23742302
+      startBlock: 24115500
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -52,7 +52,7 @@ dataSources:
         - name: Market
           file: ./abis/Market.json
       eventHandlers:
-        - event: ReserveAuctionCreated(indexed address,indexed address,indexed uint256,uint256,uint256,address,string)
+        - event: ReserveAuctionCreated(indexed address,indexed address,indexed uint256,uint256,uint256,address)
           handler: handleReserveAuctionCreated
         - event: ReserveAuctionBidPlaced(indexed uint256,indexed address,uint256,uint256)
           handler: handleReserveAuctionBidPlaced
@@ -85,7 +85,7 @@ templates:
         - name: BlingMaster
           file: ./abis/BlingMaster.json
       eventHandlers:
-        - event: Minted(indexed address,indexed uint256,indexed string,string)
+        - event: Minted(indexed address,indexed uint256,indexed string,string,uint256)
           handler: handleMinted
         - event: Updated(indexed address,indexed uint256,indexed string,string)
           handler: handleURIUpdated

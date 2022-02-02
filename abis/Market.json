@@ -13,15 +13,64 @@
 				"internalType": "uint256",
 				"name": "secondaryFoundationFeeBasisPoints",
 				"type": "uint256"
+			}
+		],
+		"name": "MarketFeesUpdated",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "paymentMode",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "nftContract",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "seller",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "buyer",
+				"type": "address"
 			},
 			{
 				"indexed": false,
 				"internalType": "uint256",
-				"name": "secondaryCreatorFeeBasisPoints",
+				"name": "creatorFee",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "ownerRev",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "deadline",
 				"type": "uint256"
 			}
 		],
-		"name": "MarketFeesUpdated",
+		"name": "PrivateSaleFinalized",
 		"type": "event"
 	},
 	{
@@ -162,12 +211,6 @@
 				"internalType": "address",
 				"name": "paymentMode",
 				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "string",
-				"name": "name",
-				"type": "string"
 			}
 		],
 		"name": "ReserveAuctionCreated",
@@ -390,11 +433,6 @@
 				"internalType": "uint256",
 				"name": "secondaryF8nFeeBasisPoints",
 				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "secondaryCreatorFeeBasisPoints",
-				"type": "uint256"
 			}
 		],
 		"name": "adminUpdateConfig",
@@ -418,6 +456,54 @@
 		"name": "adminUpdateToken",
 		"outputs": [],
 		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "contract IERC721Upgradeable",
+				"name": "nftContract",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "paymentMode",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "deadline",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint8",
+				"name": "v",
+				"type": "uint8"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "r",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "s",
+				"type": "bytes32"
+			}
+		],
+		"name": "buyFromPrivateSale",
+		"outputs": [],
+		"stateMutability": "payable",
 		"type": "function"
 	},
 	{
@@ -485,7 +571,18 @@
 		"type": "function"
 	},
 	{
-		"inputs": [],
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "nftContract",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			}
+		],
 		"name": "getFeeConfig",
 		"outputs": [
 			{
@@ -540,6 +637,24 @@
 			{
 				"internalType": "uint256",
 				"name": "ownerRev",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getFoundationFees",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "primaryFoundationFeeBasisPoints",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "secondaryFoundationFeeBasisPoints",
 				"type": "uint256"
 			}
 		],

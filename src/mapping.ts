@@ -92,7 +92,8 @@ export function handleCollectionUpdated(event: CollectionUpdatedEvent): void {
   token.colProperties = event.params.ColProperties;
   token.quantity = event.params.quantity;
   let instance = masterContract.bind(event.address);
-  token.beneficiary = instance.shares(event.params.myContract).toHexString();
+  //token.beneficiary = instance.shares(event.params.myContract).toHexString();
+  token.beneficiary = event.params.split.toHexString();
   token.timestamp = event.block.timestamp;
   token.transactionHash = event.transaction.hash.toHexString();
   token.search =
@@ -117,7 +118,6 @@ export function handleMinted(event: MintedEvent): void {
     let collection = Master.load(code.toString());
 
     let nextTokenID = CContract.getNextTokenId();
-
     let count = nextTokenID.minus(BigInt.fromI32(1));
 
     collection.nftCount = count;
@@ -147,7 +147,7 @@ export function handleMinted(event: MintedEvent): void {
       .toString();
     token.tokenURI = tokenContract.tokenURI(event.params.tokenId).toString();
     token.owner = tokenContract.ownerOf(event.params.tokenId);
-
+    token.royalty = event.params.royalty.toString();
     token.auctionID = "0";
 
     token.nftContractAddress = event.address;
@@ -156,6 +156,10 @@ export function handleMinted(event: MintedEvent): void {
 
     token.nftTransactionHash = event.transaction.hash.toHexString();
     token.nftTimestamp = event.block.timestamp;
+    
+    /*let tokenDetail = TokenDetail.load(event.params.paymentMode.toString());
+    token.tokenName = tokenDetail.name;
+    tokenDetail.save();*/
 
     token.nftAction = "Token minted";
   }
@@ -230,8 +234,14 @@ export function handleReserveAuctionCreated(event: AuctionEvent): void {
     allAuction.auctionTransactionHash = event.transaction.hash.toHexString();
     allAuction.auctionTimestamp = event.block.timestamp;
     allAuction.auctionAction = "Auction started";
-    allAuction.tokenAddress = event.params.paymentMode.toHexString();
-    allAuction.tokenName = event.params.name;
+    allAuction.tokenAddress = event.params.paymentMode;
+    
+    let tokenDetail = TokenDetail.load(event.params.paymentMode.toString());
+    allAuction.tokenName = tokenDetail.name;
+    tokenDetail.save();
+    //allAuction.tokenName = event.params.name;
+    
+    
     allAuction.auctionAddress = event.params.seller.toHexString();
 
     let temp = auction.auctionList;
@@ -250,8 +260,14 @@ export function handleReserveAuctionCreated(event: AuctionEvent): void {
     allAuction.auctionTransactionHash = event.transaction.hash.toHexString();
     allAuction.auctionTimestamp = event.block.timestamp;
     allAuction.auctionAction = "Auction started";
-    allAuction.tokenAddress = event.params.paymentMode.toHexString();
-    allAuction.tokenName = event.params.name;
+    allAuction.tokenAddress = event.params.paymentMode;
+
+    let tokenDetail = TokenDetail.load(event.params.paymentMode.toString());
+    allAuction.tokenName = tokenDetail.name;
+    tokenDetail.save();
+    //allAuction.tokenName = event.params.name;
+    
+    
     allAuction.auctionAddress = event.params.seller.toHexString();
     let temp = auction.auctionList;
     auction.auctionList = temp.concat([allAuction.id]);
@@ -272,8 +288,11 @@ export function handleReserveAuctionCreated(event: AuctionEvent): void {
     auction.auctionTransactionHash = event.transaction.hash.toHexString();
     auction.auctionTimestamp = event.block.timestamp;
     auction.auctionAction = "Auction started";
-    auction.tokenAddress = event.params.paymentMode.toHexString();
-    auction.tokenName = event.params.name;
+    auction.tokenAddress = event.params.paymentMode;
+    let tokenDetail = TokenDetail.load(event.params.paymentMode.toString());
+    auction.tokenName = tokenDetail.name;
+    tokenDetail.save();
+    //auction.tokenName = event.params.name;
 
     let Mcontract = MarketContract.bind(event.address);
     let result = Mcontract.getReserveAuction(event.params.auctionId);
@@ -475,6 +494,7 @@ export function handleReserveAuctionFinalized(
   auction.save();
 }
 
+//Need to change in this function also tokenName
 export function handleReserveAuctionUpdated(
   event: ReserveAuctionUpdatedEvent
 ): void {

@@ -58,19 +58,6 @@
 		"anonymous": false,
 		"inputs": [
 			{
-				"indexed": false,
-				"internalType": "string",
-				"name": "baseURI",
-				"type": "string"
-			}
-		],
-		"name": "BaseURIUpdated",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
 				"indexed": true,
 				"internalType": "address",
 				"name": "creator",
@@ -93,22 +80,15 @@
 				"internalType": "string",
 				"name": "tokenIPFSPath",
 				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "royalty",
+				"type": "uint256"
 			}
 		],
 		"name": "Minted",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "nftMarket",
-				"type": "address"
-			}
-		],
-		"name": "NFTMarketUpdated",
 		"type": "event"
 	},
 	{
@@ -397,7 +377,7 @@
 		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "",
+				"name": "tokenId",
 				"type": "uint256"
 			}
 		],
@@ -559,6 +539,25 @@
 	{
 		"inputs": [
 			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			}
+		],
+		"name": "getTokenRoyalty",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "address payable",
 				"name": "treasury",
 				"type": "address"
@@ -619,6 +618,11 @@
 				"internalType": "string",
 				"name": "tokenIPFSPath",
 				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "royalty",
+				"type": "uint256"
 			}
 		],
 		"name": "mint",
@@ -638,6 +642,11 @@
 				"internalType": "string",
 				"name": "tokenIPFSPath",
 				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "royalty",
+				"type": "uint256"
 			}
 		],
 		"name": "mintAndApproveMarket",
@@ -662,6 +671,11 @@
 				"internalType": "address payable",
 				"name": "tokenCreatorPaymentAddress",
 				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "royalty",
+				"type": "uint256"
 			}
 		],
 		"name": "mintWithCreatorPaymentAddress",
@@ -686,6 +700,11 @@
 				"internalType": "address payable",
 				"name": "tokenCreatorPaymentAddress",
 				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "royalty",
+				"type": "uint256"
 			}
 		],
 		"name": "mintWithCreatorPaymentAddressAndApproveMarket",

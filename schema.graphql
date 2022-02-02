@@ -33,6 +33,7 @@ type Collection @entity {
   ipfsHash: String!
   creator: Bytes!
   owner: Bytes!
+  royalty: String!
   auctionID: String!
   tokenURI: String!
   nftContractAddress: Bytes!
@@ -57,7 +58,7 @@ type Collection @entity {
   auctionTransactionHash: String
   auctionTimestamp: BigInt
   auctionAction: String
-  tokenAddress: String
+  tokenAddress: Bytes
   tokenName: String
   search: String @lowercase
   metadataUpdateList: [URI!]
@@ -93,7 +94,7 @@ type Update @entity {
   updateAction: String
   updateAddress: String
   updateAmount: String
-  tokenAddress: String
+  tokenAddress: Bytes
   tokenName: String
 }
 
@@ -116,7 +117,7 @@ type Bid @entity {
   transactionHash: String
   timestamp: BigInt
   action: String
-  tokenAddress: String
+  tokenAddress: Bytes
   tokenName: String
   colDetails: Collection!
 }
@@ -148,7 +149,7 @@ type AllAuction @entity {
   auctionTransactionHash: String
   auctionTimestamp: BigInt
   auctionAction: String
-  tokenAddress: String
+  tokenAddress: Bytes
   tokenName: String
 }
 
@@ -159,7 +160,7 @@ type CancelAuction @entity {
   cancelTimestamp: BigInt
   cancelAction: String
   cancelAddress: String 
-  tokenAddress: String
+  tokenAddress: Bytes
   tokenName: String
 }
 
